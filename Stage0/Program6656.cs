@@ -3,11 +3,13 @@ using System;
 
 namespace Stage0
 {
-	class Program
+	partial class Program
 	{
 		static void Main(string[] args)
 		{
-			Welcome6656(); Console.ReadKey();
+			Welcome6656();
+			Welcome1871();
+			Console.ReadKey();
 		}
 
 		private static void Welcome6656()
@@ -16,5 +18,6 @@ namespace Stage0
 			string? name = Console.ReadLine();
 			Console.WriteLine("{0}, welcome to my first console application", name);  //($"{name}, welcome to my first console application");
 		}
+		static partial void Welcome1871();
 	}
 }
