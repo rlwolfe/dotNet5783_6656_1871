@@ -8,21 +8,27 @@ namespace DO;
 /// </summary>
 public struct Product
 {
-	/// <summary>
-	/// Information about the Product
-	/// </summary>
 	/// product(){ ID=Config::prodcount++;?
-	public int ID { get; set; }
-	public int Name { get; set; }
-	public int Category { get; set; }
-	public int Price { get; set; }
-	public int InStock { get; set; }
+	public Product(int ID, string name, string category, double price, int inStock)
+	{
+		m_id = ID;
+		m_name = name;
+		m_category = category;
+		m_price = price;
+		m_inStock = inStock;
+	}
+
+	public int m_id { get; set; }
+	public string m_name { get; set; }
+	public string m_category { get; set; }
+	public double m_price { get; set; }
+	public int m_inStock { get; set; }
 
 	public override string ToString() => $@"
-			Product ID={ID}: {Name},
-			category - {Category}
-			Price: {Price}
-			Amount in stock: {InStock}
+			Product ID={m_id}: {m_name},
+			category - {m_category}
+			Price: {m_price}
+			Amount in stock: {m_inStock}
 	";
 
 }
