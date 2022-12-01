@@ -8,7 +8,6 @@ namespace DO;
 /// </summary>
 public struct Product
 {
-	/// product(){ ID=Config::prodcount++;?
 	public Product(int ID, string name, string category, double price, int inStock)
 	{
 		m_id = ID;

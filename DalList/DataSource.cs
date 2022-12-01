@@ -72,22 +72,22 @@ static internal class DataSource
 
 		int num;
 		
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 20; i++)						//creating 20 orders
 		{
-			num = _randomNum.Next(400);
+			num = _randomNum.Next(400);						//randoming numbers for addresses
 			DateTime orderDate = DateTime.Now - new TimeSpan(_randomNum.NextInt64(10L * 1000L * 1000L * 3600L * 24L * 10L));
-			DateTime shipDate = DateTime.Now + new TimeSpan(_randomNum.Next(5), 4, 0, 0);
-			DateTime delivDate = DateTime.Now + new TimeSpan(_randomNum.Next(5, 11), 4, 0, 0);
+			DateTime shipDate = DateTime.Now + new TimeSpan(_randomNum.Next(5), 4, 0, 0);		//randomizing time in the past ^ and
+			DateTime delivDate = DateTime.Now + new TimeSpan(_randomNum.Next(5, 11), 4, 0, 0);	//< future for the date fields
 
-			string first = Enums.FirstName.GetName(typeof(Enums.FirstName), i);
+			string first = Enums.FirstName.GetName(typeof(Enums.FirstName), i);				//getting names from enum
 			string last = Enums.LastName.GetName(typeof(Enums.LastName), i);
 		
-			Order order = new Order(Config.NextOrderNumber, first + last, first + last + "@gmail.com",
-				num.ToString() + Enums.LastName.GetName(typeof(Enums.LastName), num / 10) +
-				Enums.streetType.GetName(typeof(Enums.streetType), num / 50) , orderDate, shipDate, delivDate);
+			Order order = new Order(Config.NextOrderNumber, first + " " + last, first + last + "@gmail.com",	//id, name, email
+				num.ToString() + Enums.LastName.GetName(typeof(Enums.LastName), num / 10) +						//address
+				Enums.streetType.GetName(typeof(Enums.streetType), num / 50) , orderDate, shipDate, delivDate);	//end of address, & dates
 
-			if (i < 4) { order.m_shipDate = new DateTime(); }
-			if (i < 8) { order.m_deliveryDate = new DateTime(); }
+			if (i < 4) { order.m_shipDate = new DateTime(); }										//60% shipping date is not yet set
+			if (i < 8) { order.m_deliveryDate = new DateTime(); }									//20% delivery date is not yet set
 
 			Orders.Append(order);
 		}
