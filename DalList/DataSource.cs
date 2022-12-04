@@ -10,6 +10,7 @@ static internal class DataSource
 		// where do constructors go?
 		s_Initialize();
 	}
+
 	readonly static Random _randomNum = new Random(1);
 	
 	static internal class Config
@@ -60,9 +61,9 @@ static internal class DataSource
 				price, _randomNum.Next(20));							//price from above & how many currently in stock
 
 			if (i < 2)
-				product.m_inStock = 0;				//starting with 5% of products out of stock
+				product.m_inStock = 0;              //starting with 5% of products out of stock
 
-			Products.Append(product);				//adding product to array of all products
+			Products[i] = product;				//adding product to array of all products
 
 			i++;
 		} while (i < 10);				//initializing 10 products in array
@@ -89,7 +90,7 @@ static internal class DataSource
 			if (i < 4) { order.m_shipDate = new DateTime(); }										//60% shipping date is not yet set
 			if (i < 8) { order.m_deliveryDate = new DateTime(); }									//20% delivery date is not yet set
 
-			Orders.Append(order);
+			Orders[i] = order;
 		}
 	}
 
@@ -111,9 +112,9 @@ static internal class DataSource
 
 				usedOrders.Add(orderToAdd.m_id);							//adds to list for future checks
 				OrderItem orderItem = new OrderItem(Config.NextOrderItemNumber,productToAdd.m_id,
-					orderToAdd.m_id, productToAdd.m_price, _randomNum.Next(1, 5));		//randomly chooses amount of product in order
+					orderToAdd.m_id, productToAdd.m_price, _randomNum.Next(1, 5));      //randomly chooses amount of product in order
 
-				OrderItems.Append(orderItem);							//adds orderItem to array
+				OrderItems[i] = orderItem;							//adds orderItem to array
 				confirmed = true;										//ends loop
 
 			} while (!confirmed);
