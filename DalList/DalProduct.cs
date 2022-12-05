@@ -21,7 +21,18 @@ public class DalProduct
 				throw new Exception("This ID was already taken by a different product");
 
 		}
-		DataSource.Products.Append(product);	
+		int i = 0;
+		while (i < DataSource.Products.Length)
+		{
+			if (DataSource.Products[i].m_id == 0)
+			{
+				DataSource.Products[i] = product;
+				break;
+			}
+			else if (i == DataSource.Products.Length - 1)
+				Console.WriteLine("The array of products is already full");
+			i++;
+		}
 
 		return product.m_id;
 

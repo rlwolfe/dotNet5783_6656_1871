@@ -14,10 +14,19 @@ public class DalOrder
 		else if (Array.Exists(DataSource.Orders, x => x.m_id == order.m_id))
 			throw new Exception("This order already exists");
 
-		DataSource.Orders.Append(order);
-
+		int i = 0;
+		while (i < DataSource.Orders.Length)
+		{
+			if (DataSource.Orders[i].m_id == 0)
+			{
+				DataSource.Orders[i] = order;
+				break;
+			}
+			else if (i == DataSource.Orders.Length - 1)
+				Console.WriteLine("The array of orders is already full");
+			i++;
+		}
 		return order.m_id;
-
 	}
 
 	public Order ReadOrder(int ID)
@@ -37,7 +46,6 @@ public class DalOrder
 	public void UpdateOrder(Order order)
 	{
 		if (Array.Exists(DataSource.Orders, x => x.m_id == order.m_id))
-
 			DataSource.Orders[Array.IndexOf(DataSource.Orders, order)] = order;
 		else
 			throw new Exception("Order ID doesn't exist");

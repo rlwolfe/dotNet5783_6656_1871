@@ -14,11 +14,20 @@ public class DalOrderItem
 
 		else if (Array.Exists(DataSource.OrderItems, x => x.m_id == orderItem.m_id))
 			throw new Exception("This order item already exists");
-
-		DataSource.OrderItems.Append(orderItem);
-
+		
+		int i = 0;
+		while (i < DataSource.OrderItems.Length)
+		{
+			if (DataSource.OrderItems[i].m_id == 0)
+			{
+				DataSource.OrderItems[i] = orderItem;
+				break;
+			}
+			else if (i == DataSource.OrderItems.Length - 1)
+				Console.WriteLine("The array of order items is already full");
+			i++;
+		}
 		return orderItem.m_id;
-
 	}
 
 	public OrderItem ReadOrderItem(int ID)
@@ -37,36 +46,48 @@ public class DalOrderItem
 
 	public OrderItem GetOrderItemWithProdAndOrderID(int productId, int orderID)
 	{
-		OrderItem[] tempList = DataSource.OrderItems.TakeWhile(x => x.m_productID == productId).ToArray<OrderItem>();
-		
-		if (tempList != null)
-			if (Array.Exists(tempList, x => x.m_orderID == orderID))
-				return Array.Find(tempList, x => x.m_orderID == orderID);
 
+		OrderItem[] tempList = DataSource.OrderItems.TakeWhile(x => x.m_productID == productId && x.m_orderID == orderID).ToArray<OrderItem>();
+
+		if (tempList != null)
+			return tempList.First();
+
+		/*for (int i = 0; i < DataSource.OrderItems.Length; i++)
+		{
+			if (DataSource.OrderItems[i].m_productID == productId && DataSource.OrderItems[i].m_orderID == orderID)
+				return DataSource.OrderItems[i];
+		}*/
 		throw new Exception("This order item doesn't exist");
 	}
 
-	/*public void SetOrderItemWithProdAndOrderID(int productId, int orderID)
-	{//we need other data to set
-		OrderItem[] tempList = DataSource.OrderItems.TakeWhile(x => x.m_productID == productId).ToArray<OrderItem>();
+	public void SetOrderItemWithProdAndOrderID(int productId, int orderId)
+	{
+		Product tempProd;
+		Product[] productList = DataSource.Products.Where(x => x.m_id == productId).ToArray<Product>();
+		
+		if (productList != null)
+			tempProd = productList.First();
+		else
+			throw new Exception("This product ID doesn't exist");
 
-		if (tempList != null)
-			if (Array.Exists(tempList, x => x.m_orderID == orderID))
-
-		throw new Exception("This order item doesn't exist");
-	}*/
+		OrderItem orderItem = new OrderItem(-1, productId, orderId, tempProd.m_price, 1);   //how to determine the amount?
+		CreateOrderItem(orderItem);																									
+	}
 
 	public OrderItem[] GetItemsInOrder(int orderID)
 	{
 		OrderItem[] itemsInOrder = DataSource.OrderItems.TakeWhile(x => x.m_orderID == orderID).ToArray<OrderItem>();
 		
 		if (itemsInOrder == null)
-			throw new Exception("No items in that order!");
+			throw new Exception("No items in that order!");		//return this instead?
 
 		return itemsInOrder;
 	}
 
-	//set for this ^?
+	public void SetItemsInOrder()
+	{
+		//he's going to tell us
+	}
 
 	public void UpdateOrderItem(OrderItem orderItem)
 	{

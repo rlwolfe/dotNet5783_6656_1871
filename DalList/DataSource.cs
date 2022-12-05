@@ -26,8 +26,6 @@ static internal class DataSource
 		internal const int s_startingOrderItemNumber = 0;
 		private static int s_currentOrderItemNumber = s_startingOrderItemNumber;
 		internal static int NextOrderItemNumber { get => s_currentOrderItemNumber++; }
-
-
 	}
 
 	static internal Product[] Products = new Product[50];

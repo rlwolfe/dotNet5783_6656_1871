@@ -8,7 +8,6 @@ class DalTest
 	static private DalOrder dalOrder = new DalOrder();
 	static private DalProduct dalProduct = new DalProduct();
 	static private DalOrderItem dalOrderItem = new DalOrderItem();
-	//static private DataSource dataSource;
 
 	static public void Main()
 	{
@@ -55,11 +54,11 @@ class DalTest
 		int ID = Convert.ToInt32(Console.ReadLine());
 
 		if (type == "Product")
-			Console.WriteLine(dalProduct.ReadProduct(ID));
+			Console.WriteLine(dalProduct.ReadProduct(ID).ToString());
 		else if (type == "Order")
-			Console.WriteLine(dalOrder.ReadOrder(ID));
+			Console.WriteLine(dalOrder.ReadOrder(ID).ToString());
 		else
-			Console.WriteLine(dalOrderItem.ReadOrderItem(ID));
+			Console.WriteLine(dalOrderItem.ReadOrderItem(ID).ToString());
 	}
 	static void Delete(string type)
 	{
@@ -152,12 +151,14 @@ class DalTest
 
 	static void DisplayAllProducts()
 	{
-		dalProduct.ReadAllProducts();
+		Product[] tempProds = dalProduct.ReadAllProducts();
+		for (int i = 0; i < tempProds.Count() && tempProds[i].m_id != 0 ; i++)
+			Console.WriteLine(tempProds[i]);
 	}
 
 	static void ProductUpdate()
 	{
-		//logic here?
+		//no logic, everything but ID can be changed
 	}
 	static void OrderChosen()
 	{
@@ -232,7 +233,9 @@ class DalTest
 
 	private static void DisplayAllOrders()
 	{
-		dalOrder.ReadAllOrders();
+		Order[] tempOrds = dalOrder.ReadAllOrders();
+		for (int i = 0; i < tempOrds.Count() && tempOrds[i].m_id != 0; i++)
+			Console.WriteLine(tempOrds[i]);
 	}
 
 	static void OrderItemChosen()
@@ -248,7 +251,7 @@ class DalTest
 						"d - Update an order item\n" +
 						"e - Delete an order item\n" +
 						"f - Display all items in an order\n" +
-						//"g - Set items in an order\n" +
+						"g - Set items in an order\n" +
 						"h - Search for an item by Product & Order ID\n" +
 						"i - Set an order item based on Product & Order ID\n" + 
 						"x - Return to Main Menu");
@@ -285,7 +288,9 @@ class DalTest
 					break;
 
 				case 'g':
-					//set items in order
+					Console.WriteLine("This doesn't work yet");
+					SetAllItemsInOrder();
+					//set items in an order - he'll get back to us
 					break;
 
 				case 'h':
@@ -311,10 +316,9 @@ class DalTest
 		Console.WriteLine("What is the order's ID?");
 		int ordID = Convert.ToInt32(Console.ReadLine());
 
-		Console.WriteLine("What is the product's price?");	//get this from somewhere stored?
-		double price = Convert.ToDouble(Console.ReadLine());
+		double price = dalProduct.ReadProduct(prodID).m_price;
 
-		Console.WriteLine("How many of the product are in the order?");  //get this from somewhere?
+		Console.WriteLine("How many of the product are in the order?");		//no yet checking logic, will be done in BL
 		int amount = Convert.ToInt32(Console.ReadLine());
 
 		OrderItem orderItem = new OrderItem(-1, prodID, ordID, price, amount);
@@ -324,6 +328,9 @@ class DalTest
 	private static void DisplayAllOrderItems()
 	{
 		dalOrderItem.ReadAllOrderItems();
+		OrderItem[] tempOrdItems = dalOrderItem.ReadAllOrderItems();
+		for (int i = 0; i < tempOrdItems.Count() && tempOrdItems[i].m_id != 0; i++)
+			Console.WriteLine(tempOrdItems[i]);
 	}
 
 	private static void OrderItemUpdate()
@@ -333,17 +340,29 @@ class DalTest
 
 	private static void DisplayAllItemsInOrder()
 	{
-		//ord ID -> find OIs
+		int ordID;
+
+		//dalOrderItem.GetItemsInOrder(ordID);
 	}
 
-	//setItemsInOrder?
+	private static void SetAllItemsInOrder()
+	{
+
+		dalOrderItem.SetItemsInOrder(); //he'll get back to us
+	}
+
 	private static void FindOrderFromProdOrdID()
 	{
-		//ask for ids -> find OI
+		int prodID, ordID;
+
+
+		//dalOrderItem.GetOrderItemWithProdAndOrderID(prodID, ordID);
 	}
 
 	private static void SetItemFromProdOrdID()
 	{
-		//what todo here?
+		int prodID, ordID;
+
+		//dalOrderItem.SetOrderItemWithProdAndOrderID(prodID, ordID)
 	}
 }
