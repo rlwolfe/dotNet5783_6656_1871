@@ -51,7 +51,7 @@ static internal class DataSource
 			if (randNums.Contains(item))			//was the product already added?
 				continue;
 			randNums.Add(item);											//add product to list for future checking
-			price = _randomNum.Next(1,21) + _randomNum.NextDouble();	//price is random int + random decimal = creates a double
+			price = Math.Round((_randomNum.Next(1,21) + _randomNum.NextDouble()), 2);	//price is random int + random decimal = creates a double
 
 			Product product = new Product(Config.NextProductNumber,		 //product ID
 				Enums.ProductName.GetName(typeof(Enums.ProductName), item),			 //Randomly selects name from enum list of products
@@ -85,8 +85,8 @@ static internal class DataSource
 				num.ToString() + Enums.LastName.GetName(typeof(Enums.LastName), num / 10) +						//address
 				Enums.streetType.GetName(typeof(Enums.streetType), num / 50) , orderDate, shipDate, delivDate);	//end of address, & dates
 
-			if (i < 4) { order.m_shipDate = new DateTime(); }										//60% shipping date is not yet set
-			if (i < 8) { order.m_deliveryDate = new DateTime(); }									//20% delivery date is not yet set
+			if (i < 4) { order.m_shipDate = DateTime.MinValue; }										//60% shipping date is not yet set
+			if (i < 8) { order.m_deliveryDate = DateTime.MinValue; }									//20% delivery date is not yet set
 
 			Orders[i] = order;
 		}

@@ -1,7 +1,7 @@
 ﻿using System;
 using DO;
 using Dal;
-
+using System.Security.Cryptography.X509Certificates;
 
 class DalTest
 {
@@ -151,15 +151,77 @@ class DalTest
 
 	static void DisplayAllProducts()
 	{
-		Product[] tempProds = dalProduct.ReadAllProducts();
-		for (int i = 0; i < tempProds.Count() && tempProds[i].m_id != 0 ; i++)
-			Console.WriteLine(tempProds[i]);
+		foreach (Product product in dalProduct.ReadAllProducts())
+		{
+			if (product.m_id != 0)
+				Console.WriteLine(product);
+		}
 	}
 
 	static void ProductUpdate()
 	{
-		//no logic, everything but ID can be changed
+		Console.WriteLine("What is the ID of the product you want to update?");
+		int ID = Convert.ToInt32(Console.ReadLine());
+
+		Product product = dalProduct.ReadProduct(ID);
+		Console.WriteLine(product);
+
+		Console.WriteLine("What field would you like to update?");
+		int field = -1;
+		string temp;
+
+		do
+		{
+			Console.WriteLine("Fields available for update:\n" +
+						"1 - Name\n" +
+						"2 - Category\n" +
+						"3 - Price\n" +
+						"4 - How many are in stock\n" +
+						"0 - Finalize the update");
+			field = Convert.ToInt32(Console.ReadLine());
+
+			switch (field)
+			{
+				case 0:
+					Console.WriteLine("Thank you\n");
+					break;
+
+				case 1:
+					Console.WriteLine("What is the new name of the product?");
+					temp = Console.ReadLine();
+					if (temp != null)
+						product.m_name = temp;
+					break;
+
+				case 2:
+					Console.WriteLine("What category does the product fall under?");
+					temp = Console.ReadLine();
+					if (temp != null)
+						product.m_category = temp;
+					break;
+
+				case 3:
+					Console.WriteLine("How much does the product cost?");
+					if (double.TryParse(Console.ReadLine(), out double tempDub))
+						product.m_price = tempDub;
+					break;
+
+				case 4:
+					Console.WriteLine("How many of the product are stocked?");
+					if (int.TryParse(Console.ReadLine(), out int tempInt))
+						product.m_inStock = tempInt;
+					break;
+
+				default:
+					Console.WriteLine("Please choose a valid option.");
+					break;
+			}
+		} while (field != 0);
+
+		dalProduct.UpdateProduct(product);
+		Console.WriteLine("This product has been updated");
 	}
+
 	static void OrderChosen()
 	{
 		char subChoice = '-';
@@ -212,6 +274,7 @@ class DalTest
 	{
 		Console.WriteLine("What is the customer's name?");
 		string name = Console.ReadLine();
+		
 
 		Console.WriteLine("What is the customer's email?");
 		string email = Console.ReadLine();		//check it's a valid email?
@@ -228,14 +291,86 @@ class DalTest
 
 	private static void OrderUpdate()
 	{
-		//??
+		Console.WriteLine("What is the ID of the order you want to update?");
+		int ID = Convert.ToInt32(Console.ReadLine());
+		string temp;
+
+		Order order= dalOrder.ReadOrder(ID);
+		Console.WriteLine(order);
+
+		Console.WriteLine("What field would you like to update?");
+		int field = -1;
+		do
+		{
+			Console.WriteLine("Fields available for update:\n" +
+						"1 - Customer's Name\n" +
+						"2 - Customer's Email\n" +
+						"3 - Customer's Address\n" +
+						"4 - Order Date\n" +
+						"4 - Shipping Date\n" +
+						"4 - Delivery Date\n" +
+						"0 - Finalize the Update");
+			field = Convert.ToInt32(Console.ReadLine());
+
+			switch (field)
+			{
+				case 0:
+					Console.WriteLine("Thank you\n");
+					break;
+
+				case 1:
+					Console.WriteLine("What is the customer's name?");
+					temp = Console.ReadLine();
+					if (temp != null)
+						order.m_customerName= temp;
+					break;
+
+				case 2:
+					Console.WriteLine("What is the customer's email?");
+					temp = Console.ReadLine();
+					if (temp != null)
+						order.m_customerEmail = temp;
+					break;
+
+				case 3:
+					Console.WriteLine("What is the customer's address?");
+					temp = Console.ReadLine();
+					if (temp != null)
+						order.m_customerAddress = temp;
+					break;
+
+				case 4:
+					Console.WriteLine("What is the order date? (please input data in this format dd/mm/yyyy)");
+					order.m_orderDate = DateTime.ParseExact(Console.ReadLine(), "dd/mm/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+					break;
+
+				case 5:
+					Console.WriteLine("What is the shipping date? (please input data in this format dd/mm/yyyy)");
+					order.m_shipDate = DateTime.ParseExact(Console.ReadLine(), "dd/mm/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+					break;
+
+				case 6:
+					Console.WriteLine("What is the delivery date? (please input data in this format dd/mm/yyyy)");
+					order.m_deliveryDate = DateTime.ParseExact(Console.ReadLine(), "dd/mm/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+					break;
+
+				default:
+					Console.WriteLine("Please choose a valid option.");
+					break;
+			}
+		} while (field != 0);
+
+		dalOrder.UpdateOrder(order);
+		Console.WriteLine("This order has been updated");
 	}
 
 	private static void DisplayAllOrders()
 	{
-		Order[] tempOrds = dalOrder.ReadAllOrders();
-		for (int i = 0; i < tempOrds.Count() && tempOrds[i].m_id != 0; i++)
-			Console.WriteLine(tempOrds[i]);
+		foreach (Order order in dalOrder.ReadAllOrders())
+		{
+			if (order.m_id != 0)
+				Console.WriteLine(order);
+		}
 	}
 
 	static void OrderItemChosen()
@@ -294,7 +429,7 @@ class DalTest
 					break;
 
 				case 'h':
-					FindOrderFromProdOrdID();
+					FindOrderItemFromProdOrdID();
 					break;
 
 				case 'i':
@@ -312,7 +447,7 @@ class DalTest
 	{
 		Console.WriteLine("What is the product's ID?");
 		int prodID = Convert.ToInt32(Console.ReadLine());
-		//logic here?
+
 		Console.WriteLine("What is the order's ID?");
 		int ordID = Convert.ToInt32(Console.ReadLine());
 
@@ -327,22 +462,80 @@ class DalTest
 
 	private static void DisplayAllOrderItems()
 	{
-		dalOrderItem.ReadAllOrderItems();
-		OrderItem[] tempOrdItems = dalOrderItem.ReadAllOrderItems();
-		for (int i = 0; i < tempOrdItems.Count() && tempOrdItems[i].m_id != 0; i++)
-			Console.WriteLine(tempOrdItems[i]);
+		foreach (OrderItem orderItem in dalOrderItem.ReadAllOrderItems())
+		{
+			if (orderItem.m_id != 0)
+				Console.WriteLine(orderItem);
+		}
 	}
 
 	private static void OrderItemUpdate()
 	{
-		//how to implement?
+		Console.WriteLine("What is the ID of the order item you want to update?");
+		int temp, ID = Convert.ToInt32(Console.ReadLine());
+
+		OrderItem orderItem = dalOrderItem.ReadOrderItem(ID);
+		Console.WriteLine(orderItem);
+
+		Console.WriteLine("What field would you like to update?");
+		int field = -1;
+		do
+		{
+			Console.WriteLine("Fields available for update:\n" +
+						"1 - Product's ID\n" +
+						"2 - Order's ID\n" +
+						"3 - Price\n" +
+						"4 - Amount in order\n" +
+						"0 - Finalize the update");
+			field = Convert.ToInt32(Console.ReadLine());
+
+			switch (field)
+			{
+				case 0:
+					Console.WriteLine("Thank you\n");
+					break;
+
+				case 1:
+					Console.WriteLine("What is the ID of the product?");
+					if (int.TryParse(Console.ReadLine(), out temp))
+						orderItem.m_productID = temp;
+					break;
+
+				case 2:
+					Console.WriteLine("What is the ID of the order?");
+					if (int.TryParse(Console.ReadLine(), out temp))
+						orderItem.m_orderID = temp;
+					break;
+
+				case 3:
+					Console.WriteLine("How much does the order item cost?");
+					if (double.TryParse(Console.ReadLine(), out double tempDub))
+						orderItem.m_price = tempDub;
+					break;
+
+				case 4:
+					Console.WriteLine("How many of the product are in the order?");
+					if (int.TryParse(Console.ReadLine(), out temp))
+						orderItem.m_amount = temp;
+					break;
+
+				default:
+					Console.WriteLine("Please choose a valid option.");
+					break;
+			}
+		} while (field != 0);
+
+		dalOrderItem.UpdateOrderItem(orderItem);
+		Console.WriteLine("This order item has been updated");
 	}
 
 	private static void DisplayAllItemsInOrder()
 	{
-		int ordID;
+		Console.WriteLine("What is the ID of the order?");
 
-		//dalOrderItem.GetItemsInOrder(ordID);
+		if (int.TryParse(Console.ReadLine(), out int orderID))
+			foreach (OrderItem orderItem in dalOrderItem.GetItemsInOrder(orderID))
+				Console.WriteLine(orderItem);
 	}
 
 	private static void SetAllItemsInOrder()
@@ -351,18 +544,19 @@ class DalTest
 		dalOrderItem.SetItemsInOrder(); //he'll get back to us
 	}
 
-	private static void FindOrderFromProdOrdID()
+	private static void FindOrderItemFromProdOrdID()
 	{
-		int prodID, ordID;
+		Console.WriteLine("Please enter the product ID followed by the order ID on the next line");
 
-
-		//dalOrderItem.GetOrderItemWithProdAndOrderID(prodID, ordID);
+		if (int.TryParse(Console.ReadLine(), out int productID) && int.TryParse(Console.ReadLine(), out int orderID))
+			Console.WriteLine(dalOrderItem.GetOrderItemWithProdAndOrderID(productID, orderID));
 	}
 
 	private static void SetItemFromProdOrdID()
 	{
-		int prodID, ordID;
+		Console.WriteLine("Please enter the product ID followed by the order ID on the next line");
 
-		//dalOrderItem.SetOrderItemWithProdAndOrderID(prodID, ordID)
+		if (int.TryParse(Console.ReadLine(), out int productID) && int.TryParse(Console.ReadLine(), out int orderID))
+			dalOrderItem.SetOrderItemWithProdAndOrderID(productID, orderID);
 	}
 }

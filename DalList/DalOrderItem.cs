@@ -40,14 +40,22 @@ public class DalOrderItem
 
 	public OrderItem[] ReadAllOrderItems()
 	{
-		//maybe need to add new array and return that instead???
 		return DataSource.OrderItems;
 	}
 
-	public OrderItem GetOrderItemWithProdAndOrderID(int productId, int orderID)
+	public void UpdateOrderItem(OrderItem orderItem)
+	{
+		if (Array.Exists(DataSource.OrderItems, x => x.m_id == orderItem.m_id))
+
+			DataSource.OrderItems[Array.IndexOf(DataSource.OrderItems, orderItem)] = orderItem;
+		else
+			throw new Exception("Order Item ID doesn't exist");
+	}
+
+	public OrderItem GetOrderItemWithProdAndOrderID(int productId, int orderId)
 	{
 
-		OrderItem[] tempList = DataSource.OrderItems.TakeWhile(x => x.m_productID == productId && x.m_orderID == orderID).ToArray<OrderItem>();
+		OrderItem[] tempList = DataSource.OrderItems.TakeWhile(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
 
 		if (tempList != null)
 			return tempList.First();
@@ -62,16 +70,12 @@ public class DalOrderItem
 
 	public void SetOrderItemWithProdAndOrderID(int productId, int orderId)
 	{
-		Product tempProd;
-		Product[] productList = DataSource.Products.Where(x => x.m_id == productId).ToArray<Product>();
+		OrderItem[] tempList = DataSource.OrderItems.TakeWhile(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
 		
-		if (productList != null)
-			tempProd = productList.First();
+		if (tempList != null)
+			UpdateOrderItem(tempList.First());
 		else
-			throw new Exception("This product ID doesn't exist");
-
-		OrderItem orderItem = new OrderItem(-1, productId, orderId, tempProd.m_price, 1);   //how to determine the amount?
-		CreateOrderItem(orderItem);																									
+			throw new Exception("This product ID and order ID don't combine to create an order item");																							
 	}
 
 	public OrderItem[] GetItemsInOrder(int orderID)
@@ -87,15 +91,6 @@ public class DalOrderItem
 	public void SetItemsInOrder()
 	{
 		//he's going to tell us
-	}
-
-	public void UpdateOrderItem(OrderItem orderItem)
-	{
-		if (Array.Exists(DataSource.OrderItems, x => x.m_id == orderItem.m_id))
-
-			DataSource.OrderItems[Array.IndexOf(DataSource.OrderItems, orderItem)] = orderItem;
-		else
-			throw new Exception("Order Item ID doesn't exist");
 	}
 
 	public void DeleteOrderItem(int ID)
