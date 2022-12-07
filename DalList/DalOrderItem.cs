@@ -42,7 +42,7 @@ public class DalOrderItem
     public OrderItem ReadOrderItem(int ID)
 	{
 		if (Array.Exists(DataSource.OrderItems, x => x.m_id == ID))
-			return DataSource.OrderItems[Array.IndexOf(DataSource.OrderItems, ID)];
+			return Array.Find(DataSource.OrderItems, x => x.m_id == ID);
 
 		throw new Exception("An order item with that ID was not found!");
 	}
@@ -59,7 +59,7 @@ public class DalOrderItem
 	{
 		if (Array.Exists(DataSource.OrderItems, x => x.m_id == orderItem.m_id))
 
-			DataSource.OrderItems[Array.IndexOf(DataSource.OrderItems, orderItem)] = orderItem;
+			DataSource.OrderItems[Array.FindIndex(DataSource.OrderItems, x => x.m_id == orderItem.m_id)] = orderItem;
 		else
 			throw new Exception("Order Item ID doesn't exist");
 	}
@@ -70,9 +70,9 @@ public class DalOrderItem
     public OrderItem GetOrderItemWithProdAndOrderID(int productId, int orderId)
 	{
 
-		OrderItem[] tempList = DataSource.OrderItems.TakeWhile(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
+		OrderItem[] tempList = DataSource.OrderItems.Where(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
 
-		if (tempList != null)
+		if (tempList.Length != 0)
 			return tempList.First();
 
 		/*for (int i = 0; i < DataSource.OrderItems.Length; i++)
@@ -88,9 +88,9 @@ public class DalOrderItem
     /// </summary>
     public void SetOrderItemWithProdAndOrderID(int productId, int orderId)
 	{
-		OrderItem[] tempList = DataSource.OrderItems.TakeWhile(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
+		OrderItem[] tempList = DataSource.OrderItems.Where(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
 		
-		if (tempList != null)
+		if (tempList.Length != 0)
 			UpdateOrderItem(tempList.First());
 		else
 			throw new Exception("This product ID and order ID don't combine to create an order item");																							
@@ -101,9 +101,9 @@ public class DalOrderItem
     /// </summary>
     public OrderItem[] GetItemsInOrder(int orderID)
 	{
-		OrderItem[] itemsInOrder = DataSource.OrderItems.TakeWhile(x => x.m_orderID == orderID).ToArray<OrderItem>();
+		OrderItem[] itemsInOrder = DataSource.OrderItems.Where(x => x.m_orderID == orderID).ToArray<OrderItem>();
 		
-		if (itemsInOrder == null)
+		if (itemsInOrder.Length == 0)
 			throw new Exception("No items in that order!");		//return this instead?
 
 		return itemsInOrder;

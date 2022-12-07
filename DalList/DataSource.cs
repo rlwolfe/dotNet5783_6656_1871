@@ -93,7 +93,7 @@ static internal class DataSource
 			string last = Enums.LastName.GetName(typeof(Enums.LastName), i);
 		
 			Order order = new Order(Config.NextOrderNumber, first + " " + last, first + last + "@gmail.com",	//id, name, email
-				num.ToString() + Enums.LastName.GetName(typeof(Enums.LastName), num / 10) +						//address
+				num.ToString() + " " + Enums.LastName.GetName(typeof(Enums.LastName), num / 10) + " " +				//address
 				Enums.streetType.GetName(typeof(Enums.streetType), num / 50) , orderDate, shipDate, delivDate);	//end of address, & dates
 
 			if (i < 4) { order.m_shipDate = DateTime.MinValue; }										//60% shipping date is not yet set

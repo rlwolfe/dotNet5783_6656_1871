@@ -26,31 +26,36 @@ class DalTest
 				"Please enter your choice...");
 
 			choice = Convert.ToInt16(Console.ReadLine());
-
-			switch (choice)
+			try
 			{
-				case 0:
-					Console.WriteLine("Have a good day!\n");
-					break;
+				switch (choice)
+				{
+					case 0:
+						Console.WriteLine("Have a good day!\n");
+						break;
 
-				case 1:
-					ProductChosen();
-					break;
+					case 1:
+						ProductChosen();
+						break;
 
-				case 2:
-					OrderChosen();
-					break;
+					case 2:
+						OrderChosen();
+						break;
 
-				case 3:
-					OrderItemChosen();
-					break;
+					case 3:
+						OrderItemChosen();
+						break;
 
-				default:
-					Console.WriteLine("Please choose a number from the above list.");
-					continue;
+					default:
+						Console.WriteLine("Please choose a number from the above list.");
+						continue;
+				}
+			} catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
 			}
 
-		} while (choice != 0);
+			} while (choice != 0);
 		return;
 	}
 
@@ -408,9 +413,9 @@ class DalTest
 						"d - Update an order item\n" +
 						"e - Delete an order item\n" +
 						"f - Display all items in an order\n" +
-						"g - Set items in an order\n" +
+						//"g - Set items in an order\n" +
 						"h - Search for an item by Product & Order ID\n" +
-						"i - Set an order item based on Product & Order ID\n" + 
+						//"i - Set an order item based on Product & Order ID\n" + 
 						"x - Return to Main Menu");
 			subChoice = Console.ReadLine().First();
 			
@@ -444,19 +449,19 @@ class DalTest
 					DisplayAllItemsInOrder();
 					break;
 
-				case 'g':
+				/*case 'g':
 					Console.WriteLine("This doesn't work yet");
 					SetAllItemsInOrder();
 					//set items in an order - he'll get back to us
-					break;
+					break;*/
 
 				case 'h':
 					FindOrderItemFromProdOrdID();
 					break;
 
-				case 'i':
+				/*case 'i':
 					SetItemFromProdOrdID();
-					break;
+					break;*/
 
 				default:
 					Console.WriteLine("Please choose a letter from the above list.");
@@ -564,6 +569,7 @@ class DalTest
 		if (int.TryParse(Console.ReadLine(), out int orderID))
 			foreach (OrderItem orderItem in dalOrderItem.GetItemsInOrder(orderID))
 				Console.WriteLine(orderItem);
+
 	}
 
     ///<summary>

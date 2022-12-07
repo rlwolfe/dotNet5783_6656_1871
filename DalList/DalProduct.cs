@@ -18,15 +18,8 @@ public class DalProduct
 			product.m_id = DataSource.Config.NextProductNumber;	//add 
 
 		else if (Array.Exists(DataSource.Products, x => x.m_id == product.m_id))
-		{
-
-			if (DataSource.Products[Array.IndexOf(DataSource.Products, product.m_id)].m_name == product.m_name)
 				throw new Exception("This product already exists");
 
-			else
-				throw new Exception("This ID was already taken by a different product");
-
-		}
 		int i = 0;
 		while (i < DataSource.Products.Length)
 		{
@@ -48,9 +41,9 @@ public class DalProduct
     /// Read function
     /// </summary>
     public Product ReadProduct(int ID)
-	{			
-		if (Array.Exists(DataSource.Products, x => x.m_id == ID))
-			return DataSource.Products[Array.IndexOf(DataSource.Products, ID)];
+	{
+		if (Array.Find(DataSource.Products, x => x.m_id == ID).m_id == ID)
+			return Array.Find(DataSource.Products, x => x.m_id == ID);
 
 		throw new Exception("A product with that ID was not found!");
 	}
@@ -67,8 +60,8 @@ public class DalProduct
     public void UpdateProduct(Product product)
 	{
 		if (Array.Exists(DataSource.Products, x => x.m_id == product.m_id))
+			DataSource.Products[Array.FindIndex(DataSource.Products, x => x.m_id == product.m_id)] = product;
 
-			DataSource.Products[Array.IndexOf(DataSource.Products, product)] = product;
 		else
 			throw new Exception("Product ID doesn't exist");
 	}

@@ -41,7 +41,7 @@ public class DalOrder
     public Order ReadOrder(int ID)
 	{
 		if (Array.Exists(DataSource.Orders, x => x.m_id == ID))
-			return DataSource.Orders[Array.IndexOf(DataSource.Orders, ID)];
+			return Array.Find(DataSource.Orders, x => x.m_id == ID);
 
 		throw new Exception("An order with that ID was not found!");
 	}
@@ -58,7 +58,7 @@ public class DalOrder
     public void UpdateOrder(Order order)
 	{
 		if (Array.Exists(DataSource.Orders, x => x.m_id == order.m_id))
-			DataSource.Orders[Array.IndexOf(DataSource.Orders, order)] = order;
+			DataSource.Orders[Array.FindIndex(DataSource.Orders, x => x.m_id == order.m_id)] = order;
 		else
 			throw new Exception("Order ID doesn't exist");
 	}
