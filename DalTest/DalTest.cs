@@ -482,7 +482,7 @@ class DalTest
 
 		double price = dalProduct.ReadProduct(prodID).m_price;
 
-		Console.WriteLine("How many of the product are in the order?");		//no yet checking logic, will be done in BL
+		Console.WriteLine("How many of the product are in the order?");
 		int amount = Convert.ToInt32(Console.ReadLine());
 
 		OrderItem orderItem = new OrderItem(-1, prodID, ordID, price, amount);
