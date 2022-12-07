@@ -3,13 +3,19 @@ using DO;
 using Dal;
 using System.Security.Cryptography.X509Certificates;
 
+///<summary>
+/// Tests for the functionality of all data types, with their CRUD functions
+/// </summary>
 class DalTest
 {
 	static private DalOrder dalOrder = new DalOrder();
 	static private DalProduct dalProduct = new DalProduct();
 	static private DalOrderItem dalOrderItem = new DalOrderItem();
 
-	static public void Main()
+    ///<summary>
+    /// Main Menu
+    /// </summary>
+    static public void Main()
 	{
 		int choice = -1;
 		do {
@@ -75,7 +81,10 @@ class DalTest
 		Console.WriteLine("This " + type + " has been deleted");
 	}
 
-	static void ProductChosen()
+    ///<summary>
+    /// Product SubMenu
+    /// </summary>
+    static void ProductChosen()
 	{
 		char subChoice = '-';
 		do
@@ -124,7 +133,10 @@ class DalTest
 		} while (subChoice != 'x');
 
 	}
-	static void ProductCreate()
+    ///<summary>
+    /// User Creates new Product
+    /// </summary>
+    static void ProductCreate()
 	{
 		Console.WriteLine("What category does the product fall under?");
 		//Console.WriteLine("What # category does the product fall under?");
@@ -148,17 +160,10 @@ class DalTest
 		Product product = new Product(-1, name, category, price, inStock);
 		Console.WriteLine("This is the ID of the product just created: " + dalProduct.CreateProduct(product));
 	}
-
-	static void DisplayAllProducts()
-	{
-		foreach (Product product in dalProduct.ReadAllProducts())
-		{
-			if (product.m_id != 0)
-				Console.WriteLine(product);
-		}
-	}
-
-	static void ProductUpdate()
+    ///<summary>
+    /// User Updates a Product
+    /// </summary>
+    static void ProductUpdate()
 	{
 		Console.WriteLine("What is the ID of the product you want to update?");
 		int ID = Convert.ToInt32(Console.ReadLine());
@@ -221,8 +226,19 @@ class DalTest
 		dalProduct.UpdateProduct(product);
 		Console.WriteLine("This product has been updated");
 	}
+    static void DisplayAllProducts()
+    {
+        foreach (Product product in dalProduct.ReadAllProducts())
+        {
+            if (product.m_id != 0)
+                Console.WriteLine(product);
+        }
+    }
 
-	static void OrderChosen()
+    ///<summary>
+    /// Order SubMenu
+    /// </summary>
+    static void OrderChosen()
 	{
 		char subChoice = '-';
 		do
@@ -269,8 +285,10 @@ class DalTest
 			}
 		} while (subChoice != 'x');
 	}
-
-	private static void OrderCreate()
+    ///<summary>
+    /// User Creates new Order
+    /// </summary>
+    private static void OrderCreate()
 	{
 		Console.WriteLine("What is the customer's name?");
 		string name = Console.ReadLine();
@@ -288,8 +306,10 @@ class DalTest
 		Order order = new Order(-1, name, email, address, DateTime.Today,DateTime.Today,DateTime.Now);
 		Console.WriteLine("This is the ID of the order just created: " + dalOrder.CreateOrder(order));
 	}
-
-	private static void OrderUpdate()
+    ///<summary>
+    /// User Updates an Order
+    /// </summary>
+    private static void OrderUpdate()
 	{
 		Console.WriteLine("What is the ID of the order you want to update?");
 		int ID = Convert.ToInt32(Console.ReadLine());
@@ -363,7 +383,6 @@ class DalTest
 		dalOrder.UpdateOrder(order);
 		Console.WriteLine("This order has been updated");
 	}
-
 	private static void DisplayAllOrders()
 	{
 		foreach (Order order in dalOrder.ReadAllOrders())
@@ -373,7 +392,10 @@ class DalTest
 		}
 	}
 
-	static void OrderItemChosen()
+    ///<summary>
+    /// OrderItem SubMenu
+    /// </summary>
+    static void OrderItemChosen()
 	{
 		char subChoice = '-';
 		do
@@ -442,8 +464,10 @@ class DalTest
 			}
 		} while (subChoice != 'x');
 	}
-
-	private static void OrderItemCreate()
+    ///<summary>
+    /// User Creates new OrderItem
+    /// </summary>
+    private static void OrderItemCreate()
 	{
 		Console.WriteLine("What is the product's ID?");
 		int prodID = Convert.ToInt32(Console.ReadLine());
@@ -459,17 +483,10 @@ class DalTest
 		OrderItem orderItem = new OrderItem(-1, prodID, ordID, price, amount);
 		Console.WriteLine("This is the ID of the orderItem just created: " + dalOrderItem.CreateOrderItem(orderItem));
 	}
-
-	private static void DisplayAllOrderItems()
-	{
-		foreach (OrderItem orderItem in dalOrderItem.ReadAllOrderItems())
-		{
-			if (orderItem.m_id != 0)
-				Console.WriteLine(orderItem);
-		}
-	}
-
-	private static void OrderItemUpdate()
+    ///<summary>
+    /// User Updates an OrderItem
+    /// </summary>
+    private static void OrderItemUpdate()
 	{
 		Console.WriteLine("What is the ID of the order item you want to update?");
 		int temp, ID = Convert.ToInt32(Console.ReadLine());
@@ -528,8 +545,19 @@ class DalTest
 		dalOrderItem.UpdateOrderItem(orderItem);
 		Console.WriteLine("This order item has been updated");
 	}
+    private static void DisplayAllOrderItems()
+    {
+        foreach (OrderItem orderItem in dalOrderItem.ReadAllOrderItems())
+        {
+            if (orderItem.m_id != 0)
+                Console.WriteLine(orderItem);
+        }
+    }
 
-	private static void DisplayAllItemsInOrder()
+    ///<summary>
+    /// Displays all OrderItems in a given Order
+    /// </summary>
+    private static void DisplayAllItemsInOrder()
 	{
 		Console.WriteLine("What is the ID of the order?");
 
@@ -538,13 +566,20 @@ class DalTest
 				Console.WriteLine(orderItem);
 	}
 
-	private static void SetAllItemsInOrder()
+    ///<summary>
+    /// Insufficient data given for use case, return variable or parameters of function
+    ///- on hold while professor gets more info
+    /// </summary>
+    private static void SetAllItemsInOrder()
 	{
 
 		dalOrderItem.SetItemsInOrder(); //he'll get back to us
 	}
 
-	private static void FindOrderItemFromProdOrdID()
+    ///<summary>
+    /// Read function for OrderItems when given Product ID and OrderID (by user)
+    /// </summary>
+    private static void FindOrderItemFromProdOrdID()
 	{
 		Console.WriteLine("Please enter the product ID followed by the order ID on the next line");
 
@@ -552,7 +587,10 @@ class DalTest
 			Console.WriteLine(dalOrderItem.GetOrderItemWithProdAndOrderID(productID, orderID));
 	}
 
-	private static void SetItemFromProdOrdID()
+    ///<summary>
+    /// Update function for OrderItems when given Product ID and OrderID (by user)
+    /// </summary>
+    private static void SetItemFromProdOrdID()
 	{
 		Console.WriteLine("Please enter the product ID followed by the order ID on the next line");
 

@@ -7,13 +7,15 @@ static internal class DataSource
 {
 	static DataSource()
 	{
-		// where do constructors go?
 		s_Initialize();
 	}
 
 	readonly static Random _randomNum = new Random(1);
-	
-	static internal class Config
+
+    ///<summary>
+    /// Handles the autoincrementing ID's for all data types (product, order, orderItem)
+    /// </summary>
+    static internal class Config
 	{
 		internal const int s_startingProductNumber = 100000;
 		private static int s_currentProductNumber = s_startingProductNumber;
@@ -32,14 +34,20 @@ static internal class DataSource
 	static internal Order[] Orders = new Order[100];
 	static internal OrderItem[] OrderItems = new OrderItem[200];
 
-	static private void s_Initialize()
+    ///<summary>
+    /// Creates default initial entries for all arrays of product, order orderItem
+    /// </summary>
+    static private void s_Initialize()
 	{
 		ProductFiller();
 		OrderFiller();
 		OrderItemFiller();
 	}
 
-	static private void ProductFiller() {
+    ///<summary>
+    /// Creates 10 inital products for the database, randomly comprised from available options
+    /// </summary>
+    static private void ProductFiller() {
 
 		List<int> randNums = new List<int>(10);			//to track which products were already added
 		int item, i = 0;								//item to add to list of products, i = index
@@ -66,8 +74,11 @@ static internal class DataSource
 			i++;
 		} while (i < 10);				//initializing 10 products in array
 	}
-	
-	static private void OrderFiller() {
+
+    ///<summary>
+    /// Creates 20 inital orders for the database, randomly comprised from available options
+    /// </summary>
+    static private void OrderFiller() {
 
 		int num;
 		
@@ -92,7 +103,10 @@ static internal class DataSource
 		}
 	}
 
-	static private void OrderItemFiller() {
+    ///<summary>
+    /// Creates 40 inital orderItems for the database, randomly comprised from available options
+    /// </summary>
+    static private void OrderItemFiller() {
 
 		List<int> usedOrders = new List<int>(40);           //to track which orders already have 4 orderItems
 		bool confirmed;

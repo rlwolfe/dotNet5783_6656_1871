@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace DO;
 
 /// <summary>
-/// Structure for OrderItem
+/// Struct for OrderItem
 /// </summary>
 public struct OrderItem
 {

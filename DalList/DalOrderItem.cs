@@ -4,9 +4,15 @@ using System.Runtime.CompilerServices;
 
 namespace Dal;
 
+/// <summary>
+/// Class for managing CRUD for OrderItem
+/// </summary>
 public class DalOrderItem
 {
-	public int CreateOrderItem(OrderItem orderItem)
+    ///<summary>
+    /// Create function
+    /// </summary>
+    public int CreateOrderItem(OrderItem orderItem)
 	{
 
 		if (orderItem.m_id == -1)                                 //ID is null
@@ -30,7 +36,10 @@ public class DalOrderItem
 		return orderItem.m_id;
 	}
 
-	public OrderItem ReadOrderItem(int ID)
+    ///<summary>
+    /// Read function
+    /// </summary>
+    public OrderItem ReadOrderItem(int ID)
 	{
 		if (Array.Exists(DataSource.OrderItems, x => x.m_id == ID))
 			return DataSource.OrderItems[Array.IndexOf(DataSource.OrderItems, ID)];
@@ -43,7 +52,10 @@ public class DalOrderItem
 		return DataSource.OrderItems;
 	}
 
-	public void UpdateOrderItem(OrderItem orderItem)
+    ///<summary>
+    /// Update function
+    /// </summary>
+    public void UpdateOrderItem(OrderItem orderItem)
 	{
 		if (Array.Exists(DataSource.OrderItems, x => x.m_id == orderItem.m_id))
 
@@ -52,7 +64,10 @@ public class DalOrderItem
 			throw new Exception("Order Item ID doesn't exist");
 	}
 
-	public OrderItem GetOrderItemWithProdAndOrderID(int productId, int orderId)
+    ///<summary>
+    /// Read function for when given Product ID and OrderID
+    /// </summary>
+    public OrderItem GetOrderItemWithProdAndOrderID(int productId, int orderId)
 	{
 
 		OrderItem[] tempList = DataSource.OrderItems.TakeWhile(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
@@ -68,7 +83,10 @@ public class DalOrderItem
 		throw new Exception("This order item doesn't exist");
 	}
 
-	public void SetOrderItemWithProdAndOrderID(int productId, int orderId)
+    ///<summary>
+    /// Update function for when given Product ID and OrderID
+    /// </summary>
+    public void SetOrderItemWithProdAndOrderID(int productId, int orderId)
 	{
 		OrderItem[] tempList = DataSource.OrderItems.TakeWhile(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
 		
@@ -78,7 +96,10 @@ public class DalOrderItem
 			throw new Exception("This product ID and order ID don't combine to create an order item");																							
 	}
 
-	public OrderItem[] GetItemsInOrder(int orderID)
+    ///<summary>
+    /// Read function for all order items in single order
+    /// </summary>
+    public OrderItem[] GetItemsInOrder(int orderID)
 	{
 		OrderItem[] itemsInOrder = DataSource.OrderItems.TakeWhile(x => x.m_orderID == orderID).ToArray<OrderItem>();
 		
@@ -88,12 +109,19 @@ public class DalOrderItem
 		return itemsInOrder;
 	}
 
-	public void SetItemsInOrder()
+    ///<summary>
+    /// Insufficient data given for use case, return variable or parameters of function
+	///- on hold while professor gets more info
+    /// </summary>
+    public void SetItemsInOrder()
 	{
 		//he's going to tell us
 	}
 
-	public void DeleteOrderItem(int ID)
+    ///<summary>
+    /// Delete function
+    /// </summary>
+    public void DeleteOrderItem(int ID)
 	{
 		if (Array.Exists(DataSource.OrderItems, x => x.m_id == ID))
 			DataSource.OrderItems = DataSource.OrderItems.Where(x => x.m_id != ID).ToArray<OrderItem>();

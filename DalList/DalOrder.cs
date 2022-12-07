@@ -3,9 +3,15 @@ using System.Linq;
 
 namespace Dal;
 
+///<summary>
+///class for managing CRUD for Order
+///</summary>
 public class DalOrder
 {
-	public int CreateOrder(Order order)
+    ///<summary>
+    /// Create function
+    /// </summary>
+    public int CreateOrder(Order order)
 	{
 
 		if (order.m_id == -1)                                 //ID is null
@@ -29,7 +35,10 @@ public class DalOrder
 		return order.m_id;
 	}
 
-	public Order ReadOrder(int ID)
+    ///<summary>
+    /// Read function
+    /// </summary>
+    public Order ReadOrder(int ID)
 	{
 		if (Array.Exists(DataSource.Orders, x => x.m_id == ID))
 			return DataSource.Orders[Array.IndexOf(DataSource.Orders, ID)];
@@ -43,7 +52,10 @@ public class DalOrder
 		return DataSource.Orders;
 	}
 
-	public void UpdateOrder(Order order)
+    ///<summary>
+    /// Update function
+    /// </summary>
+    public void UpdateOrder(Order order)
 	{
 		if (Array.Exists(DataSource.Orders, x => x.m_id == order.m_id))
 			DataSource.Orders[Array.IndexOf(DataSource.Orders, order)] = order;
@@ -51,7 +63,10 @@ public class DalOrder
 			throw new Exception("Order ID doesn't exist");
 	}
 
-	public void DeleteOrder(int ID)
+    ///<summary>
+    /// Delete function
+    /// </summary>
+    public void DeleteOrder(int ID)
 	{
 		if (Array.Exists(DataSource.Orders, x => x.m_id == ID))
 			DataSource.Orders = DataSource.Orders.Where(x => x.m_id != ID).ToArray<Order>();

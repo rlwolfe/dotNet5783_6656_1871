@@ -3,9 +3,15 @@ using DO;
 
 namespace Dal;
 
+/// <summary>
+/// Class for managing CRUD for Product
+/// </summary>
 public class DalProduct
 {
-	public int CreateProduct(Product product)
+    ///<summary>
+    /// Create function
+    /// </summary>
+    public int CreateProduct(Product product)
 	{
 
 		if (product.m_id == -1)                                 //ID is null
@@ -38,7 +44,10 @@ public class DalProduct
 
 	}
 
-	public Product ReadProduct(int ID)
+    ///<summary>
+    /// Read function
+    /// </summary>
+    public Product ReadProduct(int ID)
 	{			
 		if (Array.Exists(DataSource.Products, x => x.m_id == ID))
 			return DataSource.Products[Array.IndexOf(DataSource.Products, ID)];
@@ -52,7 +61,10 @@ public class DalProduct
 		return DataSource.Products;
 	}
 
-	public void UpdateProduct(Product product)
+    ///<summary>
+    /// Update function
+    /// </summary>
+    public void UpdateProduct(Product product)
 	{
 		if (Array.Exists(DataSource.Products, x => x.m_id == product.m_id))
 
@@ -61,7 +73,10 @@ public class DalProduct
 			throw new Exception("Product ID doesn't exist");
 	}
 
-	public void DeleteProduct(int ID)
+    ///<summary>
+    /// Delete function
+    /// </summary>
+    public void DeleteProduct(int ID)
 	{
 		if (Array.Exists(DataSource.Products, x => x.m_id == ID))
 			DataSource.Products = DataSource.Products.Where(x => x.m_id != ID).ToArray<Product>();

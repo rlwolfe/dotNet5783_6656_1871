@@ -5,7 +5,7 @@ using static DO.Enums;
 namespace DO;
 
 /// <summary>
-/// Structure for Product
+/// Struct for Product
 /// </summary>
 public struct Product
 {
