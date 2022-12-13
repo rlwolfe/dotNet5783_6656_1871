@@ -1,53 +1,42 @@
-﻿using DO;
-using System.Linq;
-using System.Runtime.CompilerServices;
+﻿using DalApi;
+using DO;
 
 namespace Dal;
 
 /// <summary>
 /// Class for managing CRUD for OrderItem
 /// </summary>
-public class DalOrderItem
+internal class DalOrderItem : IOrderItem
 {
     ///<summary>
     /// Create function
     /// </summary>
-    public int CreateOrderItem(OrderItem orderItem)
+    public int Create(OrderItem orderItem)
 	{
+		if (DataSource.OrderItems.Exists(x => x.m_id == orderItem.m_id))
+			throw new idAlreadyExistsException("Order Item");
 
-		if (orderItem.m_id == -1)                                 //ID is null
-			orderItem.m_id = DataSource.Config.NextOrderItemNumber; //add 
+		else if (DataSource.OrderItems.Count == DataSource.OrderItems.Capacity)
+			Console.WriteLine("The order items list is already full");
 
-		else if (Array.Exists(DataSource.OrderItems, x => x.m_id == orderItem.m_id))
-			throw new Exception("This order item already exists");
-		
-		int i = 0;
-		while (i < DataSource.OrderItems.Length)
-		{
-			if (DataSource.OrderItems[i].m_id == 0)
-			{
-				DataSource.OrderItems[i] = orderItem;
-				break;
-			}
-			else if (i == DataSource.OrderItems.Length - 1)
-				Console.WriteLine("The array of order items is already full");
-			i++;
-		}
-		return orderItem.m_id;
+		else
+			DataSource.OrderItems.Add(orderItem);
+
+		return orderItem.m_id;;
 	}
 
     ///<summary>
     /// Read function
     /// </summary>
-    public OrderItem ReadOrderItem(int ID)
+    public OrderItem Read(int ID)
 	{
-		if (Array.Exists(DataSource.OrderItems, x => x.m_id == ID))
-			return Array.Find(DataSource.OrderItems, x => x.m_id == ID);
+		if (DataSource.OrderItems.Exists(x => x.m_id == ID))
+			return DataSource.OrderItems.Find(x => x.m_id == ID);
 
-		throw new Exception("An order item with that ID was not found!");
+		throw new idNotFoundException("Order Item");
 	}
 
-	public OrderItem[] ReadAllOrderItems()
+	public IEnumerable<OrderItem> ReadAll()
 	{
 		return DataSource.OrderItems;
 	}
@@ -55,13 +44,12 @@ public class DalOrderItem
     ///<summary>
     /// Update function
     /// </summary>
-    public void UpdateOrderItem(OrderItem orderItem)
+    public void Update(OrderItem orderItem)
 	{
-		if (Array.Exists(DataSource.OrderItems, x => x.m_id == orderItem.m_id))
-
-			DataSource.OrderItems[Array.FindIndex(DataSource.OrderItems, x => x.m_id == orderItem.m_id)] = orderItem;
+		if (DataSource.OrderItems.Exists(x => x.m_id == orderItem.m_id))
+			DataSource.OrderItems.Insert(DataSource.Orders.FindIndex(x => x.m_id == orderItem.m_id), orderItem);
 		else
-			throw new Exception("Order Item ID doesn't exist");
+			throw new idNotFoundException("Order Item");
 	}
 
     ///<summary>
@@ -80,31 +68,31 @@ public class DalOrderItem
 			if (DataSource.OrderItems[i].m_productID == productId && DataSource.OrderItems[i].m_orderID == orderID)
 				return DataSource.OrderItems[i];
 		}*/
-		throw new Exception("This order item doesn't exist");
+		throw new EntityNotFoundException("Order Item");
 	}
 
     ///<summary>
     /// Update function for when given Product ID and OrderID
     /// </summary>
     public void SetOrderItemWithProdAndOrderID(int productId, int orderId)
-	{
+	{//how to determine what to change
 		OrderItem[] tempList = DataSource.OrderItems.Where(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
 		
 		if (tempList.Length != 0)
-			UpdateOrderItem(tempList.First());
+			Update(tempList.First());
 		else
-			throw new Exception("This product ID and order ID don't combine to create an order item");																							
+			throw new EntityNotFoundException("Order Item");																							
 	}
 
     ///<summary>
     /// Read function for all order items in single order
     /// </summary>
-    public OrderItem[] GetItemsInOrder(int orderID)
+    public IEnumerable<OrderItem> GetItemsInOrder(int orderID)
 	{
 		OrderItem[] itemsInOrder = DataSource.OrderItems.Where(x => x.m_orderID == orderID).ToArray<OrderItem>();
 		
 		if (itemsInOrder.Length == 0)
-			throw new Exception("No items in that order!");		//return this instead?
+			throw new idNotFoundException("Order");
 
 		return itemsInOrder;
 	}
@@ -121,12 +109,12 @@ public class DalOrderItem
     ///<summary>
     /// Delete function
     /// </summary>
-    public void DeleteOrderItem(int ID)
+    public void Delete(int ID)
 	{
-		if (Array.Exists(DataSource.OrderItems, x => x.m_id == ID))
-			DataSource.OrderItems = DataSource.OrderItems.Where(x => x.m_id != ID).ToArray<OrderItem>();
+		if (DataSource.OrderItems.Exists(x => x.m_id == ID))
+			DataSource.OrderItems.RemoveAt(DataSource.OrderItems.FindIndex(x => x.m_id == ID));
 
 		else
-			throw new Exception("A order item with that ID was not found!");
+			throw new idNotFoundException("Order Item");
 	}
 }

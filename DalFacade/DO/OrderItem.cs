@@ -8,9 +8,10 @@ namespace DO;
 /// </summary>
 public struct OrderItem
 {
-	public OrderItem (int ID, int productID, int orderID, double Price, int amount)
+	static int idCounter = 1000;
+	public OrderItem(int productID, int orderID, double Price, int amount)
 	{
-		m_id = ID;
+		m_id = idCounter++;
 		m_productID = productID;
 		m_orderID = orderID;
 		m_price = Price;

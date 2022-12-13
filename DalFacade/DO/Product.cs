@@ -9,9 +9,10 @@ namespace DO;
 /// </summary>
 public struct Product
 {
-	public Product(int ID, string name, string category, double price, int inStock)
+	static int idCounter = 100000;
+	public Product(string name, string category, double price, int inStock)
 	{
-		m_id = ID;
+		m_id = idCounter++;
 		m_name = name;
 		m_category = category;
 		m_price = price;

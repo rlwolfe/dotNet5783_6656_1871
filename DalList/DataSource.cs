@@ -13,26 +13,26 @@ static internal class DataSource
 	readonly static Random _randomNum = new Random(1);
 
     ///<summary>
-    /// Handles the autoincrementing ID's for all data types (product, order, orderItem)
+    /// Handles the ID's for all data types (product, order, orderItem)
     /// </summary>
-    static internal class Config
+    /*static internal class Config
 	{
 		internal const int s_startingProductNumber = 100000;
 		private static int s_currentProductNumber = s_startingProductNumber;
 		internal static int NextProductNumber { get => s_currentProductNumber++; }
 
-		internal const int s_startingOrderNumber = 0;
+		internal const int s_startingOrderNumber = 1;
 		private static int s_currentOrderNumber = s_startingOrderNumber;
 		internal static int NextOrderNumber { get => s_currentOrderNumber++; }
 
-		internal const int s_startingOrderItemNumber = 0;
+		internal const int s_startingOrderItemNumber = 1;
 		private static int s_currentOrderItemNumber = s_startingOrderItemNumber;
 		internal static int NextOrderItemNumber { get => s_currentOrderItemNumber++; }
-	}
+	}*/
 
-	static internal Product[] Products = new Product[50];
-	static internal Order[] Orders = new Order[100];
-	static internal OrderItem[] OrderItems = new OrderItem[200];
+	static internal List<Product> Products = new List<Product>(50);
+	static internal List<Order> Orders = new List<Order>(100);
+	static internal List<OrderItem> OrderItems = new List<OrderItem>(200);
 
     ///<summary>
     /// Creates default initial entries for all arrays of product, order orderItem
@@ -50,7 +50,7 @@ static internal class DataSource
     static private void ProductFiller() {
 
 		List<int> randNums = new List<int>(10);			//to track which products were already added
-		int item, i = 0;								//item to add to list of products, i = index
+		int item, i = 0;								//item to add to list of products
 		double price;
 
 		do
@@ -61,18 +61,18 @@ static internal class DataSource
 			randNums.Add(item);											//add product to list for future checking
 			price = Math.Round((_randomNum.Next(1,21) + _randomNum.NextDouble()), 2);	//price is random int + random decimal = creates a double
 
-			Product product = new Product(Config.NextProductNumber,		 //product ID
-				Enums.ProductName.GetName(typeof(Enums.ProductName), item),			 //Randomly selects name from enum list of products
-				Enums.Category.GetName(typeof(Enums.Category), item / 5),//Finds category in enum's list based on its location
-				price, _randomNum.Next(20));							//price from above & how many currently in stock
+			Product product = new Product(Enums.ProductName.GetName(typeof(Enums.ProductName), item),        //product ID
+					 Enums.Category.GetName(typeof(Enums.Category), item / 5),          //Randomly selects name from enum list of products
+												price,//Finds category in enum's list based on its location
+				_randomNum.Next(20));							//price from above & how many currently in stock
 
 			if (i < 2)
 				product.m_inStock = 0;              //starting with 5% of products out of stock
 
-			Products[i] = product;				//adding product to array of all products
+			Products.Add(product);				//adding product to list of all products
 
 			i++;
-		} while (i < 10);				//initializing 10 products in array
+		} while (i < 10);				//initializing 10 products in list
 	}
 
     ///<summary>
@@ -92,14 +92,14 @@ static internal class DataSource
 			string first = Enums.FirstName.GetName(typeof(Enums.FirstName), i);				//getting names from enum
 			string last = Enums.LastName.GetName(typeof(Enums.LastName), i);
 		
-			Order order = new Order(Config.NextOrderNumber, first + " " + last, first + last + "@gmail.com",	//id, name, email
-				num.ToString() + " " + Enums.LastName.GetName(typeof(Enums.LastName), num / 10) + " " +				//address
-				Enums.streetType.GetName(typeof(Enums.streetType), num / 50) , orderDate, shipDate, delivDate);	//end of address, & dates
+			Order order = new Order(first + " " + last, first + last + "@gmail.com", num.ToString() + " " + Enums.LastName.GetName(typeof(Enums.LastName), num / 10) + " " +                //address
+				Enums.streetType.GetName(typeof(Enums.streetType), num / 50),   //id, name, email
+				orderDate, shipDate, delivDate);	//end of address, & dates
 
 			if (i < 4) { order.m_shipDate = DateTime.MinValue; }										//60% shipping date is not yet set
 			if (i < 8) { order.m_deliveryDate = DateTime.MinValue; }									//20% delivery date is not yet set
 
-			Orders[i] = order;
+			Orders.Add(order);
 		}
 	}
 
@@ -123,10 +123,10 @@ static internal class DataSource
 					continue;
 
 				usedOrders.Add(orderToAdd.m_id);							//adds to list for future checks
-				OrderItem orderItem = new OrderItem(Config.NextOrderItemNumber,productToAdd.m_id,
-					orderToAdd.m_id, productToAdd.m_price, _randomNum.Next(1, 5));      //randomly chooses amount of product in order
+				OrderItem orderItem = new OrderItem(productToAdd.m_id, orderToAdd.m_id,
+					productToAdd.m_price, _randomNum.Next(1, 5));      //randomly chooses amount of product in order
 
-				OrderItems[i] = orderItem;							//adds orderItem to array
+				OrderItems.Add(orderItem);							//adds orderItem to array
 				confirmed = true;										//ends loop
 
 			} while (!confirmed);

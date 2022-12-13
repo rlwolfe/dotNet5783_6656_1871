@@ -7,10 +7,11 @@ namespace DO;
 /// </summary>
 public struct Order
 {
-	public Order(int ID, string customerName, string customerEmail, string customerAddress,
-		DateTime orderDate, DateTime shipDate, DateTime deliveryDate)
+	static int idCounter = 1;
+	public Order(string customerName, string customerEmail, string customerAddress, DateTime orderDate,
+		DateTime shipDate, DateTime deliveryDate)
 	{
-		m_id = ID;
+		m_id = idCounter++;
 		m_customerName = customerName;
 		m_customerEmail = customerEmail;
 		m_customerAddress = customerAddress;

@@ -1,52 +1,42 @@
-﻿using DO;
-using System.Linq;
+﻿using DalApi;
+using DO;
 
 namespace Dal;
 
 ///<summary>
 ///class for managing CRUD for Order
 ///</summary>
-public class DalOrder
+internal class DalOrder : IOrder
 {
     ///<summary>
     /// Create function
     /// </summary>
-    public int CreateOrder(Order order)
+    public int Create(Order order)
 	{
+		if (DataSource.Orders.Exists(x => x.m_id == order.m_id))
+			throw new idAlreadyExistsException("Order");
 
-		if (order.m_id == -1)                                 //ID is null
-			order.m_id = DataSource.Config.NextOrderNumber; //add 
+		else if (DataSource.Orders.Count == DataSource.Orders.Capacity)
+			Console.WriteLine("The orders list is already full");
 
-		else if (Array.Exists(DataSource.Orders, x => x.m_id == order.m_id))
-			throw new Exception("This order already exists");
+		else
+			DataSource.Orders.Add(order);
 
-		int i = 0;
-		while (i < DataSource.Orders.Length)
-		{
-			if (DataSource.Orders[i].m_id == 0)
-			{
-				DataSource.Orders[i] = order;
-				break;
-			}
-			else if (i == DataSource.Orders.Length - 1)
-				Console.WriteLine("The array of orders is already full");
-			i++;
-		}
 		return order.m_id;
 	}
 
     ///<summary>
     /// Read function
     /// </summary>
-    public Order ReadOrder(int ID)
+    public Order Read(int ID)
 	{
-		if (Array.Exists(DataSource.Orders, x => x.m_id == ID))
-			return Array.Find(DataSource.Orders, x => x.m_id == ID);
+		if (DataSource.Orders.Exists(x => x.m_id == ID))
+			return DataSource.Orders.Find(x => x.m_id == ID);
 
-		throw new Exception("An order with that ID was not found!");
+		throw new idNotFoundException("Order");
 	}
 
-	public Order[] ReadAllOrders()
+	public IEnumerable<Order> ReadAll()
 	{
 		//maybe need to add new array and return that instead???
 		return DataSource.Orders;
@@ -55,23 +45,23 @@ public class DalOrder
     ///<summary>
     /// Update function
     /// </summary>
-    public void UpdateOrder(Order order)
+    public void Update(Order order)
 	{
-		if (Array.Exists(DataSource.Orders, x => x.m_id == order.m_id))
-			DataSource.Orders[Array.FindIndex(DataSource.Orders, x => x.m_id == order.m_id)] = order;
+		if (DataSource.Orders.Exists(x => x.m_id == order.m_id))
+			DataSource.Orders.Insert(DataSource.Orders.FindIndex(x => x.m_id == order.m_id), order);
 		else
-			throw new Exception("Order ID doesn't exist");
+			throw new idNotFoundException("Order");
 	}
 
     ///<summary>
     /// Delete function
     /// </summary>
-    public void DeleteOrder(int ID)
+    public void Delete(int ID)
 	{
-		if (Array.Exists(DataSource.Orders, x => x.m_id == ID))
-			DataSource.Orders = DataSource.Orders.Where(x => x.m_id != ID).ToArray<Order>();
+		if (DataSource.Orders.Exists(x => x.m_id == ID))
+			DataSource.Orders.RemoveAt(DataSource.Orders.FindIndex(x => x.m_id == ID));
 
 		else
-			throw new Exception("A order with that ID was not found!");
+			throw new idNotFoundException("Order");
 	}
 }

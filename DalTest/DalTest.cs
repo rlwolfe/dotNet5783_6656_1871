@@ -2,22 +2,21 @@
 using DO;
 using Dal;
 using System.Security.Cryptography.X509Certificates;
+using DalApi;
 
 ///<summary>
 /// Tests for the functionality of all data types, with their CRUD functions
 /// </summary>
 class DalTest
 {
-	static private DalOrder dalOrder = new DalOrder();
-	static private DalProduct dalProduct = new DalProduct();
-	static private DalOrderItem dalOrderItem = new DalOrderItem();
+	static IDal dalList = new DalList();
 
     ///<summary>
     /// Main Menu
     /// </summary>
     static public void Main()
 	{
-		int choice = -1;
+		int choice;
 		do {
 			Console.WriteLine("0 - Exit\n" +
 				"1 - Go to Product Menu\n" +
@@ -65,11 +64,11 @@ class DalTest
 		int ID = Convert.ToInt32(Console.ReadLine());
 
 		if (type == "Product")
-			Console.WriteLine(dalProduct.ReadProduct(ID).ToString());
+			Console.WriteLine(dalList.Product.Read(ID).ToString());
 		else if (type == "Order")
-			Console.WriteLine(dalOrder.ReadOrder(ID).ToString());
+			Console.WriteLine(dalList.Order.Read(ID).ToString());
 		else
-			Console.WriteLine(dalOrderItem.ReadOrderItem(ID).ToString());
+			Console.WriteLine(dalList.OrderItem.Read(ID).ToString());
 	}
 	static void Delete(string type)
 	{
@@ -77,11 +76,11 @@ class DalTest
 		int ID = Convert.ToInt32(Console.ReadLine());
 
 		if (type == "Product")
-			dalProduct.DeleteProduct(ID);
+			dalList.Product.Delete(ID);
 		else if (type == "Order")
-			dalOrder.DeleteOrder(ID);
+			dalList.Order.Delete(ID);
 		else
-			dalOrderItem.DeleteOrderItem(ID);
+			dalList.OrderItem.Delete(ID);
 
 		Console.WriteLine("This " + type + " has been deleted");
 	}
@@ -162,8 +161,8 @@ class DalTest
 		Console.WriteLine("How many will be added to the inventory?");
 		int inStock = Convert.ToInt16(Console.ReadLine());
 
-		Product product = new Product(-1, name, category, price, inStock);
-		Console.WriteLine("This is the ID of the product just created: " + dalProduct.CreateProduct(product));
+		Product product = new Product(name, category, price, inStock);
+		Console.WriteLine("This is the ID of the product just created: " + dalList.Product.Create(product));
 	}
     ///<summary>
     /// User Updates a Product
@@ -173,7 +172,7 @@ class DalTest
 		Console.WriteLine("What is the ID of the product you want to update?");
 		int ID = Convert.ToInt32(Console.ReadLine());
 
-		Product product = dalProduct.ReadProduct(ID);
+		Product product = dalList.Product.Read(ID);
 		Console.WriteLine(product);
 
 		Console.WriteLine("What field would you like to update?");
@@ -228,12 +227,12 @@ class DalTest
 			}
 		} while (field != 0);
 
-		dalProduct.UpdateProduct(product);
+		dalList.Product.Update(product);
 		Console.WriteLine("This product has been updated");
 	}
     static void DisplayAllProducts()
     {
-        foreach (Product product in dalProduct.ReadAllProducts())
+        foreach (Product product in dalList.Product.ReadAll())
         {
             if (product.m_id != 0)
                 Console.WriteLine(product);
@@ -308,8 +307,8 @@ class DalTest
 		//how do we set the ship/deliv dates
 		//order date set to today?
 
-		Order order = new Order(-1, name, email, address, DateTime.Today,DateTime.Today,DateTime.Now);
-		Console.WriteLine("This is the ID of the order just created: " + dalOrder.CreateOrder(order));
+		Order order = new Order(name, email, address, DateTime.Today, DateTime.Today, DateTime.Now);
+		Console.WriteLine("This is the ID of the order just created: " + dalList.Order.Create(order));
 	}
     ///<summary>
     /// User Updates an Order
@@ -320,7 +319,7 @@ class DalTest
 		int ID = Convert.ToInt32(Console.ReadLine());
 		string temp;
 
-		Order order= dalOrder.ReadOrder(ID);
+		Order order= dalList.Order.Read(ID);
 		Console.WriteLine(order);
 
 		Console.WriteLine("What field would you like to update?");
@@ -385,12 +384,12 @@ class DalTest
 			}
 		} while (field != 0);
 
-		dalOrder.UpdateOrder(order);
+		dalList.Order.Update(order);
 		Console.WriteLine("This order has been updated");
 	}
 	private static void DisplayAllOrders()
 	{
-		foreach (Order order in dalOrder.ReadAllOrders())
+		foreach (Order order in dalList.Order.ReadAll())
 		{
 			if (order.m_id != 0)
 				Console.WriteLine(order);
@@ -480,13 +479,13 @@ class DalTest
 		Console.WriteLine("What is the order's ID?");
 		int ordID = Convert.ToInt32(Console.ReadLine());
 
-		double price = dalProduct.ReadProduct(prodID).m_price;
+		double price = dalList.Product.Read(prodID).m_price;
 
 		Console.WriteLine("How many of the product are in the order?");
 		int amount = Convert.ToInt32(Console.ReadLine());
 
-		OrderItem orderItem = new OrderItem(-1, prodID, ordID, price, amount);
-		Console.WriteLine("This is the ID of the orderItem just created: " + dalOrderItem.CreateOrderItem(orderItem));
+		OrderItem orderItem = new OrderItem(prodID, ordID, price, amount);
+		Console.WriteLine("This is the ID of the orderItem just created: " + dalList.OrderItem.Create(orderItem));
 	}
     ///<summary>
     /// User Updates an OrderItem
@@ -496,7 +495,7 @@ class DalTest
 		Console.WriteLine("What is the ID of the order item you want to update?");
 		int temp, ID = Convert.ToInt32(Console.ReadLine());
 
-		OrderItem orderItem = dalOrderItem.ReadOrderItem(ID);
+		OrderItem orderItem = dalList.OrderItem.Read(ID);
 		Console.WriteLine(orderItem);
 
 		Console.WriteLine("What field would you like to update?");
@@ -547,12 +546,12 @@ class DalTest
 			}
 		} while (field != 0);
 
-		dalOrderItem.UpdateOrderItem(orderItem);
+		dalList.OrderItem.Update(orderItem);
 		Console.WriteLine("This order item has been updated");
 	}
     private static void DisplayAllOrderItems()
     {
-        foreach (OrderItem orderItem in dalOrderItem.ReadAllOrderItems())
+        foreach (OrderItem orderItem in dalList.OrderItem.ReadAll())
         {
             if (orderItem.m_id != 0)
                 Console.WriteLine(orderItem);
@@ -567,7 +566,7 @@ class DalTest
 		Console.WriteLine("What is the ID of the order?");
 
 		if (int.TryParse(Console.ReadLine(), out int orderID))
-			foreach (OrderItem orderItem in dalOrderItem.GetItemsInOrder(orderID))
+			foreach (OrderItem orderItem in dalList.OrderItem.GetItemsInOrder(orderID))
 				Console.WriteLine(orderItem);
 
 	}
@@ -579,7 +578,7 @@ class DalTest
     private static void SetAllItemsInOrder()
 	{
 
-		dalOrderItem.SetItemsInOrder(); //he'll get back to us
+		dalList.OrderItem.SetItemsInOrder(); //he'll get back to us
 	}
 
     ///<summary>
@@ -590,7 +589,7 @@ class DalTest
 		Console.WriteLine("Please enter the product ID followed by the order ID on the next line");
 
 		if (int.TryParse(Console.ReadLine(), out int productID) && int.TryParse(Console.ReadLine(), out int orderID))
-			Console.WriteLine(dalOrderItem.GetOrderItemWithProdAndOrderID(productID, orderID));
+			Console.WriteLine(dalList.OrderItem.GetOrderItemWithProdAndOrderID(productID, orderID));
 	}
 
     ///<summary>
@@ -601,6 +600,6 @@ class DalTest
 		Console.WriteLine("Please enter the product ID followed by the order ID on the next line");
 
 		if (int.TryParse(Console.ReadLine(), out int productID) && int.TryParse(Console.ReadLine(), out int orderID))
-			dalOrderItem.SetOrderItemWithProdAndOrderID(productID, orderID);
+			dalList.OrderItem.SetOrderItemWithProdAndOrderID(productID, orderID);
 	}
 }
