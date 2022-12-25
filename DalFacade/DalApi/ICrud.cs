@@ -1,4 +1,4 @@
-﻿namespace DalApi
+﻿namespace BlApi
 {
 	public interface ICrud<T>
 	{

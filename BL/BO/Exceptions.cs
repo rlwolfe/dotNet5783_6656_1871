@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlApi
+namespace BO
 {
-	public interface IDal
+	internal class Exceptions
 	{
-		IOrder Order { get; }
-		IProduct Product { get; }
-		IOrderItem OrderItem { get; }
 	}
 }

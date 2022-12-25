@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlApi
+namespace BO
 {
-	public interface IDal
+	internal class Enums
 	{
-		IOrder Order { get; }
-		IProduct Product { get; }
-		IOrderItem OrderItem { get; }
 	}
 }

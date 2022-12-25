@@ -35,6 +35,5 @@ public struct Order
 			Customer Address: {m_customerAddress}
 			Order Date: {m_orderDate}
 			Ship Date: {m_shipDate}
-			Delivery Date: {m_deliveryDate}
-	";
+			Delivery Date: {m_deliveryDate}";
 }

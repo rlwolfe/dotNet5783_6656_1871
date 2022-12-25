@@ -29,6 +29,5 @@ public struct OrderItem
 			Product ID = {m_productID},
 			Order ID = {m_orderID}
 			Price: {m_price}
-			Amount: {m_amount}
-	";
+			Amount: {m_amount}";
 }

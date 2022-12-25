@@ -1,6 +1,6 @@
 ﻿using DO;
 
-namespace DalApi
+namespace BlApi
 {
 	public interface IOrder : ICrud<Order>
 	{
