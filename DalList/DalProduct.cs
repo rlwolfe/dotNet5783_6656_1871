@@ -38,7 +38,6 @@ internal class DalProduct : IProduct
 
 	public IEnumerable<Product> ReadAll()
 	{
-		//maybe need to add new array and return that instead???
 		return DataSource.Products;
 	}
 

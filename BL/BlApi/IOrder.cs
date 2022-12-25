@@ -12,6 +12,6 @@ namespace BlApi
 		public Order Read(int id);
 		public IEnumerable<Order> ReadAll();
 		public void Update(Order order);
-		public void Delete(Order order);
+		public void Delete(int orderId);
 	}
 }

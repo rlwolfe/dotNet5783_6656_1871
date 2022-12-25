@@ -12,6 +12,6 @@ namespace BlApi
 		public Product Read(int id);
 		public IEnumerable<Product> ReadAll();
 		public void Update(Product product);
-		public void Delete(Product Product);
+		public void Delete(int productId);
 	}
 }

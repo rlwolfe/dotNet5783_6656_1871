@@ -18,6 +18,14 @@ public struct Product
 		m_price = price;
 		m_inStock = inStock;
 	}
+	public Product(Product product)
+	{
+		m_id = product.m_id;
+		m_name = product.m_name;
+		m_category = product.m_category;
+		m_price = product.m_price;
+		m_inStock = product.m_inStock;
+	}
 
 	public int m_id { get; set; }
 	public string m_name { get; set; }
