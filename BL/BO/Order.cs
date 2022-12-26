@@ -13,16 +13,24 @@ namespace BO
 		public string? m_customerEmail { get; set; }
 		public string? m_customerAddress { get; set; }
 		public DateTime m_orderDate { get; set; }
+		public string? m_status { get; set; } //OrderStatus
+		public DateTime m_paymentDate { get; set; }
 		public DateTime m_shipDate { get; set; }
 		public DateTime m_deliveryDate { get; set; }
+		public List<OrderItem> m_items { get; set; }
+		public double m_totalPrice { get; set; }
 
 		public override string ToString() => $@"
 			Order ID = {m_id}
 			Customer Name - {m_customerName},
-			Customer Email - {m_customerEmail}
-			Customer Address: {m_customerAddress}
+			Customer Email - {m_customerEmail},
+			Customer Address: {m_customerAddress},
 			Order Date: {m_orderDate}
-			Ship Date: {m_shipDate}
-			Delivery Date: {m_deliveryDate}";
+			Status: {m_status},
+			Payment Date: {m_paymentDate},
+			Ship Date: {m_shipDate},
+			Delivery Date: {m_deliveryDate}
+			Total Price: {m_totalPrice}
+			Items - {m_items}";
 	}
 }

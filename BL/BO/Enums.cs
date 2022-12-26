@@ -8,5 +8,7 @@ namespace BO
 {
 	internal class Enums
 	{
+		//OrderStatus
+		//Category
 	}
 }

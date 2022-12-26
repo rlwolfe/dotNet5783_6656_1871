@@ -414,7 +414,7 @@ class DalTest
 						"f - Display all items in an order\n" +
 						//"g - Set items in an order\n" +
 						"h - Search for an item by Product & Order ID\n" +
-						//"i - Set an order item based on Product & Order ID\n" + 
+						"i - Set an order item based on Product & Order ID\n" + 
 						"x - Return to Main Menu");
 			subChoice = Console.ReadLine().First();
 			
@@ -458,9 +458,9 @@ class DalTest
 					FindOrderItemFromProdOrdID();
 					break;
 
-				/*case 'i':
+				case 'i':
 					SetItemFromProdOrdID();
-					break;*/
+					break;
 
 				default:
 					Console.WriteLine("Please choose a letter from the above list.");
@@ -549,7 +549,11 @@ class DalTest
 		dalList.OrderItem.Update(orderItem);
 		Console.WriteLine("This order item has been updated");
 	}
-    private static void DisplayAllOrderItems()
+
+	///<summary>
+	/// Displays all OrderItems
+	/// </summary>
+	private static void DisplayAllOrderItems()
     {
         foreach (OrderItem orderItem in dalList.OrderItem.ReadAll())
         {
@@ -576,9 +580,11 @@ class DalTest
     ///- on hold while professor gets more info
     /// </summary>
     private static void SetAllItemsInOrder()
-	{
-
-		dalList.OrderItem.SetItemsInOrder(); //he'll get back to us
+	{//he'll get back to us
+		Console.WriteLine("What is the ID of the order?");
+		
+		if (int.TryParse(Console.ReadLine(), out int orderID))	
+			dalList.OrderItem.SetItemsInOrder(orderID);
 	}
 
     ///<summary>

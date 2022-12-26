@@ -16,8 +16,8 @@ namespace BO
 
 		public override string ToString() => $@"
 			Product ID={m_id}: {m_name},
-			category - {m_category}
-			Price: {m_price}
+			Category - {m_category},
+			Price: {m_price},
 			Amount in stock: {m_inStock}";
 	}
 }

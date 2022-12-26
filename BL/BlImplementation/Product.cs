@@ -8,7 +8,7 @@ namespace BlImplementation
 	{
 		static IDal? dal = new DalList();
 
-		public void Create(BO.Product product)
+		public int Create(BO.Product product)
 		{
 			if (product.m_name == null || !Regex.IsMatch(product.m_name, @"^[a-zA-Z]+$"))
 				throw new BO.InputIsInvalidException("Name");
@@ -24,6 +24,7 @@ namespace BlImplementation
 
 			DO.Product prod = new DO.Product(product.m_name,product.m_category, product.m_price, product.m_inStock);
 			dal.Product.Create(prod);
+			//save id here needs try catch
 		}
 
 		public BO.Product Read(int id)

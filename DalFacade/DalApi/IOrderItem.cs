@@ -7,6 +7,6 @@ namespace BlApi
 		public OrderItem GetOrderItemWithProdAndOrderID(int productId, int orderId);
 		public IEnumerable<OrderItem> GetItemsInOrder(int orderID);
 		public void SetOrderItemWithProdAndOrderID(int productId, int orderId);
-		public void SetItemsInOrder();
+		public void SetItemsInOrder(int orderID);
 	}
 }

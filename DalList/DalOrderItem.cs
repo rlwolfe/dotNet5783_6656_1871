@@ -63,23 +63,25 @@ internal class DalOrderItem : IOrderItem
 		if (tempList.Length != 0)
 			return tempList.First();
 
-		/*for (int i = 0; i < DataSource.OrderItems.Length; i++)
-		{
-			if (DataSource.OrderItems[i].m_productID == productId && DataSource.OrderItems[i].m_orderID == orderID)
-				return DataSource.OrderItems[i];
-		}*/
 		throw new EntityNotFoundException("Order Item");
 	}
 
-    ///<summary>
-    /// Update function for when given Product ID and OrderID
-    /// </summary>
-    public void SetOrderItemWithProdAndOrderID(int productId, int orderId)
-	{//how to determine what to change
+	///<summary>
+	/// Update function for when given Product ID and OrderID
+	/// </summary>
+	public void SetOrderItemWithProdAndOrderID(int productId, int orderId) //OrderItem SetOrderItemWithProdAndOrderID(int productId, int orderId)
+	{//how to determine what to change?
 		OrderItem[] tempList = DataSource.OrderItems.Where(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
-		
+
+		//if (tempList.Length == 0){
+		//OrderItem orderItem = new OrderItem(productId, orderId, new Random(5).NextDouble(), new Random(8).Next());
+		//Create(orderItem);
+		//}
 		if (tempList.Length != 0)
+		{
 			Update(tempList.First());
+			//return tempList.First()
+		}
 		else
 			throw new EntityNotFoundException("Order Item");																							
 	}
@@ -101,15 +103,20 @@ internal class DalOrderItem : IOrderItem
     /// Insufficient data given for use case, return variable or parameters of function
 	///- on hold while professor gets more info
     /// </summary>
-    public void SetItemsInOrder()
-	{
-		//he's going to tell us
+    public void SetItemsInOrder(int orderID)
+	{//he's going to tell us
+		OrderItem[] tempList = DataSource.OrderItems.Where(x => x.m_orderID == orderID).ToArray<OrderItem>();
+
+		/*if (tempList.Length == 0){
+			OrderItem orderItem = new OrderItem(???, orderId, new Random(5).NextDouble(), new Random(8).Next());
+			Create(orderItem);
+		}*/
 	}
 
-    ///<summary>
-    /// Delete function
-    /// </summary>
-    public void Delete(int ID)
+	///<summary>
+	/// Delete function
+	/// </summary>
+	public void Delete(int ID)
 	{
 		if (DataSource.OrderItems.Exists(x => x.m_id == ID))
 			DataSource.OrderItems.RemoveAt(DataSource.OrderItems.FindIndex(x => x.m_id == ID));

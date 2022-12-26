@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace BO
 {
-	public class OrderItem
+	internal class ProductForList
 	{
 		public int m_id { get; set; }
-		public int m_productID { get; set; }
+		public string? m_name { get; set; }
+		public string? m_category { get; set; }
 		public double m_price { get; set; }
-		public int m_amount { get; set; }
 
 		public override string ToString() => $@"
-			Order Item ID = {m_id}
-			Product ID = {m_productID},
-			Price: {m_price},
-			Amount: {m_amount}";
+			ID = {m_id}
+			Name: {m_name},
+			Category - {m_category}
+			Price: {m_price}";
 	}
 }
