@@ -1,11 +1,12 @@
 ﻿using BlApi;
 using Dal;
+using System.Linq;
 /*
- * 	m_id = idCounter++;
-		m_productID = productID;
-		m_orderID = orderID;
-		m_price = Price;
-		m_amount = amount;
+* 	m_id = idCounter++;
+m_productID = productID;
+m_orderID = orderID;
+m_price = Price;
+m_amount = amount;
 */
 namespace BlImplementation
 {
@@ -13,8 +14,9 @@ namespace BlImplementation
 	{
 		private IDal? dal =  new DalList();
 
-		public void Create(BO.OrderItem orderItem)
+		public int Create(BO.OrderItem orderItem)
 		{
+            return -1;
 		}
 
         public BO.OrderItem Read(int id)
@@ -24,7 +26,6 @@ namespace BlImplementation
             {
                 orderItem.m_id = dal.OrderItem.Read(id).m_id;
                 orderItem.m_productID = dal.OrderItem.Read(id).m_productID;
-                orderItem.m_orderID = dal.OrderItem.Read(id).m_orderID;
                 orderItem.m_price = dal.OrderItem.Read(id).m_price;
                 orderItem.m_amount = dal.OrderItem.Read(id).m_amount;
             }
@@ -36,7 +37,7 @@ namespace BlImplementation
             catch (Exception exc)
             {
                 Console.WriteLine("Some other problem"); //maybe?
-                throw new BO.blGeneralException;
+                throw new BO.blGeneralException();
             }
             return orderItem;
 
@@ -44,7 +45,7 @@ namespace BlImplementation
 
         public IEnumerable<BO.OrderItem> ReadAll()
         {
-            IEnumerable<BO.Product> orderItems = null;
+            IEnumerable<BO.OrderItem> orderItems = null;
             try
             {
                 foreach (DO.OrderItem ordItem in dal.OrderItem.ReadAll())
@@ -52,7 +53,7 @@ namespace BlImplementation
                     BO.OrderItem orderItem = new BO.OrderItem();
                     orderItem.m_id = ordItem.m_id;
                     orderItem.m_productID = ordItem.m_productID;
-                    orderItem.m_orderID = ordItem.m_orderID;
+                    //orderItem.m_orderID = ordItem.m_orderID;
                     orderItem.m_price = ordItem.m_price;
                     orderItem.m_amount = ordItem.m_amount;
 
@@ -62,7 +63,7 @@ namespace BlImplementation
             catch (Exception exc)
             {
                 Console.WriteLine("Some other problem"); //maybe?
-                throw new BO.blGeneralException;
+                throw new BO.blGeneralException();
             }
             return orderItems;
         }
@@ -79,22 +80,24 @@ namespace BlImplementation
             }
             catch (DO.idNotFoundException exc)
             {
-                Console.WriteLine(id); //maybe?
+                Console.WriteLine(orderItemId); //maybe?
                 throw new BO.dataLayerIdNotFoundException(exc.Message);
             }
             catch (Exception exc)
             {
                 Console.WriteLine("Some other problem"); //maybe?
-                throw new BO.blGeneralException;
+                throw new BO.blGeneralException();
             }
         }
 
         public IEnumerable<BO.OrderItem> GetItemsInOrder(int orderID)
 		{
+            return null;
 		}
 
 		public BO.OrderItem GetOrderItemWithProdAndOrderID(int productId, int orderId)
 		{
+            return null;
 		}
 
 		public void SetItemsInOrder()

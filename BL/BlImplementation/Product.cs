@@ -27,7 +27,7 @@ namespace BlImplementation
 			{
 				dal.Product.Create(prod);
 			}
-			catch(DO.idAlreadyExistsExecption exc) 
+			catch(DO.idAlreadyExistsException exc) 
 			{
 				Console.WriteLine(prod.m_id); //maybe?
 				throw new BO.dataLayerIdAlreadyExistsException(exc.Message);
@@ -35,7 +35,7 @@ namespace BlImplementation
 			catch(Exception exc)
 			{
                 Console.WriteLine("Some other problem"); //maybe?
-				throw new BO.blGeneralException;
+				throw new BO.blGeneralException();
             }
 			//save id here needs try catch
 			return -1;
@@ -60,7 +60,7 @@ namespace BlImplementation
             catch (Exception exc)
             {
                 Console.WriteLine("Some other problem"); //maybe?
-                throw new BO.blGeneralException;
+                throw new BO.blGeneralException();
             }
             return product;
 		}
@@ -85,7 +85,7 @@ namespace BlImplementation
 			catch(Exception exc)
 			{
 				Console.WriteLine("Some other problem"); //maybe?
-                throw new BO.blGeneralException;
+                throw new BO.blGeneralException();
             }
 			return products;
 		}
@@ -112,13 +112,13 @@ namespace BlImplementation
 			}
             catch (DO.idNotFoundException exc)
             {
-                Console.WriteLine(id); //maybe?
+                Console.WriteLine(prod.m_id); //maybe?
                 throw new BO.dataLayerIdNotFoundException(exc.Message);
             }
             catch (Exception exc)
             {
                 Console.WriteLine("Some other problem"); //maybe?
-                throw new BO.blGeneralException;
+                throw new BO.blGeneralException();
             }
         }
 
@@ -130,13 +130,13 @@ namespace BlImplementation
 			}
             catch (DO.idNotFoundException exc)
             {
-                Console.WriteLine(id); //maybe?
+                Console.WriteLine(productId); //maybe?
                 throw new BO.dataLayerIdNotFoundException(exc.Message);
             }
             catch (Exception exc)
             {
                 Console.WriteLine("Some other problem"); //maybe?
-                throw new BO.blGeneralException;
+                throw new BO.blGeneralException();
             }
         }
 	}
