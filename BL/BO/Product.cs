@@ -10,7 +10,7 @@ namespace BO
 	{
 		public int m_id { get; set; }
 		public string? m_name { get; set; }
-		public string? m_category { get; set; }
+		public Enums.Category m_category { get; set; }
 		public double m_price { get; set; }
 		public int m_inStock { get; set; }
 

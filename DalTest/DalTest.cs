@@ -146,11 +146,10 @@ class DalTest
 		//Console.WriteLine("What # category does the product fall under?");
 		
 		foreach (Enums.Category enumCategory in Enum.GetValues(typeof(Enums.Category)))
-			Console.WriteLine(//enumCategory.GetHashCode() + " - "+
-							  enumCategory);
+			Console.WriteLine(enumCategory.GetHashCode() + " - " + enumCategory);
 
-		string? category = Console.ReadLine();
-		//int category = Convert.ToInt32(Console.ReadLine());
+		int catNum = Convert.ToInt16(Console.ReadLine());
+		Enums.Category category = (Enums.Category)catNum;
 
 		Console.WriteLine("What is the name of the product?");
 		string? name = Console.ReadLine();
@@ -159,7 +158,7 @@ class DalTest
 		double price = Convert.ToDouble(Console.ReadLine());
 
 		Console.WriteLine("How many will be added to the inventory?");
-		int inStock = Convert.ToInt16(Console.ReadLine());
+		int inStock = Convert.ToInt32(Console.ReadLine());
 
 		Product product = new Product(name, category, price, inStock);
 		Console.WriteLine("This is the ID of the product just created: " + dalList.Product.Create(product));
@@ -177,7 +176,6 @@ class DalTest
 
 		Console.WriteLine("What field would you like to update?");
 		int field = -1;
-		string temp;
 
 		do
 		{
@@ -197,16 +195,20 @@ class DalTest
 
 				case 1:
 					Console.WriteLine("What is the new name of the product?");
-					temp = Console.ReadLine();
+					string? temp = Console.ReadLine();
 					if (temp != null)
 						product.m_name = temp;
 					break;
 
 				case 2:
-					Console.WriteLine("What category does the product fall under?");
-					temp = Console.ReadLine();
-					if (temp != null)
-						product.m_category = temp;
+					Console.WriteLine("What category number does the product fall under?");
+					foreach (Enums.Category enumCategory in Enum.GetValues(typeof(Enums.Category)))
+						Console.WriteLine(enumCategory.GetHashCode() + " - " + enumCategory);
+
+					if (int.TryParse(Console.ReadLine(), out int intTemp))
+						product.m_category = (Enums.Category)Enum.ToObject(typeof(DO.Enums.Category), intTemp);
+					else
+						Console.WriteLine("invalid category");
 					break;
 
 				case 3:

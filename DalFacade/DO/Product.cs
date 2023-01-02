@@ -10,7 +10,7 @@ namespace DO;
 public struct Product
 {
 	static int idCounter = 100000;
-	public Product(string name, string category, double price, int inStock)
+	public Product(string name, Category category, double price, int inStock)
 	{
 		m_id = idCounter++;
 		m_name = name;
@@ -29,7 +29,7 @@ public struct Product
 
 	public int m_id { get; set; }
 	public string m_name { get; set; }
-	public string m_category { get; set; }
+	public Category m_category { get; set; }
 	public double m_price { get; set; }
 	public int m_inStock { get; set; }
 

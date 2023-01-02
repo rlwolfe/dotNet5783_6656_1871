@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BO
 {
-	internal class Cart
+	public class Cart
 	{
 			public string? m_customerName { get; set; }
 			public string? m_customerEmail { get; set; }

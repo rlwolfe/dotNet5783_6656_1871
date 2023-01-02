@@ -8,6 +8,6 @@ namespace BlImplementation
 
 		public IOrder Order => new Order();
 
-		public IOrderItem OrderItem => new OrderItem();
+		public ICart Cart => new Cart();
 	}
 }
