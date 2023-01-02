@@ -4,7 +4,7 @@ namespace BlApi
 {
 	public interface IOrderItem
 	{
-		public void Create(OrderItem orderItem);
+		public int Create(OrderItem orderItem);
 		public OrderItem Read(int id);
 		public IEnumerable<OrderItem> ReadAll();
 		public void Update(OrderItem orderItem);

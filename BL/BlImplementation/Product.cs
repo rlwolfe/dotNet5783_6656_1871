@@ -38,6 +38,7 @@ namespace BlImplementation
 				throw new BO.blGeneralException;
             }
 			//save id here needs try catch
+			return -1;
 		}
 
 		public BO.Product Read(int id)

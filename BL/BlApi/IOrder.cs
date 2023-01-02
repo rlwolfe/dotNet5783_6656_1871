@@ -8,7 +8,7 @@ namespace BlApi
 {
 	public interface IOrder
 	{
-		public void Create(Order order);
+		public int Create(Order order);
 		public Order Read(int id);
 		public IEnumerable<Order> ReadAll();
 		public void Update(Order order);
