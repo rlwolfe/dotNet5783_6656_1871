@@ -7,11 +7,11 @@ namespace BlImplementation
 	{
 		private IDal? dal =  new DalList();
 
-		public void Create(BO.OrderItem orderItem)
+		public int Create(BO.OrderItem orderItem)
 		{
 		}
 
-		public void Delete(BO.OrderItem orderItem)
+		public void Delete(int orderItemID)
 		{
 		}
 
