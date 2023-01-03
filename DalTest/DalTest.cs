@@ -309,7 +309,7 @@ class DalTest
 		//how do we set the ship/deliv dates
 		//order date set to today?
 
-		Order order = new Order(name, email, address, DateTime.Today, DateTime.Today, DateTime.Now);
+		Order order = new Order(name, email, address, DateTime.Today, DateTime.Today, DateTime.Today);
 		Console.WriteLine("This is the ID of the order just created: " + dalList.Order.Create(order));
 	}
     ///<summary>

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BO.Enums;
 
 namespace BO
 {
-	internal class OrderForList
+	public class OrderForList
 	{
 		public int m_id { get; set; }
 		public string? m_customerName { get; set; }
-		public string? m_status { get; set; } //OrderStatus
+		public OrderStatus m_status { get; set; }
 		public double m_totalPrice { get; set; }
 		public int m_amountOfItems { get; set; }
 

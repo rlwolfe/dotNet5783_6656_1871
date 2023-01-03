@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BO
 {
-	internal class ProductForList
+	public class ProductForList
 	{
 		public int m_id { get; set; }
 		public string? m_name { get; set; }
-		public string? m_category { get; set; }
+		public BO.Enums.Category m_category { get; set; }
 		public double m_price { get; set; }
 
 		public override string ToString() => $@"

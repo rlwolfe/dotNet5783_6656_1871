@@ -12,9 +12,7 @@ namespace BlImplementation
 		{
 			InputValidation(product);
 
-			DO.Enums.Category category = (DO.Enums.Category)product.m_category.GetHashCode();
-
-			DO.Product prod = new DO.Product(product.m_name, category, product.m_price, product.m_inStock);
+			DO.Product prod = new DO.Product(product.m_name, (DO.Enums.Category)product.m_category, product.m_price, product.m_inStock);
 			try
 			{
 				dal.Product.Create(prod);
@@ -30,19 +28,15 @@ namespace BlImplementation
 				throw new BO.blGeneralException();
             }
 			//save id here needs try catch
-			return -1;
+			return prod.m_id;
 		}
 
-		public BO.Product Read(int id)
+		public BO.ProductItem CustomerRequest(int id)
 		{
-			BO.Product product = new BO.Product();
+			DO.Product product;
 			try
 			{
-				product.m_id = dal.Product.Read(id).m_id;
-				product.m_name = dal.Product.Read(id).m_name;
-				product.m_category = (BO.Enums.Category)(dal.Product.Read(id).m_category.GetHashCode());	//converting BO category to DO category
-				product.m_price = dal.Product.Read(id).m_price;
-				product.m_inStock = dal.Product.Read(id).m_inStock;
+				product = dal.Product.Read(id);
 			}
             catch (DO.idNotFoundException exc)
             {
@@ -54,10 +48,21 @@ namespace BlImplementation
                 Console.WriteLine("Some other problem"); //maybe?
                 throw new BO.blGeneralException();
             }
-            return product;
+
+			BO.ProductItem productItem = new BO.ProductItem()
+			{
+				m_id = product.m_id,
+				m_name = product.m_name,
+				m_price = product.m_price,
+				m_category = (BO.Enums.Category)product.m_category,
+				m_amount = product.m_inStock,
+				m_inStock = product.m_inStock > 0
+			};
+
+            return productItem;
 		}
 
-		public IEnumerable<BO.Product> ReadAll()
+		public IEnumerable<BO.Product> CatalogRequest()
 		{
 			IEnumerable<BO.Product> products = null;
 			try
@@ -82,13 +87,53 @@ namespace BlImplementation
 			return products;
 		}
 
+		public BO.Product ManagerRequest(int id)
+		{
+			BO.Product product = new BO.Product();
+			try
+			{
+				DO.Product doProd = dal.Product.Read(id);
+				product.m_id = doProd.m_id;
+				product.m_name = doProd.m_name;
+				product.m_category = (BO.Enums.Category)(doProd.m_category.GetHashCode());  //converting BO category to DO category
+				product.m_price = doProd.m_price;
+				product.m_inStock = doProd.m_inStock;
+			}
+			catch (DO.idNotFoundException exc)
+			{
+				Console.WriteLine(id); //maybe?
+				throw new BO.dataLayerIdNotFoundException(exc.Message);
+			}
+			catch (Exception exc)
+			{
+				Console.WriteLine("Some other problem"); //maybe?
+				throw new BO.blGeneralException();
+			}
+			return product;
+		}
+
+		public IEnumerable<BO.ProductForList> ManagerListRequest()
+		{
+			List<BO.ProductForList> list = new();
+
+			foreach (DO.Product prod in dal.Product.ReadAll())
+			{
+				BO.ProductForList productForList = new BO.ProductForList();
+				productForList.m_id = prod.m_id;
+				productForList.m_name = prod.m_name;
+				productForList.m_price = prod.m_price;
+				productForList.m_category = (BO.Enums.Category)prod.m_category;
+
+				list.Add(productForList);
+			}
+			return list;
+		}
+
 		public void Update(BO.Product product)
 		{
 			InputValidation(product);
 
-			DO.Enums.Category category = (DO.Enums.Category)product.m_category.GetHashCode();
-
-			DO.Product prod = new DO.Product(product.m_name, category, product.m_price, product.m_inStock);
+			DO.Product prod = new DO.Product(product.m_name, (DO.Enums.Category)product.m_category, product.m_price, product.m_inStock);
 			try
 			{
 				dal.Product.Update(prod);
@@ -109,6 +154,11 @@ namespace BlImplementation
 
 		public void Delete(int productId)
 		{
+			foreach (DO.OrderItem orderItem in dal.OrderItem.ReadAll())
+			{
+				if (productId == orderItem.m_productID)
+					throw new BO.InputIsInvalidException("Product was found in orders still");
+			}
 			try
 			{
 				dal.Product.Delete(productId);
@@ -118,7 +168,12 @@ namespace BlImplementation
                 Console.WriteLine(productId); //maybe?
                 throw new BO.dataLayerIdNotFoundException(exc.Message);
             }
-            catch (Exception exc)
+			catch (BO.InputIsInvalidException exc)
+			{
+				Console.WriteLine(productId); //maybe?
+				throw new BO.InputIsInvalidException(exc.Message);
+			}
+			catch (Exception exc)
             {
                 Console.WriteLine("Some other problem"); //maybe?
                 throw new BO.blGeneralException();

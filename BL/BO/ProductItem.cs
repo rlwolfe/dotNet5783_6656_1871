@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BO
 {
-	internal class ProductItem
+	public class ProductItem
 	{
 		public int m_id { get; set; }
 		public string? m_name { get; set; }
-		public string? m_category { get; set; } //Category
+		public BO.Enums.Category m_category { get; set; }
 		public double m_price { get; set; }
 		public bool m_inStock { get; set; }
 		public int m_amount { get; set; }
