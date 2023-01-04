@@ -40,6 +40,12 @@ namespace BlImplementation
 			{
 				throw new BO.dataLayerIdNotFoundException(exc.Message);
 			}
+			catch(Exception exc)
+			{
+                Console.WriteLine("Some other problem"); //maybe?
+                throw new BO.blGeneralException();
+            }
+        
 			return cart;
 		}
 
@@ -134,7 +140,17 @@ namespace BlImplementation
 					else
 						throw new BO.blGeneralException();
 				}
-				catch (Exception exc)
+                catch (DO.idNotFoundException exc)
+                {
+                    Console.WriteLine(prodID); //maybe?
+                    throw new BO.dataLayerIdNotFoundException(exc.Message);
+                }
+                catch (BO.blGeneralException exc)
+                {
+                    Console.WriteLine("Some other problem: " +exc.Message); //maybe?
+                    throw new BO.blGeneralException();
+                }
+                catch (Exception exc)
 				{
 					Console.WriteLine("Some other problem"); //maybe?
 					throw new BO.blGeneralException();

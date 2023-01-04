@@ -64,8 +64,9 @@ namespace BlImplementation
 
 		public IEnumerable<BO.Product> CatalogRequest()
 		{
-			IEnumerable<BO.Product> products = null;
-			try
+            //IEnumerable<BO.Product> products = null;
+            List<BO.Product> products = new ();
+            try
 			{
 				foreach (DO.Product prod in dal.Product.ReadAll())
 				{
@@ -76,7 +77,7 @@ namespace BlImplementation
 					product.m_price = prod.m_price;
 					product.m_inStock = prod.m_inStock;
 
-					products.Append(product);
+					products.Add(product);
 				}
 			}
 			catch(Exception exc)
