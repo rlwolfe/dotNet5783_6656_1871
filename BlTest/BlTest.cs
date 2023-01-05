@@ -9,7 +9,7 @@ namespace BlTest;
 class BlTest
 {
     static IBl bl = new Bl();
-    //static BO.Cart cart = new BO.Cart();  //can't do it in main (w/o static) as is not recognised in customer menu
+    static BO.Cart cart = new BO.Cart();  //can't do it in main (w/o static) as is not recognised in customer menu
 										    //can't do here w/o static keyword - but still not sure if this is correct choice
 										   //can put in customer menu w/o static - poss solution?
     static void Main(string[] args)
@@ -62,10 +62,14 @@ class BlTest
 						"What would you like to do?\n" +
 						"a - View list of products\n" +     //g
 						"b - Single product details\n" +    //g
-						"c - Add a product\n" +             // returns 0/-1 as id
-						"d - Delete a product\n" +                  //deal with data source
-						"e - Update a  product\n" +                 //update needs id
+						"c - Add a product\n" +             // returns 0/-1 as id - fixed
+						"d - Delete a product\n" +                  //deal with data source 
+                                                                    //delete works on new product that is defs not in any orders
+						"e - Update a  product\n" +                 //changes don't take - creates new DO.Product - thus new ID#, thus ID doesn't match - so original isn't found
+                                                                    //(id counter still increases and still prints that the product was updated!) 
+                                                                    //- fixed the new do.product - not that it prints when it shouldn't
 						"f - View list of orders\n" +       //returns null (but is this correct?)
+                                                            //more correctly prints nothing
 						"g - Single order details\n" +      //must still check maybe check '2'
 						"h - Update shipped order\n" +      //needs implimentation
 						"i - Update delivered order\n" +    //ditto
@@ -195,14 +199,14 @@ class BlTest
 
         Console.WriteLine("How many will be added to the inventory?");
         product.m_inStock = Convert.ToInt32(Console.ReadLine());
-
+        int id = -1;
         try
         {
-            bl.Product.Create(product);
+            id = bl.Product.Create(product);
         }
         catch (BO.dataLayerIdAlreadyExistsException)
         {
-            Console.WriteLine("the product with id: " + product.m_id + "was not created"); //maybe?
+            Console.WriteLine("the product with id: " + id + "was not created"); //maybe?
         }
 		catch (BO.blGeneralException)
 		{
@@ -212,35 +216,78 @@ class BlTest
         {
             Console.WriteLine("Some other problem: " + exc.Message); //maybe?
         }
-        Console.WriteLine("This is the ID of the product just created: " + product.m_id);
+        Console.WriteLine("This is the ID of the product just created: " + id);
     }
+
+
     static void ProductUpdate()
     {
-        BO.Product product = new BO.Product();
-        Console.WriteLine("What category does the product fall under?");
-        //Console.WriteLine("What # category does the product fall under?");
+        Console.WriteLine("What is the ID of the product you want to update?");
+        int ID = Convert.ToInt32(Console.ReadLine());
 
-        foreach (BO.Enums.Category enumCategory in Enum.GetValues(typeof(BO.Enums.Category)))
-            Console.WriteLine(enumCategory.GetHashCode() + " - " + enumCategory);
+        BO.Product product = bl.Product.ManagerRequest(ID);
+        Console.WriteLine(product);
 
-        int catNum = Convert.ToInt16(Console.ReadLine());
-        product.m_category = (BO.Enums.Category)catNum;
-                                                                        //ask for id
-        Console.WriteLine("What is the name of the product?");
-        product.m_name = Console.ReadLine();
+        Console.WriteLine("What field would you like to update?");
+        int field = -1;
 
-        Console.WriteLine("How much does the product cost?");
-        product.m_price = Convert.ToDouble(Console.ReadLine());
+        do
+        {
+            Console.WriteLine("Fields available for update:\n" +
+                        "1 - Name\n" +
+                        "2 - Category\n" +
+                        "3 - Price\n" +
+                        "4 - How many are in stock\n" +
+                        "0 - Finalize the update");
+            field = Convert.ToInt32(Console.ReadLine());
 
-        Console.WriteLine("How many will be added to the inventory?");
-        product.m_inStock = Convert.ToInt32(Console.ReadLine());
+            switch (field)
+            {
+                case 0:
+                    Console.WriteLine("Thank you\n");
+                    break;
 
-		try
-		{
-			bl.Product.Update(product);
-		}
-		catch(BO.dataLayerIdNotFoundException exc)
-		{
+                case 1:
+                    Console.WriteLine("What is the new name of the product?");
+                    string? temp = Console.ReadLine();
+                    if (temp != null)
+                        product.m_name = temp;
+                    break;
+
+                case 2:
+                    Console.WriteLine("What category number does the product fall under?");
+                    foreach (BO.Enums.Category enumCategory in Enum.GetValues(typeof(BO.Enums.Category)))
+                        Console.WriteLine(enumCategory.GetHashCode() + " - " + enumCategory);
+
+                    if (int.TryParse(Console.ReadLine(), out int intTemp))
+                        product.m_category = (BO.Enums.Category)Enum.ToObject(typeof(DO.Enums.Category), intTemp);
+                    else
+                        Console.WriteLine("invalid category");
+                    break;
+
+                case 3:
+                    Console.WriteLine("How much does the product cost?");
+                    if (double.TryParse(Console.ReadLine(), out double tempDub))
+                        product.m_price = tempDub;
+                    break;
+
+                case 4:
+                    Console.WriteLine("How many of the product are stocked?");
+                    if (int.TryParse(Console.ReadLine(), out int tempInt))
+                        product.m_inStock = tempInt;
+                    break;
+
+                default:
+                    Console.WriteLine("Please choose a valid option.");
+                    break;
+            }
+        } while (field != 0);
+        try
+        {
+            bl.Product.Update(product);
+        }
+        catch (BO.dataLayerIdNotFoundException exc)
+        {
             Console.WriteLine("the id: " + product.m_id + "was not found");
         }
         catch (BO.blGeneralException)
@@ -251,11 +298,14 @@ class BlTest
         {
             Console.WriteLine("Some other problem: " + exc.Message); //maybe?
         }
+        Console.WriteLine("This product has been updated");
     }
+
+
 
     static void CustomerChosen()
 	{
-        BO.Cart cart2 = new BO.Cart();
+        //BO.Cart cart2 = new BO.Cart();
         char subChoice = '-';
 		do
 		{
@@ -296,7 +346,7 @@ class BlTest
                     ID = Convert.ToInt32(Console.ReadLine());
 					try
 					{
-						bl.Cart.AddToCart(cart2, ID); //see nores on cart at top
+						bl.Cart.AddToCart(cart, ID); //see nores on cart at top
 					}
                     catch (BO.dataLayerIdNotFoundException exc)
                     {
@@ -319,7 +369,7 @@ class BlTest
                     int amount = Convert.ToInt32(Console.ReadLine());
                     try
                     {
-                        bl.Cart.Update(cart2, ID, amount);
+                        bl.Cart.Update(cart, ID, amount);
                     }
                     catch(BO.dataLayerIdNotFoundException exc) 
                     {
@@ -348,7 +398,7 @@ class BlTest
 
                     try
                     {
-                        bl.Cart.PlaceOrder(cart2, customerName, customerEmail, customerAddress);
+                        bl.Cart.PlaceOrder(cart, customerName, customerEmail, customerAddress);
                     }
                     catch(BO.InputIsInvalidException exc)
                     {

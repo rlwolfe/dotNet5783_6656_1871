@@ -1,5 +1,6 @@
 ﻿using BlApi;
 using Dal;
+using DO;
 using System.Text.RegularExpressions;
 
 namespace BlImplementation
@@ -28,7 +29,7 @@ namespace BlImplementation
 				throw new BO.blGeneralException();
             }
 			//save id here needs try catch
-			return product.m_id;			//changed from prod
+			return prod.m_id;			//changed from prod
 		}
 
 		public BO.ProductItem CustomerRequest(int id)
@@ -134,19 +135,43 @@ namespace BlImplementation
 		{
 			InputValidation(product);
 
-			DO.Product prod = new DO.Product(product.m_name, (DO.Enums.Category)product.m_category, product.m_price, product.m_inStock);
-			try
+            //here be prblem of id
+            //DO.Product prod = new DO.Product(product.m_name, (DO.Enums.Category)product.m_category, product.m_price, product.m_inStock);
+           
+			DO.Product doProd = new DO.Product();	
+
+            try
 			{
-				dal.Product.Update(prod);
+				doProd = dal.Product.Read(product.m_id);
+                doProd.m_id = product.m_id;
+                doProd.m_category = (DO.Enums.Category)product.m_category;
+                doProd.m_price = product.m_price;
+                doProd.m_inStock = product.m_inStock;
+            }
+            catch (DO.idNotFoundException exc)
+            {
+                Console.WriteLine(product.m_id); //maybe?
+                throw new BO.dataLayerIdNotFoundException(exc.Message);
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine("Some other problem - read product (dl)"); //maybe?
+                throw new BO.blGeneralException();
+            }
+			
+
+            try
+			{
+				dal.Product.Update(doProd);
 			}
 			catch (DO.idNotFoundException exc)
 			{
-				Console.WriteLine(prod.m_id); //maybe?
+				Console.WriteLine(doProd.m_id); //maybe?
 				throw new BO.dataLayerIdNotFoundException(exc.Message);
 			}
 			catch (Exception exc)
 			{
-				Console.WriteLine("Some other problem"); //maybe?
+				Console.WriteLine("Some other problem - update product (dl)"); //maybe?
 				throw new BO.blGeneralException();
 			}
 		}

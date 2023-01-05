@@ -11,17 +11,18 @@ namespace BlImplementation
 			try
 			{
 				DO.Product product = dal.Product.Read(prodID);
-				BO.OrderItem orderItem = cart.m_items.Find(x => x.m_productID == prodID);				//does this work
-
+				//this line is the issue - jumps straight to gen exception - null reference -
+				//? stops it from immediately exiting from the following line
+				BO.OrderItem orderItem = cart.m_items?.Find(x => x.m_productID == prodID);
 				if (orderItem == null)
-				{
+                {
 					if (product.m_inStock != 0)
 					{
 						orderItem = new BO.OrderItem();
 						orderItem.m_productID = prodID;
 						orderItem.m_price = product.m_price;
 						orderItem.m_amount = 1;
-						cart.m_items.Add(orderItem);
+						cart.m_items?.Add(orderItem);
 						cart.m_totalPrice += orderItem.m_price;
 					}
 					else

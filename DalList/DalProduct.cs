@@ -47,7 +47,7 @@ internal class DalProduct : IProduct
     public void Update(Product product)
 	{
 		if (DataSource.Products.Exists(x => x.m_id == product.m_id))
-			DataSource.Products.Insert(DataSource.Orders.FindIndex(x => x.m_id == product.m_id), product);
+			DataSource.Products.Insert(DataSource.Products.FindIndex(x => x.m_id == product.m_id), product);
 		else
 			throw new idNotFoundException("Product");
 	}
