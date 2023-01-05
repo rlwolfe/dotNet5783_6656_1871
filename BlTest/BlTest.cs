@@ -60,16 +60,16 @@ class BlTest
 		{
 			Console.WriteLine("Manager Menu\n" +
 						"What would you like to do?\n" +
-						"a - View list of products\n" +
-						"b - Single product details\n" +
-						"c - Add a product\n" +
+						"a - View list of products\n" +     //g
+						"b - Single product details\n" +    //g
+						"c - Add a product\n" +             // returns 0/-1 as id
 						"d - Delete a product\n" +                  //deal with data source
 						"e - Update a  product\n" +                 //update needs id
-						"f - View list of orders\n" +
-						"g - Single order details\n" +
-						"h - Update shipped order\n" +
-						"i - Update delivered order\n" +
-						"j - Track an order\n" +
+						"f - View list of orders\n" +       //returns null (but is this correct?)
+						"g - Single order details\n" +      //must still check maybe check '2'
+						"h - Update shipped order\n" +      //needs implimentation
+						"i - Update delivered order\n" +    //ditto
+						"j - Track an order\n" +            //couldn't check (confirm functionality)
 						"x - Return to Main Menu");
 			subChoice = Console.ReadLine().First();
 
@@ -261,9 +261,9 @@ class BlTest
 		{
 			Console.WriteLine("Customer Menu\n" +
 						"What would you like to do?\n" +
-						"a - View list of products\n" +
-						"b - Single product details\n" +
-						"c - Add product to cart\n" +                       //problematic
+						"a - View list of products\n" +     //g
+						"b - Single product details\n" +    //g
+						"c - Add product to cart\n" +                       //problematic - must also check following features
 						"d - Update quantity or product in cart\n" +
 						"e - Place the order\n" +
 						"f - View order details\n" +
