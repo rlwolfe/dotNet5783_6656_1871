@@ -63,8 +63,8 @@ class BlTest
 						"a - View list of products\n" +
 						"b - Single product details\n" +
 						"c - Add a product\n" +
-						"d - Delete a product\n" +
-						"e - Update a  product\n" +
+						"d - Delete a product\n" +                  //deal with data source
+						"e - Update a  product\n" +                 //update needs id
 						"f - View list of orders\n" +
 						"g - Single order details\n" +
 						"h - Update shipped order\n" +
@@ -225,7 +225,7 @@ class BlTest
 
         int catNum = Convert.ToInt16(Console.ReadLine());
         product.m_category = (BO.Enums.Category)catNum;
-
+                                                                        //ask for id
         Console.WriteLine("What is the name of the product?");
         product.m_name = Console.ReadLine();
 
@@ -259,11 +259,11 @@ class BlTest
         char subChoice = '-';
 		do
 		{
-			Console.WriteLine("Product Menu\n" +
+			Console.WriteLine("Customer Menu\n" +
 						"What would you like to do?\n" +
 						"a - View list of products\n" +
 						"b - Single product details\n" +
-						"c - Add product to cart\n" +
+						"c - Add product to cart\n" +                       //problematic
 						"d - Update quantity or product in cart\n" +
 						"e - Place the order\n" +
 						"f - View order details\n" +

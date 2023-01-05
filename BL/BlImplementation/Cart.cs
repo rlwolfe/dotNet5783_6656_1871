@@ -11,7 +11,7 @@ namespace BlImplementation
 			try
 			{
 				DO.Product product = dal.Product.Read(prodID);
-				BO.OrderItem orderItem = cart.m_items.Find(x => x.m_productID == prodID);
+				BO.OrderItem orderItem = cart.m_items.Find(x => x.m_productID == prodID);				//does this work
 
 				if (orderItem == null)
 				{

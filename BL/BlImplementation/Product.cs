@@ -28,7 +28,7 @@ namespace BlImplementation
 				throw new BO.blGeneralException();
             }
 			//save id here needs try catch
-			return prod.m_id;
+			return product.m_id;			//changed from prod
 		}
 
 		public BO.ProductItem CustomerRequest(int id)
