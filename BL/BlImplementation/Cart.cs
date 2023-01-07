@@ -184,7 +184,7 @@ namespace BlImplementation
 
 			foreach (BO.OrderItem orderItem in cart.m_items)
 			{
-				if (orderItem.m_amount <= 0 || orderItem.m_amount > dal.Product.ReadAll().First().m_inStock)
+				if (orderItem.m_amount <= 0 || orderItem.m_amount > dal.Product.Read(orderItem.m_productID).m_inStock)
 					throw new BO.blGeneralException();
 
 				DO.OrderItem newItem = new DO.OrderItem();

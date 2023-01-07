@@ -9,7 +9,7 @@ namespace BlTest;
 class BlTest
 {
     static IBl bl = new Bl();
-    static BO.Cart cart = new BO.Cart();  //can't do it in main (w/o static) as is not recognised in customer menu
+    //static BO.Cart cart = new BO.Cart();  //can't do it in main (w/o static) as is not recognised in customer menu
 										    //can't do here w/o static keyword - but still not sure if this is correct choice
 										   //can put in customer menu w/o static - poss solution?
     static void Main(string[] args)
@@ -306,7 +306,7 @@ class BlTest
 
     static void CustomerChosen()
 	{
-        //BO.Cart cart2 = new BO.Cart();
+        BO.Cart cart2 = new BO.Cart();
         char subChoice = '-';
 		do
 		{
@@ -347,7 +347,7 @@ class BlTest
                     ID = Convert.ToInt32(Console.ReadLine());
 					try
 					{
-						bl.Cart.AddToCart(cart, ID); //see nores on cart at top
+						bl.Cart.AddToCart(cart2, ID); //see nores on cart at top
 					}
                     catch (BO.dataLayerIdNotFoundException exc)
                     {
@@ -370,7 +370,7 @@ class BlTest
                     int amount = Convert.ToInt32(Console.ReadLine());
                     try
                     {
-                        bl.Cart.Update(cart, ID, amount);
+                        bl.Cart.Update(cart2, ID, amount);
                     }
                     catch(BO.dataLayerIdNotFoundException exc) 
                     {
@@ -399,7 +399,7 @@ class BlTest
 
                     try
                     {
-                        bl.Cart.PlaceOrder(cart, customerName, customerEmail, customerAddress);
+                        bl.Cart.PlaceOrder(cart2, customerName, customerEmail, customerAddress);
                     }
                     catch(BO.InputIsInvalidException exc)
                     {
