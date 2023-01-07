@@ -375,7 +375,7 @@ namespace BlImplementation
 			if (order.m_customerName == null || !Regex.IsMatch(order.m_customerName, @"^[a-zA-Z]+$"))
 				throw new BO.InputIsInvalidException("Customer Name");
 			//add @ and . to regex expression
-			if (order.m_customerEmail == null || !Regex.IsMatch(order.m_customerEmail, @"^[^@\s] +@[^@\s] +\.[^@\s]+$"))
+			if (order.m_customerEmail == null || !Regex.IsMatch(order.m_customerEmail, @"^[a-zA-Z]+\@+[a-zA-Z]+\.+[a-zA-Z]+$"))
 				throw new BO.InputIsInvalidException("Customer Email");
 			//regex expression (up to 4 digits for number space, street name, space, street type (1st letter caps, up to 3 more lowercase
 			if (order.m_customerAddress == null || !Regex.IsMatch(order.m_customerAddress,
@@ -384,10 +384,10 @@ namespace BlImplementation
 			//if orderDate is later or equal to shipDate or delivery date
 			if ((DateTime.Compare(order.m_orderDate, order.m_shipDate) > 0 || DateTime.Compare(order.m_orderDate, order.m_shipDate) == 0) ||
 				(DateTime.Compare(order.m_orderDate, order.m_deliveryDate) > 0 || DateTime.Compare(order.m_orderDate, order.m_shipDate) == 0))
-				throw new BO.InputIsInvalidException("OrderDate");
+				throw new BO.InputIsInvalidException("OrderDate after ship or delivery date");
 			//if shipDate is later than delivery date
 			if (DateTime.Compare(order.m_shipDate, order.m_deliveryDate) > 0)
-				throw new BO.InputIsInvalidException("ShipDate");
+				throw new BO.InputIsInvalidException("ShipDate after delivery date");
 		}
 	}
 }

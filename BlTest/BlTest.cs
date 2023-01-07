@@ -21,7 +21,7 @@ class BlTest
             Console.WriteLine("Main Menu\n" +
                 "Who are you?\n" +
                 "1 - I am a manager\n" +
-                "2 - I am a customer" +
+                "2 - I am a customer\n" +
                 "0 - Exit");
 
 			choice = Convert.ToInt16(Console.ReadLine());
