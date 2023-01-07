@@ -7,22 +7,44 @@ using System.Threading.Tasks;
 
 namespace BO
 {
-		[Serializable]
-	public class InputIsInvalidException : Exception
-	{
-		public InputIsInvalidException() : base()
-		{
-			Console.WriteLine("That is invalid");
-		}
-		public InputIsInvalidException(string entity) : base(entity)
-		{
-			Console.WriteLine($"The {entity} entered is invalid");
-		}
-		public InputIsInvalidException(string message, Exception innerException) : base(message, innerException) { }
-		protected InputIsInvalidException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-	}
+    [Serializable]
+    public class InputIsInvalidException : Exception
+    {
+        public InputIsInvalidException() : base()
+        {
+            Console.WriteLine("That is invalid");
+        }
+        public InputIsInvalidException(string entity) : base(entity)
+        {
+            Console.WriteLine($"The {entity} entered is invalid");
+        }
+        public InputIsInvalidException(string message, Exception innerException) : base(message, innerException) { }
+        protected InputIsInvalidException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    }
 
     [Serializable]
+    public class UnableToExecute : Exception        //change name?
+    {
+        public UnableToExecute() : base()
+        {
+            Console.WriteLine("Cannot execute request");
+		}
+		public UnableToExecute(string entity) : base(entity)        //unfixable
+		{
+			Console.WriteLine($"Cannot execute request because: {entity}");
+		}
+
+		public UnableToExecute(string entity, int id) : base(entity)        //fixable
+        {
+            Console.WriteLine($"Cannot execute request because: {entity}");
+		}
+
+		public UnableToExecute(string message, Exception innerException) : base(message, innerException) { }
+		protected UnableToExecute(SerializationInfo info, StreamingContext context) : base(info, context) { }
+	}
+
+
+	[Serializable]
     public class dataLayerEntityNotFoundException : Exception
     {
         public dataLayerEntityNotFoundException() : base()

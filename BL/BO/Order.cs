@@ -20,17 +20,29 @@ namespace BO
 		public List<OrderItem> m_items { get; set; }
 		public double m_totalPrice { get; set; }
 
-		public override string ToString() => $@"
-			Order ID = {m_id}
+		public override string ToString()
+		{
+			string str = "";
+			foreach (OrderItem item in m_items)
+			{
+				str += item.ToString();
+				str += "\n";
+			};
+			if (str == "")
+				str = "none";
+
+			return $@"Order ID = {m_id}:
 			Customer Name - {m_customerName},
 			Customer Email - {m_customerEmail},
-			Customer Address: {m_customerAddress},
-			Order Date: {m_orderDate}
-			Status: {m_status},
+			Customer Address - {m_customerAddress},
+			Status - {m_status},
+			Order Date: {m_orderDate},
 			Payment Date: {m_paymentDate},
 			Ship Date: {m_shipDate},
-			Delivery Date: {m_deliveryDate}
+			Delivery Date: {m_deliveryDate},
 			Total Price: {m_totalPrice}
-			Items - {m_items}";
+			
+			Items: {str}";
+		}
 	}
 }

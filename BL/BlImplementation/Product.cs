@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using BO;
 using Dal;
 using DO;
 using System.Text.RegularExpressions;
@@ -143,7 +144,7 @@ namespace BlImplementation
             try
 			{
 				doProd = dal.Product.Read(product.m_id);
-                doProd.m_id = product.m_id;
+                doProd.m_name = product.m_name;
                 doProd.m_category = (DO.Enums.Category)product.m_category;
                 doProd.m_price = product.m_price;
                 doProd.m_inStock = product.m_inStock;
@@ -159,7 +160,6 @@ namespace BlImplementation
                 throw new BO.blGeneralException();
             }
 			
-
             try
 			{
 				dal.Product.Update(doProd);
@@ -180,30 +180,29 @@ namespace BlImplementation
 
 		public void Delete(int productId)
 		{
-			foreach (DO.OrderItem orderItem in dal.OrderItem.ReadAll())
-			{
-				if (productId == orderItem.m_productID)
-					throw new BO.InputIsInvalidException("Product was found in orders still");
-			}
 			try
 			{
+				foreach (DO.OrderItem orderItem in dal.OrderItem.ReadAll())
+				{
+					if (productId == orderItem.m_productID)
+						throw new BO.UnableToExecute("Product was found in orders still", productId);
+				}
 				dal.Product.Delete(productId);
 			}
-            catch (DO.idNotFoundException exc)
-            {
-                Console.WriteLine(productId); //maybe?
-                throw new BO.dataLayerIdNotFoundException(exc.Message);
-            }
-			catch (BO.InputIsInvalidException exc)
+			catch (DO.idNotFoundException exc)
 			{
 				Console.WriteLine(productId); //maybe?
-				throw new BO.InputIsInvalidException(exc.Message);
+				throw new BO.dataLayerIdNotFoundException(exc.Message);
+			}
+			catch (BO.UnableToExecute exc)
+			{
+				Console.WriteLine("Please remove items from orders and try again\n");
 			}
 			catch (Exception exc)
-            {
-                Console.WriteLine("Some other problem"); //maybe?
-                throw new BO.blGeneralException();
-            }
+			{
+				Console.WriteLine("Some other problem"); //maybe?
+				throw new BO.blGeneralException();
+			}
         }
 		
 		private static void InputValidation(BO.Product product)

@@ -14,9 +14,8 @@ namespace BO
 		public double m_price { get; set; }
 
 		public override string ToString() => $@"
-			ID = {m_id}
-			Name: {m_name},
-			Category - {m_category}
+			Product ID={m_id}: Name - {m_name},
+			Category - {m_category},
 			Price: {m_price}";
 	}
 }

@@ -12,9 +12,20 @@ namespace BO
 		public int m_id { get; set; }
 		public OrderStatus m_status { get; set; }
 		public List<Tuple<DateTime, string>>? DatePairs { get; set; }
-		public override string ToString() => $@"
-			Product ID = {m_id},
-			Status: {m_status},
-			Dates tracked: {DatePairs}";
+		public override string ToString()
+		{
+			string str = "";
+			foreach (Tuple<DateTime, string> pair in DatePairs)
+			{
+				str += pair.ToString();
+				str += "\n";
+			};
+			if (str == "")
+				str = "No dates to track";
+
+			return $@"Product ID = {m_id},
+			Status - {m_status},
+			Dates tracked: {str}";
+		}
 	}
 }

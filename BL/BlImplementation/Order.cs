@@ -1,15 +1,68 @@
 ﻿using BlApi;
+using BO;
 using Dal;
+using DO;
 using System.Text.RegularExpressions;
 
 namespace BlImplementation
 {
 	internal class Order : IOrder
 	{
-		private IDal? dal = new DalList();
+		static private IDal? dal = new DalList();
 		static public List<BO.Order> Orders = new List<BO.Order>();
+
+		static private void fillOrders()
+		{
+			foreach (DO.Order doOrder in dal.Order.ReadAll())
+			{
+				BO.Order boOrder = new BO.Order();
+				boOrder.m_id = doOrder.m_id;
+				boOrder.m_customerName = doOrder.m_customerName;
+				boOrder.m_customerAddress = doOrder.m_customerAddress;
+				boOrder.m_customerEmail = doOrder.m_customerEmail;
+				boOrder.m_orderDate = doOrder.m_orderDate;
+				boOrder.m_shipDate = doOrder.m_shipDate;
+				boOrder.m_deliveryDate = doOrder.m_deliveryDate;
+				boOrder.m_paymentDate = DateTime.MinValue;
+
+				if (boOrder.m_orderDate != DateTime.MinValue && boOrder.m_orderDate <= DateTime.Now)
+					if (boOrder.m_shipDate != DateTime.MinValue && boOrder.m_shipDate <= DateTime.Now)
+						if (boOrder.m_deliveryDate != DateTime.MinValue && boOrder.m_deliveryDate <= DateTime.Now)
+							boOrder.m_status = BO.Enums.OrderStatus.Delivered;                      //past delivery, shipped and ordered
+						else
+							boOrder.m_status = BO.Enums.OrderStatus.Shipped;                        //not past delivery, but past order and shipped dates
+					else
+						boOrder.m_status = BO.Enums.OrderStatus.Ordered;                            //not past shipped, but past ordered
+				else
+					boOrder.m_status = BO.Enums.OrderStatus.None;                                   //not past shipped, ordered or delivered
+
+				boOrder.m_totalPrice = 0;
+				boOrder.m_items = new();
+				foreach (DO.OrderItem doItem in dal.OrderItem.ReadAll())
+				{
+					BO.OrderItem boItem = new();
+					if (doItem.m_orderID == doOrder.m_id)
+					{
+						boItem.m_id = doItem.m_id;
+						boItem.m_productID = doItem.m_productID;
+						boItem.m_amount = doItem.m_amount;
+						boItem.m_price = doItem.m_price;
+					}
+					else
+						continue;
+
+					boOrder.m_totalPrice += (boItem.m_price * boItem.m_amount);
+					boOrder.m_items.Add(boItem);
+				}
+
+				Orders.Add(boOrder);
+			}
+		}
+
 		public int Create(BO.Order order)
 		{
+			if (Orders.Count == 0)
+				fillOrders();
 			InputValidation(order);
 
 			DO.Order ord = new DO.Order(order.m_customerName, order.m_customerEmail, order.m_customerAddress, order.m_orderDate,
@@ -35,53 +88,145 @@ namespace BlImplementation
 
 		public BO.Order Read(int id)
 		{
-			BO.Order order = null;
+			BO.Order order = new BO.Order();
 			try
 			{
 				if (id > 0)
 					order = Orders.Find(x => x.m_id == id);
 				else
-					throw new BO.InputIsInvalidException();
+					throw new BO.InputIsInvalidException("ID");
 			}
 			catch (BO.InputIsInvalidException)
 			{
-				Console.WriteLine("ID is invalid");
-				throw new BO.InputIsInvalidException();
+				Console.WriteLine(id);
 			}
 			if (order != null)
 				return order;
 
-			throw new BO.InputIsInvalidException();
+			order = new BO.Order();
+			try
+			{
+				DO.Order doOrd = dal.Order.Read(id);
+				order.m_id = doOrd.m_id;
+				order.m_customerName = doOrd.m_customerName;
+				order.m_customerEmail = doOrd.m_customerEmail;
+				order.m_customerAddress = doOrd.m_customerAddress;
+				order.m_orderDate = doOrd.m_orderDate;
+				order.m_shipDate = doOrd.m_shipDate;
+				order.m_deliveryDate = doOrd.m_deliveryDate;
+				order.m_paymentDate = DateTime.MinValue;
+
+				if (order.m_orderDate != DateTime.MinValue && order.m_orderDate <= DateTime.Now)
+					if (order.m_shipDate != DateTime.MinValue && order.m_shipDate <= DateTime.Now)
+						if (order.m_deliveryDate != DateTime.MinValue && order.m_deliveryDate <= DateTime.Now)
+							order.m_status = BO.Enums.OrderStatus.Delivered;					  //past delivery, shipped and ordered
+						else
+							order.m_status = BO.Enums.OrderStatus.Shipped;                        //not past delivery, but past order and shipped dates
+					else
+						order.m_status = BO.Enums.OrderStatus.Ordered;                            //not past shipped, but past ordered
+				else
+					order.m_status = BO.Enums.OrderStatus.None;                                   //not past shipped, ordered or delivered
+
+
+
+				order.m_totalPrice = 0;
+				order.m_items = new();
+				foreach (DO.OrderItem doItem in dal.OrderItem.ReadAll())
+				{
+					BO.OrderItem boItem = new();
+					if (doItem.m_orderID == id)
+					{
+						boItem.m_id = doItem.m_id;
+						boItem.m_productID = doItem.m_productID;
+						boItem.m_amount = doItem.m_amount;
+						boItem.m_price = doItem.m_price;
+					}
+					else
+						continue;
+
+					order.m_totalPrice += (boItem.m_price * boItem.m_amount);
+					order.m_items.Add(boItem);
+				}
+			}
+			catch (DO.idNotFoundException exc)
+			{
+				Console.WriteLine(id);
+				throw new BO.dataLayerEntityNotFoundException(exc.Message);
+			}
+			catch (Exception exc)
+			{
+				Console.WriteLine("Some other problem"); //maybe?
+				throw new BO.blGeneralException();
+			}
+			return order;
 		}
 
 		public IEnumerable<BO.OrderForList> ReadAll()
 		{
+			if (Orders.Count == 0)
+				fillOrders();
 			List<BO.OrderForList> listOfOrders = new List<BO.OrderForList>();
-			foreach (BO.Order order in Orders)
+			if (Orders.Count > 0)
 			{
-				BO.OrderForList orderForList = new BO.OrderForList()
+				foreach (BO.Order order in Orders)
 				{
-					m_id = order.m_id,
-					m_customerName = order.m_customerName,
-					m_status = order.m_status,
-					m_amountOfItems = order.m_items.Count,
-					m_totalPrice = order.m_totalPrice
-				};
-				listOfOrders.Add(orderForList);
+					BO.OrderForList orderForList = new BO.OrderForList()
+					{
+						m_id = order.m_id,
+						m_customerName = order.m_customerName,
+						m_status = order.m_status,
+						m_amountOfItems = order.m_items.Count,
+						m_totalPrice = order.m_totalPrice
+					};
+					listOfOrders.Add(orderForList);
+				}
+			}
+			else
+			{
+				foreach (DO.Order order in dal.Order.ReadAll())
+				{
+					BO.OrderForList orderForList = new BO.OrderForList()
+					{
+						m_id = order.m_id,
+						m_customerName = order.m_customerName
+					};
+
+					if (order.m_orderDate != DateTime.MinValue && order.m_orderDate <= DateTime.Now)
+						if (order.m_shipDate != DateTime.MinValue && order.m_shipDate <= DateTime.Now)
+							if (order.m_deliveryDate != DateTime.MinValue && order.m_deliveryDate <= DateTime.Now)
+								orderForList.m_status = BO.Enums.OrderStatus.Delivered;                      //past delivery, shipped and ordered
+							else
+								orderForList.m_status = BO.Enums.OrderStatus.Shipped;                        //not past delivery, but past order and shipped dates
+						else
+							orderForList.m_status = BO.Enums.OrderStatus.Ordered;                            //not past shipped, but past ordered
+					else
+						orderForList.m_status = BO.Enums.OrderStatus.None;                                   //not past shipped, ordered or delivered
+
+					foreach (DO.OrderItem orderItem in dal.OrderItem.ReadAll())
+					{
+						if (orderItem.m_orderID == order.m_id)
+						{
+							orderForList.m_amountOfItems += orderItem.m_amount;
+							orderForList.m_totalPrice += (orderItem.m_amount * orderItem.m_price);
+						}
+					}
+					listOfOrders.Add(orderForList);
+				}
 			}
 			return listOfOrders;
 		}
 
-
 		public BO.Order UpdateOrderStatus(int orderId, BO.Enums.OrderStatus newStatus)
 		{
+			if (Orders.Count == 0)
+				fillOrders();
 			BO.Order boOrder = Read(orderId);
 			if (boOrder == null)
 			{
 				try
 				{
 					DO.Order doOrder = dal.Order.Read(orderId);
-
+					boOrder = new BO.Order();
 					boOrder.m_id = doOrder.m_id;
 					boOrder.m_customerName = doOrder.m_customerName;
 					boOrder.m_customerAddress = doOrder.m_customerAddress;
@@ -103,7 +248,6 @@ namespace BlImplementation
 						boOrder.m_totalPrice += (doItem.m_amount * doItem.m_price);
 						boOrder.m_items.Add(boItem);
 					}
-
 
 					boOrder.m_orderDate = doOrder.m_orderDate;
 					boOrder.m_deliveryDate = doOrder.m_deliveryDate;
@@ -162,6 +306,11 @@ namespace BlImplementation
 			else
 			{
 				int ordIndex = Orders.FindIndex(x => x.m_id == orderId);
+				if (ordIndex == -1)
+				{
+					Orders.Add(boOrder);
+					ordIndex = Orders.FindIndex(x => x.m_id == orderId);
+				}
 				switch (newStatus)
 				{
 					case BO.Enums.OrderStatus.Ordered:
@@ -180,6 +329,7 @@ namespace BlImplementation
 						break;
 				}
 			}
+			Console.WriteLine("Update successful");
 			return boOrder;
 		}
 
@@ -204,13 +354,14 @@ namespace BlImplementation
 			}
 			BO.OrderTracking orderTracking = new BO.OrderTracking();
 			orderTracking.m_id = orderId;
-			orderTracking.m_status = boOrder.m_status;
+			orderTracking.m_status = boOrder.m_status;          //date check?
+			orderTracking.DatePairs = new List<Tuple<DateTime, string>>();
 
 			if (boOrder.m_orderDate != DateTime.MinValue)
-				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_orderDate, "The order has been Ordered"));
+				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_orderDate, "The order has been ordered"));
 
 			if (boOrder.m_shipDate != DateTime.MinValue)
-				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_shipDate, "The order has been Shipped"));
+				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_shipDate, "The order has been shipped"));
 
 			if (boOrder.m_deliveryDate != DateTime.MinValue)
 				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_deliveryDate, "The order has been delivered"));

@@ -76,7 +76,7 @@ namespace BlImplementation
 
 		public IEnumerable<BO.OrderItem> ReadAll()
 		{
-			IEnumerable<BO.OrderItem> orderItems = null;
+			List<BO.OrderItem> orderItems = new();
 			try
 			{
 				foreach (DO.OrderItem ordItem in dal.OrderItem.ReadAll())

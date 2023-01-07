@@ -18,10 +18,11 @@ class BlTest
         int choice;
 		do
 		{
-			Console.WriteLine("0 - Exit\n" +
-				"Who are you?\n" +
-				"1 - I am a manager\n" +
-				"2 - I am a customer");
+            Console.WriteLine("Main Menu\n" +
+                "Who are you?\n" +
+                "1 - I am a manager\n" +
+                "2 - I am a customer" +
+                "0 - Exit");
 
 			choice = Convert.ToInt16(Console.ReadLine());
 			try
@@ -60,20 +61,18 @@ class BlTest
 		{
 			Console.WriteLine("Manager Menu\n" +
 						"What would you like to do?\n" +
-						"a - View list of products\n" +     //g
-						"b - Single product details\n" +    //g
-						"c - Add a product\n" +             // returns 0/-1 as id - fixed
-						"d - Delete a product\n" +                  //deal with data source 
-                                                                    //delete works on new product that is defs not in any orders
+						"a - View list of products\n" + 
+						"b - Single product details\n" +
+						"c - Add a product\n" +
+						"d - Delete a product\n" +
 						"e - Update a  product\n" +                 //changes don't take - creates new DO.Product - thus new ID#, thus ID doesn't match - so original isn't found
                                                                     //(id counter still increases and still prints that the product was updated!) 
                                                                     //- fixed the new do.product - not that it prints when it shouldn't
-						"f - View list of orders\n" +       //returns null (but is this correct?)
-                                                            //more correctly prints nothing
-						"g - Single order details\n" +      //must still check maybe check '2'
-						"h - Update shipped order\n" +      //needs implimentation
-						"i - Update delivered order\n" +    //ditto
-						"j - Track an order\n" +            //couldn't check (confirm functionality)
+						"f - View list of orders\n" +
+						"g - Single order details\n" + 
+						"h - Update shipped order\n" +
+						"i - Update delivered order\n" +
+						"j - Track an order\n" +
 						"x - Return to Main Menu");
 			subChoice = Console.ReadLine().First();
 
@@ -140,11 +139,15 @@ class BlTest
                     break;
 
 				case 'h':
-
+					Console.WriteLine("What is the ID of the order you want to mark as shipped?");
+					ID = Convert.ToInt32(Console.ReadLine());
+					bl.Order.UpdateOrderStatus(ID, BO.Enums.OrderStatus.Shipped);
 					break;
 
 				case 'i':
-
+					Console.WriteLine("What is the ID of the order you want to mark as delivered?");
+					ID = Convert.ToInt32(Console.ReadLine());
+					bl.Order.UpdateOrderStatus(ID, BO.Enums.OrderStatus.Delivered);
 					break;
 
 				case 'j':
@@ -152,7 +155,7 @@ class BlTest
                     ID = Convert.ToInt32(Console.ReadLine());
 					try
 					{
-						bl.Order.OrderTracker(ID);
+                        Console.WriteLine(bl.Order.OrderTracker(ID));
 					}
                     catch (BO.dataLayerIdNotFoundException exc)
                     {
@@ -176,8 +179,6 @@ class BlTest
 		} while (subChoice != 'x');
 
 	}
-
-
 
     static void ProductCreate()
     {

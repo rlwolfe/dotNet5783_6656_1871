@@ -126,7 +126,7 @@ static internal class DataSource
 				OrderItem orderItem = new OrderItem(productToAdd.m_id, orderToAdd.m_id,
 					productToAdd.m_price, _randomNum.Next(1, 5));      //randomly chooses amount of product in order
 
-				OrderItems.Add(orderItem);							//adds orderItem to array
+				OrderItems.Add(orderItem);							//adds orderItem to list
 				confirmed = true;										//ends loop
 
 			} while (!confirmed);

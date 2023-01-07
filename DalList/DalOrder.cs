@@ -38,7 +38,6 @@ internal class DalOrder : IOrder
 
 	public IEnumerable<Order> ReadAll()
 	{
-		//maybe need to add new array and return that instead???
 		return DataSource.Orders;
 	}
 
