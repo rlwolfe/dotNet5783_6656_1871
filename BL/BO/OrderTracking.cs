@@ -15,7 +15,7 @@ namespace BO
 		public override string ToString()
 		{
 			string str = "";
-			foreach (Tuple<DateTime, string> pair in DatePairs)
+			foreach (Tuple<DateTime, string> pair in DatePairs)			//creates string to add to ToString of list of tuples
 			{
 				str += pair.ToString();
 				str += "\n";

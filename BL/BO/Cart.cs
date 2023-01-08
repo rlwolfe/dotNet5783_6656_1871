@@ -18,7 +18,7 @@ namespace BO
 		public override string ToString()
 		{
 			string str = "";
-			foreach (OrderItem item in m_items)
+			foreach (OrderItem item in m_items)                 //creates string to add to ToString of list items in cart
 			{
 				str += item.ToString();
 				str += "\n";
