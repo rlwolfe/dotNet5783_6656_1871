@@ -1,7 +1,5 @@
 ﻿using BlApi;
-using BO;
 using Dal;
-using DO;
 using System.Text.RegularExpressions;
 
 namespace BlImplementation
@@ -10,6 +8,13 @@ namespace BlImplementation
 	{
 		private IDal? dal = new DalList();
 
+		/// <summary>
+		/// creates a new product
+		/// </summary>
+		/// <param name="product"></param>
+		/// <returns>id of the created product</returns>
+		/// <exception cref="BO.dataLayerIdAlreadyExistsException"></exception>
+		/// <exception cref="BO.blGeneralException"></exception>
 		public int Create(BO.Product product)
 		{
 			InputValidation(product);
@@ -21,18 +26,24 @@ namespace BlImplementation
 			}
 			catch(DO.idAlreadyExistsException exc) 
 			{
-				Console.WriteLine(prod.m_id); //maybe?
+				Console.WriteLine(prod.m_id);
 				throw new BO.dataLayerIdAlreadyExistsException(exc.Message);
 			}
 			catch(Exception exc)
 			{
-                Console.WriteLine("Some other problem"); //maybe?
+                Console.WriteLine("Some other problem");
 				throw new BO.blGeneralException();
             }
-			//save id here needs try catch
-			return prod.m_id;			//changed from prod
+			return prod.m_id;
 		}
 
+		/// <summary>
+		/// gets product details for customer
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns>instance of the product for customer</returns>
+		/// <exception cref="BO.dataLayerIdNotFoundException"></exception>
+		/// <exception cref="BO.blGeneralException"></exception>
 		public BO.ProductItem CustomerRequest(int id)
 		{
 			DO.Product product;
@@ -42,12 +53,12 @@ namespace BlImplementation
 			}
             catch (DO.idNotFoundException exc)
             {
-                Console.WriteLine(id); //maybe?
+				Console.WriteLine(id);
                 throw new BO.dataLayerIdNotFoundException(exc.Message);
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Some other problem"); //maybe?
+                Console.WriteLine("Some other problem");
                 throw new BO.blGeneralException();
             }
 
@@ -64,9 +75,13 @@ namespace BlImplementation
             return productItem;
 		}
 
+		/// <summary>
+		/// gets all products for customer to view in list
+		/// </summary>
+		/// <returns>list of products</returns>
+		/// <exception cref="BO.blGeneralException"></exception>
 		public IEnumerable<BO.Product> CatalogRequest()
 		{
-            //IEnumerable<BO.Product> products = null;
             List<BO.Product> products = new ();
             try
 			{
@@ -84,12 +99,19 @@ namespace BlImplementation
 			}
 			catch(Exception exc)
 			{
-				Console.WriteLine("Some other problem"); //maybe?
+				Console.WriteLine("Some other problem");
                 throw new BO.blGeneralException();
             }
 			return products;
 		}
 
+		/// <summary>
+		/// gets product details for manager to see
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns>product</returns>
+		/// <exception cref="BO.dataLayerIdNotFoundException"></exception>
+		/// <exception cref="BO.blGeneralException"></exception>
 		public BO.Product ManagerRequest(int id)
 		{
 			BO.Product product = new BO.Product();
@@ -104,17 +126,21 @@ namespace BlImplementation
 			}
 			catch (DO.idNotFoundException exc)
 			{
-				Console.WriteLine(id); //maybe?
+				Console.WriteLine(id);
 				throw new BO.dataLayerIdNotFoundException(exc.Message);
 			}
 			catch (Exception exc)
 			{
-				Console.WriteLine("Some other problem"); //maybe?
+				Console.WriteLine("Some other problem");
 				throw new BO.blGeneralException();
 			}
 			return product;
 		}
 
+		/// <summary>
+		/// gets list of all products without amounts for manager to view
+		/// </summary>
+		/// <returns>list of limited product information</returns>
 		public IEnumerable<BO.ProductForList> ManagerListRequest()
 		{
 			List<BO.ProductForList> list = new();
@@ -132,15 +158,17 @@ namespace BlImplementation
 			return list;
 		}
 
+		/// <summary>
+		/// allows manager to update product information
+		/// </summary>
+		/// <param name="product"></param>
+		/// <exception cref="BO.dataLayerIdNotFoundException"></exception>
+		/// <exception cref="BO.blGeneralException"></exception>
 		public void Update(BO.Product product)
 		{
 			InputValidation(product);
 
-            //here be prblem of id
-            //DO.Product prod = new DO.Product(product.m_name, (DO.Enums.Category)product.m_category, product.m_price, product.m_inStock);
-           
-			DO.Product doProd = new DO.Product();	
-
+			DO.Product doProd = new DO.Product();
             try
 			{
 				doProd = dal.Product.Read(product.m_id);
@@ -151,12 +179,12 @@ namespace BlImplementation
             }
             catch (DO.idNotFoundException exc)
             {
-                Console.WriteLine(product.m_id); //maybe?
+                Console.WriteLine(product.m_id); 
                 throw new BO.dataLayerIdNotFoundException(exc.Message);
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Some other problem - read product (dl)"); //maybe?
+                Console.WriteLine("Some other problem - read product (dl)");
                 throw new BO.blGeneralException();
             }
 			
@@ -166,18 +194,22 @@ namespace BlImplementation
 			}
 			catch (DO.idNotFoundException exc)
 			{
-				Console.WriteLine(doProd.m_id); //maybe?
+				Console.WriteLine(doProd.m_id);
 				throw new BO.dataLayerIdNotFoundException(exc.Message);
 			}
 			catch (Exception exc)
 			{
-				Console.WriteLine("Some other problem - update product (dl)"); //maybe?
+				Console.WriteLine("Some other problem - update product (dl)");
 				throw new BO.blGeneralException();
 			}
 		}
 
-		
-
+		/// <summary>
+		/// deletes product (if it isn't found in any current orders)
+		/// </summary>
+		/// <param name="productId"></param>
+		/// <exception cref="BO.dataLayerIdNotFoundException"></exception>
+		/// <exception cref="BO.blGeneralException"></exception>
 		public void Delete(int productId)
 		{
 			try
@@ -191,7 +223,7 @@ namespace BlImplementation
 			}
 			catch (DO.idNotFoundException exc)
 			{
-				Console.WriteLine(productId); //maybe?
+				Console.WriteLine(productId);
 				throw new BO.dataLayerIdNotFoundException(exc.Message);
 			}
 			catch (BO.UnableToExecute exc)
@@ -200,11 +232,17 @@ namespace BlImplementation
 			}
 			catch (Exception exc)
 			{
-				Console.WriteLine("Some other problem"); //maybe?
+				Console.WriteLine("Some other problem");
 				throw new BO.blGeneralException();
 			}
+			Console.WriteLine($"Product with id - {productId} was deleted successfully");
         }
 		
+		/// <summary>
+		/// validates information from user
+		/// </summary>
+		/// <param name="product"></param>
+		/// <exception cref="BO.InputIsInvalidException"></exception>
 		private static void InputValidation(BO.Product product)
 		{
 			if (product.m_name == null || !Regex.IsMatch(product.m_name, @"^[a-zA-Z]+$"))

@@ -23,7 +23,7 @@ namespace BO
     }
 
     [Serializable]
-    public class UnableToExecute : Exception        //change name?
+    public class UnableToExecute : Exception
     {
         public UnableToExecute() : base()
         {

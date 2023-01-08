@@ -24,7 +24,7 @@ class DalTest
 				"3 - Go to OrderItem Menu\n" +
 				"Please enter your choice...");
 
-			choice = Convert.ToInt16(Console.ReadLine());
+			choice = Convert.ToInt32(Console.ReadLine());
 			try
 			{
 				switch (choice)
@@ -143,12 +143,11 @@ class DalTest
     static void ProductCreate()
 	{
 		Console.WriteLine("What category does the product fall under?");
-		//Console.WriteLine("What # category does the product fall under?");
 		
 		foreach (Enums.Category enumCategory in Enum.GetValues(typeof(Enums.Category)))
 			Console.WriteLine(enumCategory.GetHashCode() + " - " + enumCategory);
 
-		int catNum = Convert.ToInt16(Console.ReadLine());
+		int catNum = Convert.ToInt32(Console.ReadLine());
 		Enums.Category category = (Enums.Category)catNum;
 
 		Console.WriteLine("What is the name of the product?");
@@ -301,13 +300,11 @@ class DalTest
 		
 
 		Console.WriteLine("What is the customer's email?");
-		string email = Console.ReadLine();		//check it's a valid email?
+		string email = Console.ReadLine();
 
 		Console.WriteLine("What is the customer's address?");
 		string address = Console.ReadLine();
 
-		//how do we set the ship/deliv dates
-		//order date set to today?
 
 		Order order = new Order(name, email, address, DateTime.Today, DateTime.Today, DateTime.Today);
 		Console.WriteLine("This is the ID of the order just created: " + dalList.Order.Create(order));

@@ -70,7 +70,7 @@ internal class DalOrderItem : IOrderItem
 	/// Update function for when given Product ID and OrderID
 	/// </summary>
 	public void SetOrderItemWithProdAndOrderID(int productId, int orderId) //OrderItem SetOrderItemWithProdAndOrderID(int productId, int orderId)
-	{//how to determine what to change?
+	{//how to determine what to change? He's getting back to us
 		OrderItem[] tempList = DataSource.OrderItems.Where(x => x.m_productID == productId && x.m_orderID == orderId).ToArray<OrderItem>();
 
 		//if (tempList.Length == 0){

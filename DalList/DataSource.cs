@@ -61,10 +61,10 @@ static internal class DataSource
 			randNums.Add(item);											//add product to list for future checking
 			price = Math.Round((_randomNum.Next(1,21) + _randomNum.NextDouble()), 2);   //price is random int + random decimal = creates a double
 
-			Product product = new Product(Enums.ProductName.GetName(typeof(Enums.ProductName), item),        //product ID
+			Product product = new Product(Enum.GetName(typeof(Enums.ProductName), item),        //product ID
 					 (Enums.Category)(item / 5),         //Randomly selects name from enum list of products
 																//Finds category in enum's list based on its location
-					price, _randomNum.Next(20));                //price from above & how many currently in stock
+					price, _randomNum.Next(500));                //price from above & how many currently in stock
 
 			if (i < 2)
 				product.m_inStock = 0;              //starting with 5% of products out of stock

@@ -11,8 +11,8 @@ namespace BO
 		public string? m_customerName { get; set; }
 		public string? m_customerEmail { get; set; }
 		public string? m_customerAddress { get; set; }
-		//without this instantiation the m_items reamined null no matter what
-		public List<OrderItem> m_items = new List<OrderItem>();//{ get; set; }
+
+		public List<OrderItem> m_items = new List<OrderItem>();
 		public double m_totalPrice { get; set; }
 
 		public override string ToString()
