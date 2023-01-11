@@ -22,7 +22,7 @@ internal class DalOrderItem : IOrderItem
 		else
 			DataSource.OrderItems.Add(orderItem);
 
-		return orderItem.m_id;;
+		return orderItem.m_id;
 	}
 
     ///<summary>

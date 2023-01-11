@@ -21,9 +21,9 @@ public struct Order
 	}
 
 	public int m_id { get; set; }
-	public string m_customerName { get; set; }
-	public string m_customerEmail { get; set; }
-	public string m_customerAddress { get; set; }
+	public string? m_customerName { get; set; }
+	public string? m_customerEmail { get; set; }
+	public string? m_customerAddress { get; set; }
 	public DateTime m_orderDate { get; set; }
 	public DateTime m_shipDate { get; set; }
 	public DateTime m_deliveryDate { get; set; }
