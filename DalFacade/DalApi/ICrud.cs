@@ -1,6 +1,4 @@
-﻿using DO;
-
-namespace BlApi
+﻿namespace BlApi
 {
 	public interface ICrud<T> where T : struct
 	{

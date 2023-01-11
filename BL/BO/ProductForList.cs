@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BO
+﻿namespace BO
 {
 	public class ProductForList
 	{
@@ -13,9 +7,6 @@ namespace BO
 		public BO.Enums.Category m_category { get; set; }
 		public double m_price { get; set; }
 
-		public override string ToString() => $@"
-			Product ID={m_id}: Name - {m_name},
-			Category - {m_category},
-			Price: {m_price}";
+		public override string ToString() => $"Product ID={m_id}:\nName - {m_name}, Category - {m_category},\nPrice: {m_price}";
 	}
 }

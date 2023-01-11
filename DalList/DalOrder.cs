@@ -40,7 +40,7 @@ internal class DalOrder : IOrder
 	{
 		if (filter == null)
 		{
-			throw new ArgumentNullException(nameof(filter));//filter is null
+			throw new ArgumentNullException(nameof(filter));			//filter is null
 		}
 		foreach (Order? order in DataSource.Orders)
 		{

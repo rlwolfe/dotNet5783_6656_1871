@@ -1,7 +1,5 @@
-﻿using System;
-using DO;
+﻿using DO;
 using Dal;
-using System.Security.Cryptography.X509Certificates;
 using BlApi;
 
 ///<summary>

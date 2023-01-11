@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace DO;
+﻿namespace DO;
 
 /// <summary>
 /// Struct for Order

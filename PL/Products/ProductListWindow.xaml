@@ -8,25 +8,25 @@
         Title="ProductListWindow" Height="640" Width="800">
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="500*"/>
+            <RowDefinition Height="46*"/>
+            <RowDefinition Height="527*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Name="UpGrid" HorizontalAlignment="Stretch" Height="auto" Grid.Row="0"
-        VerticalAlignment="Stretch" Width="auto">
+        <Grid Name="UpGrid" Height="auto" Grid.Row="0" Width="auto">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions >
-            <ComboBox Name="ProductSelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-            <Label Name="ProductLabel" Grid.Column="0" Content="Label" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <ComboBox Name="ProductSelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="ProductSelector_SelectionChanged" FontSize="20"/>
+            <Label Name="ProductLabel" Grid.Column="0" Content="Category:" HorizontalAlignment="Right" FontSize="24" Margin="0,0,20,0"/>
         </Grid>
-        <ListView x:Name="ProductsListView" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
+        <ListView x:Name="ProductsListView" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" MouseDoubleClick="ProductsListView_MouseDoubleClick">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
                 </GridView>
             </ListView.View>
         </ListView>
+        <Button Content="AddProductButton" HorizontalAlignment="Right" Margin="5" Grid.Row="2" Padding="5" Click="AddProductButton_Click"/>
     </Grid>
 </Window>
