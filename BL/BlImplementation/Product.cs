@@ -1,12 +1,11 @@
 ﻿using BlApi;
-using Dal;
 using System.Text.RegularExpressions;
 
 namespace BlImplementation
 {
 	internal class Product : IProduct
 	{
-		private IDal? dal = new DalList();
+		private IDal? dal = DalApi.Factory.Get();
 
 		/// <summary>
 		/// creates a new product

@@ -1,12 +1,11 @@
 ﻿using BlApi;
-using Dal;
 using System.Text.RegularExpressions;
 
 namespace BlImplementation
 {
 	internal class Order : IOrder
 	{
-		static private IDal? dal = new DalList();
+		static private IDal? dal = DalApi.Factory.Get();
 		static public List<BO.Order> Orders = new List<BO.Order>();				//holds orders containing tracking status
 		
 		/// <summary>

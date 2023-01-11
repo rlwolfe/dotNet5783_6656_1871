@@ -1,6 +1,4 @@
-﻿using BlApi;
-using BlImplementation;
-using BO;
+﻿using BO;
 using System;
 using System.Windows;
 
@@ -11,11 +9,13 @@ namespace PL.Products
 	/// </summary>
 	public partial class AddUpdateProduct : Window
 	{
-		private IBl bl = new Bl();
-		public AddUpdateProduct()                   //Add/create a new product
+		private BlApi.IBl? bl = BlApi.Factory.Get();
+		public AddUpdateProduct()                   //create a new product
 		{
 			InitializeComponent();
 			UpdateButton.Visibility = Visibility.Hidden;            //update not enabled in this case
+			IDBox.Visibility = Visibility.Hidden;                   //ID not shown because it is allocated after creation
+			IDLabel.Visibility = Visibility.Hidden;
 			CategoryBox.ItemsSource = Enum.GetValues(typeof(BO.Enums.Category));
 			//display next ID?
 		}

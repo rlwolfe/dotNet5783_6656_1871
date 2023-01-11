@@ -7,12 +7,12 @@ using BlApi;
 /// </summary>
 class DalTest
 {
-	static IDal dalList = new DalList();
+	static IDal dalList = DalApi.Factory.Get();
 
-    ///<summary>
-    /// Main Menu
-    /// </summary>
-    static public void Main()
+	///<summary>
+	/// Main Menu
+	/// </summary>
+	static public void Main()
 	{
 		int choice;
 		do {

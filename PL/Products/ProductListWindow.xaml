@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="ProductListWindow" Height="640" Width="800">
-    <Grid Name="MainGrid">
+    <Grid Name="MainGrid" Background="#FF6B71CB">
         <Grid.RowDefinitions>
             <RowDefinition Height="46*"/>
             <RowDefinition Height="527*"/>
@@ -17,10 +17,10 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions >
-            <ComboBox Name="ProductSelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="ProductSelector_SelectionChanged" FontSize="20"/>
-            <Label Name="ProductLabel" Grid.Column="0" Content="Category:" HorizontalAlignment="Right" FontSize="24" Margin="0,0,20,0"/>
+            <ComboBox Name="ProductSelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="ProductSelector_SelectionChanged" FontSize="20" VerticalContentAlignment="Center"/>
+            <Label Name="ProductLabel" Grid.Column="0" Content="Category:" HorizontalAlignment="Right" FontSize="24" Margin="0,0,20,0" Foreground="Gainsboro"/>
         </Grid>
-        <ListView x:Name="ProductsListView" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" MouseDoubleClick="ProductsListView_MouseDoubleClick">
+        <ListView x:Name="ProductsListView" Grid.Row="1"  d:ItemsSource="{d:SampleData ItemCount=5}" MouseDoubleClick="ProductsListView_MouseDoubleClick" Background="White" Foreground="Black">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>

@@ -43,6 +43,10 @@ namespace DO
 		protected idAlreadyExistsException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 	}
 
-	//no items in that order
-	//The array of order items is already full
+	[Serializable]
+	public class DalConfigException : Exception
+	{
+		public DalConfigException(string msg) : base(msg) { }
+		public DalConfigException(string msg, Exception ex) : base(msg, ex) { }
+	}
 }

@@ -1,10 +1,9 @@
 ﻿using BlApi;
-using BlImplementation;
 
 namespace BlTest;
 class BlTest
 {
-	static IBl bl = new Bl();
+	static IBl? bl = BlApi.Factory.Get();
 	/// <summary>
 	/// Main runs a do/while loop until the user wishes to exit the program
 	/// </summary>
