@@ -8,8 +8,8 @@ namespace DO;
 public struct Order
 {
 	static int idCounter = 1;
-	public Order(string customerName, string customerEmail, string customerAddress, DateTime orderDate,
-		DateTime shipDate, DateTime deliveryDate)
+	public Order(string customerName, string customerEmail, string customerAddress, DateTime? orderDate,
+		DateTime? shipDate, DateTime? deliveryDate)
 	{
 		m_id = idCounter++;
 		m_customerName = customerName;
@@ -24,9 +24,9 @@ public struct Order
 	public string? m_customerName { get; set; }
 	public string? m_customerEmail { get; set; }
 	public string? m_customerAddress { get; set; }
-	public DateTime m_orderDate { get; set; }
-	public DateTime m_shipDate { get; set; }
-	public DateTime m_deliveryDate { get; set; }
+	public DateTime? m_orderDate { get; set; }
+	public DateTime? m_shipDate { get; set; }
+	public DateTime? m_deliveryDate { get; set; }
 
 	public override string ToString() => $@"
 			Order ID = {m_id}:

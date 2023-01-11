@@ -1,0 +1,15 @@
+﻿<Window x:Class="PL.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="400" Width="400">
+    <Grid>
+        <Button Name="ShowProductsButton" Content="Show Products" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,100,0,0" Click="ShowProductsButton_Click" Height="50" Width="200"/>
+        <Button Name="ShowOrdersButton" Content="Show Orders" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Click="ShowOrdersButton_Click" Height="50" Width="200"/>
+        <Button Name="ShowCartsButton" Content="Show Carts" HorizontalAlignment="Center" VerticalAlignment="Bottom"  Margin="0,0,0,100" Click="ShowCartsButton_Click" Height="50" Width="200"/>
+
+    </Grid>
+</Window>

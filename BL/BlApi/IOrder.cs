@@ -10,7 +10,7 @@ namespace BlApi
 	{
 		public int Create(Order order);
 		public Order Read(int id);
-		public IEnumerable<OrderForList> ReadAll();
+		public IEnumerable<OrderForList?> ReadAll();
 		public BO.Order UpdateOrderStatus(int orderId, BO.Enums.OrderStatus newStatus);
 		public OrderTracking OrderTracker(int orderId);
 	}

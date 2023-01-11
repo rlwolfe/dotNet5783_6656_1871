@@ -11,11 +11,11 @@ namespace BO
 	{
 		public int m_id { get; set; }
 		public OrderStatus m_status { get; set; }
-		public List<Tuple<DateTime, string>>? DatePairs { get; set; }
+		public List<Tuple<DateTime?, string?>>? DatePairs { get; set; }
 		public override string ToString()
 		{
 			string str = "";
-			foreach (Tuple<DateTime, string> pair in DatePairs)			//creates string to add to ToString of list of tuples
+			foreach (Tuple<DateTime?, string?> pair in DatePairs)			//creates string to add to ToString of list of tuples
 			{
 				str += pair.ToString();
 				str += "\n";

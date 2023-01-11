@@ -325,19 +325,10 @@ class BlTest
 					try
 					{
 						bl.Cart.AddToCart(cart2, ID);                                                           //adds product to cart
-						Console.WriteLine("This is the ID of the product just added: " + ID);
 					}
 					catch (BO.dataLayerIdNotFoundException exc)
 					{
 						Console.WriteLine(exc.Message);
-					}
-					catch (BO.blGeneralException)
-					{
-						Console.WriteLine("blGeneralException - adding product to cart");
-					}
-					catch (Exception exc)
-					{
-						Console.WriteLine("Some other problem: " + exc.Message);
 					}
 					break;
 
@@ -349,7 +340,6 @@ class BlTest
 					try
 					{
 						bl.Cart.Update(cart2, ID, amount);                                                              //product amount updates in cart
-						Console.WriteLine($"The product with the ID {ID} now has {amount} in the cart ");
 					}
 					catch (BO.dataLayerIdNotFoundException exc)
 					{

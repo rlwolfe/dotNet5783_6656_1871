@@ -85,7 +85,7 @@ namespace BlImplementation
             List<BO.Product> products = new ();
             try
 			{
-				foreach (DO.Product prod in dal.Product.ReadAll())
+				foreach (DO.Product prod in dal.Product.ReadAllFiltered())
 				{
 					BO.Product product = new BO.Product();
 					product.m_id = prod.m_id;
@@ -145,7 +145,7 @@ namespace BlImplementation
 		{
 			List<BO.ProductForList> list = new();
 
-			foreach (DO.Product prod in dal.Product.ReadAll())
+			foreach (DO.Product prod in dal.Product.ReadAllFiltered())
 			{
 				BO.ProductForList productForList = new BO.ProductForList();
 				productForList.m_id = prod.m_id;
@@ -214,7 +214,7 @@ namespace BlImplementation
 		{
 			try
 			{
-				foreach (DO.OrderItem orderItem in dal.OrderItem.ReadAll())
+				foreach (DO.OrderItem orderItem in dal.OrderItem.ReadAllFiltered())
 				{
 					if (productId == orderItem.m_productID)
 						throw new BO.UnableToExecute("Product was found in orders still", productId);

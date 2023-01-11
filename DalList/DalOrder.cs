@@ -13,7 +13,7 @@ internal class DalOrder : IOrder
     /// </summary>
     public int Create(Order order)
 	{
-		if (DataSource.Orders.Exists(x => x.m_id == order.m_id))
+		if (DataSource.Orders.Exists(x => x?.m_id == order.m_id))
 			throw new idAlreadyExistsException("Order");
 
 		else if (DataSource.Orders.Count == DataSource.Orders.Capacity)
@@ -30,15 +30,36 @@ internal class DalOrder : IOrder
     /// </summary>
     public Order Read(int ID)
 	{
-		if (DataSource.Orders.Exists(x => x.m_id == ID))
-			return DataSource.Orders.Find(x => x.m_id == ID);
+		if (DataSource.Orders.Exists(x => x?.m_id == ID))
+			return (Order)DataSource.Orders.Find(x => x?.m_id == ID);
 
 		throw new idNotFoundException("Order");
 	}
 
-	public IEnumerable<Order> ReadAll()
+	public Order ReadWithFilter(Func<Order?, bool>? filter)
 	{
-		return DataSource.Orders;
+		if (filter == null)
+		{
+			throw new ArgumentNullException(nameof(filter));//filter is null
+		}
+		foreach (Order? order in DataSource.Orders)
+		{
+			if (order != null && filter(order))
+			{
+				return (Order)order;
+			}
+		}
+		throw new DO.EntityNotFoundException();
+	}
+
+	public IEnumerable<Order?> ReadAllFiltered(Func<Order?, bool>? filter)
+	{
+		if (filter == null)                                 //return all
+			return DataSource.Orders;
+
+		return from order in DataSource.Orders			//return filtered list
+			   where filter(order)
+			   select order;
 	}
 
     ///<summary>
@@ -46,8 +67,8 @@ internal class DalOrder : IOrder
     /// </summary>
     public void Update(Order order)
 	{
-		if (DataSource.Orders.Exists(x => x.m_id == order.m_id))
-			DataSource.Orders.Insert(DataSource.Orders.FindIndex(x => x.m_id == order.m_id), order);
+		if (DataSource.Orders.Exists(x => x?.m_id == order.m_id))
+			DataSource.Orders.Insert(DataSource.Orders.FindIndex(x => x?.m_id == order.m_id), order);
 		else
 			throw new idNotFoundException("Order");
 	}
@@ -57,8 +78,8 @@ internal class DalOrder : IOrder
     /// </summary>
     public void Delete(int ID)
 	{
-		if (DataSource.Orders.Exists(x => x.m_id == ID))
-			DataSource.Orders.RemoveAt(DataSource.Orders.FindIndex(x => x.m_id == ID));
+		if (DataSource.Orders.Exists(x => x?.m_id == ID))
+			DataSource.Orders.RemoveAt(DataSource.Orders.FindIndex(x => x?.m_id == ID));
 
 		else
 			throw new idNotFoundException("Order");

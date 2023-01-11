@@ -34,7 +34,7 @@ namespace BlImplementation
 					else
 					{
 						Console.WriteLine("Product out of Stock");
-						throw new BO.blGeneralException();
+						throw new BO.UnableToExecute("product is out of stock");
 					}
 				}
 				else
@@ -42,17 +42,16 @@ namespace BlImplementation
 					boOrderItem.m_amount += 1;
 					cart.m_totalPrice += boOrderItem.m_price;
 				}
+				Console.WriteLine("This is the ID of the product just added: " + prodID);
 			}
 			catch (DO.idNotFoundException exc)
 			{
 				throw new BO.dataLayerIdNotFoundException(exc.Message);
 			}
-			catch(Exception exc)
+			catch (BO.UnableToExecute)
 			{
-                Console.WriteLine("Some other problem"); 
-                throw new BO.blGeneralException();
-            }
-        
+
+			}
 			return cart;
 		}
 
@@ -112,8 +111,10 @@ namespace BlImplementation
 			{
 				try
 				{
-					DO.Product product = dal.Product.Read(prodID);									//find product in the cart
-					int orderItemIndex = cart.m_items.FindIndex(x => x.m_productID == prodID);
+					DO.Product product = dal.Product.Read(prodID);                                  //set product if product exists
+					int orderItemIndex = cart.m_items.FindIndex(x => x.m_productID == prodID);      //find product in the cart
+					if (orderItemIndex == -1)
+						throw new BO.UnableToExecute("product not yet in cart, please add it to cart first");
 					int diff = amount - cart.m_items[orderItemIndex].m_amount;
 
 					if (orderItemIndex != -1)                                      //product is in the cart
@@ -141,15 +142,21 @@ namespace BlImplementation
 					}
 					else
 						throw new BO.blGeneralException();
+
+					Console.WriteLine($"The product with the ID {prodID} now has {cart.m_items[orderItemIndex].m_amount} in the cart ");
 				}
                 catch (DO.idNotFoundException exc)
                 {
                     Console.WriteLine(prodID); 
                     throw new BO.dataLayerIdNotFoundException(exc.Message);
                 }
+				catch (BO.UnableToExecute)
+				{
+
+				}
                 catch (BO.blGeneralException exc)
                 {
-                    Console.WriteLine("Some other problem: " +exc.Message); 
+                    Console.WriteLine("Some other problem: " + exc.Message); 
                     throw new BO.blGeneralException();
                 }
                 catch (Exception exc)
@@ -180,7 +187,7 @@ namespace BlImplementation
 			int orderID = -1;
 			try
 			{
-				DO.Order doOrder = new DO.Order(customerName, customerEmail, customerAddress, DateTime.Today, DateTime.MinValue, DateTime.MinValue);			//create a new order
+				DO.Order doOrder = new DO.Order(customerName, customerEmail, customerAddress, DateTime.Today, null, null);			//create a new order
 				orderID = dal.Order.Create(doOrder);																											//set the order ID
 			}
 			catch (DO.idAlreadyExistsException exc)
@@ -197,7 +204,7 @@ namespace BlImplementation
 			foreach (BO.OrderItem orderItem in cart.m_items)																					//add all the necessary products to the order
 			{
 				if (orderItem.m_amount <= 0 || orderItem.m_amount > dal.Product.Read(orderItem.m_productID).m_inStock)					//check that there's enough in stock
-					throw new BO.blGeneralException();
+					throw new BO.UnableToExecute("there is not enough in stock");
 
 				DO.OrderItem newItem = new DO.OrderItem(orderItem.m_productID, orderID, orderItem.m_price, orderItem.m_amount);
 				orderItem.m_id = dal.OrderItem.Create(newItem);
@@ -226,8 +233,8 @@ namespace BlImplementation
 				m_customerAddress = customerAddress,
 				m_orderDate = DateTime.Today,
 				m_paymentDate = DateTime.Today,
-				m_shipDate = DateTime.MinValue,
-				m_deliveryDate = DateTime.MinValue,
+				m_shipDate = null,
+				m_deliveryDate = null,
 				m_status = BO.Enums.OrderStatus.Ordered,
 				m_totalPrice = cart.m_totalPrice,
 				m_items = cart.m_items

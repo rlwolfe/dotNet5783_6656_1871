@@ -20,6 +20,6 @@ namespace BO
 			Customer Name: {m_customerName},
 			Status - {m_status},
 			Total Price: {m_totalPrice},
-			Amount of Item: {m_amountOfItems}";
+			Amount of Items: {m_amountOfItems}";
 	}
 }

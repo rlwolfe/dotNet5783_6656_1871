@@ -80,9 +80,9 @@ namespace BlImplementation
 				order.m_deliveryDate = doOrd.m_deliveryDate;
 				order.m_paymentDate = doOrd.m_orderDate;
 
-				if (order.m_orderDate != DateTime.MinValue && order.m_orderDate <= DateTime.Now)
-					if (order.m_shipDate != DateTime.MinValue && order.m_shipDate <= DateTime.Now)
-						if (order.m_deliveryDate != DateTime.MinValue && order.m_deliveryDate <= DateTime.Now)
+				if (order.m_orderDate != null && order.m_orderDate <= DateTime.Now)
+					if (order.m_shipDate != null && order.m_shipDate <= DateTime.Now)
+						if (order.m_deliveryDate != null && order.m_deliveryDate <= DateTime.Now)
 							order.m_status = BO.Enums.OrderStatus.Delivered;                      //past delivery, shipped and ordered
 						else
 							order.m_status = BO.Enums.OrderStatus.Shipped;                        //not past delivery, but past order and shipped dates
@@ -95,7 +95,7 @@ namespace BlImplementation
 
 				order.m_totalPrice = 0;
 				order.m_items = new();
-				foreach (DO.OrderItem doItem in dal.OrderItem.ReadAll())						//find and add orderItems
+				foreach (DO.OrderItem doItem in dal.OrderItem.ReadAllFiltered())						//find and add orderItems
 				{
 					BO.OrderItem boItem = new();
 					if (doItem.m_orderID == id)
@@ -151,7 +151,7 @@ namespace BlImplementation
 			}
 			else
 			{
-				foreach (DO.Order order in dal.Order.ReadAll())							//since no orders were in the business layer, searches the data layer for orders that may need to be pulled up
+				foreach (DO.Order order in dal.Order.ReadAllFiltered())							//since no orders were in the business layer, searches the data layer for orders that may need to be pulled up
 				{
 					BO.OrderForList orderForList = new BO.OrderForList()
 					{
@@ -159,9 +159,9 @@ namespace BlImplementation
 						m_customerName = order.m_customerName
 					};
 
-					if (order.m_orderDate != DateTime.MinValue && order.m_orderDate <= DateTime.Now)
-						if (order.m_shipDate != DateTime.MinValue && order.m_shipDate <= DateTime.Now)
-							if (order.m_deliveryDate != DateTime.MinValue && order.m_deliveryDate <= DateTime.Now)
+					if (order.m_orderDate != null && order.m_orderDate <= DateTime.Now)
+						if (order.m_shipDate != null && order.m_shipDate <= DateTime.Now)
+							if (order.m_deliveryDate != null && order.m_deliveryDate <= DateTime.Now)
 								orderForList.m_status = BO.Enums.OrderStatus.Delivered;                      //past delivery, shipped and ordered
 							else
 								orderForList.m_status = BO.Enums.OrderStatus.Shipped;                        //not past delivery, but past order and shipped dates
@@ -170,7 +170,7 @@ namespace BlImplementation
 					else
 						orderForList.m_status = BO.Enums.OrderStatus.None;                                   //not past shipped, ordered or delivered
 
-					foreach (DO.OrderItem orderItem in dal.OrderItem.ReadAll())
+					foreach (DO.OrderItem orderItem in dal.OrderItem.ReadAllFiltered())
 					{
 						if (orderItem.m_orderID == order.m_id)
 						{
@@ -211,7 +211,7 @@ namespace BlImplementation
 					boOrder.m_paymentDate = doOrder.m_orderDate;
 
 					boOrder.m_totalPrice = 0;
-					foreach (DO.OrderItem doItem in dal.OrderItem.ReadAll())
+					foreach (DO.OrderItem doItem in dal.OrderItem.ReadAllFiltered())
 					{
 						BO.OrderItem boItem = new BO.OrderItem()
 						{
@@ -232,7 +232,7 @@ namespace BlImplementation
 					switch (newStatus)
 					{
 						case BO.Enums.OrderStatus.Ordered:
-							if (boOrder.m_orderDate == DateTime.MinValue || boOrder.m_orderDate > DateTime.Today)           //if it's default or after today set the date to match the new status
+							if (boOrder.m_orderDate == null || boOrder.m_orderDate > DateTime.Today)           //if it's default or after today set the date to match the new status
 							{
 								doOrder.m_orderDate = DateTime.Today;
 								boOrder.m_orderDate = DateTime.Today;
@@ -241,7 +241,7 @@ namespace BlImplementation
 							break;
 
 						case BO.Enums.OrderStatus.Shipped:
-							if (doOrder.m_shipDate == DateTime.MinValue || doOrder.m_shipDate > DateTime.Today)           //if it's default or after today set the date to match the new status
+							if (doOrder.m_shipDate == null || doOrder.m_shipDate > DateTime.Today)           //if it's default or after today set the date to match the new status
 							{
 								doOrder.m_shipDate = DateTime.Today;
 								boOrder.m_shipDate = DateTime.Today;
@@ -249,7 +249,7 @@ namespace BlImplementation
 							boOrder.m_status = BO.Enums.OrderStatus.Shipped;
 							break;
 						case BO.Enums.OrderStatus.Delivered:
-							if (doOrder.m_deliveryDate == DateTime.MinValue || doOrder.m_deliveryDate > DateTime.Today)     //if it's default or after today set the date to match the new status
+							if (doOrder.m_deliveryDate == null || doOrder.m_deliveryDate > DateTime.Today)     //if it's default or after today set the date to match the new status
 							{
 								doOrder.m_deliveryDate = DateTime.Today;
 								boOrder.m_deliveryDate = DateTime.Today;
@@ -326,15 +326,15 @@ namespace BlImplementation
 			BO.OrderTracking orderTracking = new BO.OrderTracking();
 			orderTracking.m_id = orderId;
 			orderTracking.m_status = boOrder.m_status;
-			orderTracking.DatePairs = new List<Tuple<DateTime, string>>();										//starts an empty list if any pairs that may need to be added
+			orderTracking.DatePairs = new List<Tuple<DateTime?, string?>>();										//starts an empty list if any pairs that may need to be added
 
-			if (boOrder.m_orderDate != DateTime.MinValue)
+			if (boOrder.m_orderDate != null)
 				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_orderDate, "The order has been ordered"));
 
-			if (boOrder.m_shipDate != DateTime.MinValue)
+			if (boOrder.m_shipDate != null)
 				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_shipDate, "The order has been shipped"));
 
-			if (boOrder.m_deliveryDate != DateTime.MinValue)
+			if (boOrder.m_deliveryDate != null)
 				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_deliveryDate, "The order has been delivered"));
 
 			Console.WriteLine("Tracking has been set for: " + orderId);
@@ -361,15 +361,18 @@ namespace BlImplementation
 				@"^(\d{1,4}) [a-zA-Z\s]+[A-Z]{1}[a-z]{1,3}$"))
 				throw new BO.InputIsInvalidException("Customer Address");
 
-			//if orderDate is later or equal to shipDate or delivery date (but not set as default - DateTime.Min)
-			if ((DateTime.Compare(order.m_orderDate, order.m_shipDate) > 0 && order.m_shipDate != DateTime.MinValue) ||
-				DateTime.Compare(order.m_orderDate, order.m_shipDate) == 0 || DateTime.Compare(order.m_orderDate, order.m_shipDate) == 0 ||
-				(DateTime.Compare(order.m_orderDate, order.m_deliveryDate) > 0 && order.m_deliveryDate != DateTime.MinValue))
-				throw new BO.InputIsInvalidException("OrderDate after ship or delivery date");
+			//if orderDate is later than shipDate or delivery date
+			if (order.m_shipDate != null)
+				if (DateTime.Compare((DateTime)order.m_orderDate, (DateTime)order.m_shipDate) > 0)
+					throw new BO.InputIsInvalidException("OrderDate after ship date");
+			if (order.m_deliveryDate != null)
+				if (DateTime.Compare((DateTime)order.m_orderDate, (DateTime)order.m_deliveryDate) > 0)
+				throw new BO.InputIsInvalidException("OrderDate after delivery date");
 
 			//if shipDate is later than delivery date
-			if (DateTime.Compare(order.m_shipDate, order.m_deliveryDate) > 0 && order.m_deliveryDate != DateTime.MinValue)
-				throw new BO.InputIsInvalidException("ShipDate after delivery date");
+			if (order.m_shipDate != null || order.m_deliveryDate != null)
+				if (DateTime.Compare((DateTime)order.m_shipDate, (DateTime)order.m_deliveryDate) > 0)
+					throw new BO.InputIsInvalidException("ShipDate after delivery date");
 		}
 		
 		/// <summary>
@@ -377,7 +380,7 @@ namespace BlImplementation
 		/// </summary>
 		static private void fillOrders()
 		{
-			foreach (DO.Order doOrder in dal.Order.ReadAll())
+			foreach (DO.Order doOrder in dal.Order.ReadAllFiltered())
 			{
 				BO.Order boOrder = new BO.Order();										//grabs data here
 				boOrder.m_id = doOrder.m_id;
@@ -389,9 +392,9 @@ namespace BlImplementation
 				boOrder.m_deliveryDate = doOrder.m_deliveryDate;
 				boOrder.m_paymentDate = doOrder.m_orderDate;
 
-				if (boOrder.m_orderDate != DateTime.MinValue && boOrder.m_orderDate <= DateTime.Now)
-					if (boOrder.m_shipDate != DateTime.MinValue && boOrder.m_shipDate <= DateTime.Now)
-						if (boOrder.m_deliveryDate != DateTime.MinValue && boOrder.m_deliveryDate <= DateTime.Now)
+				if (boOrder.m_orderDate != null && boOrder.m_orderDate <= DateTime.Now)
+					if (boOrder.m_shipDate != null && boOrder.m_shipDate <= DateTime.Now)
+						if (boOrder.m_deliveryDate != null && boOrder.m_deliveryDate <= DateTime.Now)
 							boOrder.m_status = BO.Enums.OrderStatus.Delivered;                      //past delivery, shipped and ordered
 						else
 							boOrder.m_status = BO.Enums.OrderStatus.Shipped;                        //not past delivery, but past order and shipped dates
@@ -402,7 +405,7 @@ namespace BlImplementation
 
 				boOrder.m_totalPrice = 0;
 				boOrder.m_items = new();
-				foreach (DO.OrderItem doItem in dal.OrderItem.ReadAll())
+				foreach (DO.OrderItem doItem in dal.OrderItem.ReadAllFiltered())
 				{
 					BO.OrderItem boItem = new();													//adds list of orderItems to the order
 					if (doItem.m_orderID == doOrder.m_id)

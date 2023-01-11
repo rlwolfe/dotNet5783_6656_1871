@@ -30,9 +30,9 @@ static internal class DataSource
 		internal static int NextOrderItemNumber { get => s_currentOrderItemNumber++; }
 	}*/
 
-	static internal List<Product> Products = new List<Product>(50);
-	static internal List<Order> Orders = new List<Order>(100);
-	static internal List<OrderItem> OrderItems = new List<OrderItem>(200);
+	static internal List<Product?> Products = new List<Product?>();
+	static internal List<Order?> Orders = new List<Order?>();
+	static internal List<OrderItem?> OrderItems = new List<OrderItem?>();
 
     ///<summary>
     /// Creates default initial entries for all arrays of product, order orderItem
@@ -96,8 +96,8 @@ static internal class DataSource
 				Enums.streetType.GetName(typeof(Enums.streetType), num / 50),   //id, name, email
 				orderDate, shipDate, delivDate);	//end of address, & dates
 
-			if (i < 4) { order.m_shipDate = DateTime.MinValue; }										//60% shipping date is not yet set
-			if (i < 8) { order.m_deliveryDate = DateTime.MinValue; }									//20% delivery date is not yet set
+			if (i < 4) { order.m_shipDate = null; }										//60% shipping date is not yet set
+			if (i < 8) { order.m_deliveryDate = null; }									//20% delivery date is not yet set
 
 			Orders.Add(order);
 		}
@@ -113,11 +113,11 @@ static internal class DataSource
 		
 		for (int i=0; i < 40; i++)							//initiating 40 OrderItems
 		{
-			Product productToAdd = Products[_randomNum.Next(2, 10)];	//randomly selects a product to add
+			Product productToAdd = (Product)Products[_randomNum.Next(2, 10)];	//randomly selects a product to add
 			confirmed = false;
 			do
 			{
-				Order orderToAdd = Orders[_randomNum.Next(0, 20)];		//randomly selects an order to add
+				Order orderToAdd = (Order)Orders[_randomNum.Next(0, 20)];		//randomly selects an order to add
 
 				if (usedOrders.Count(o => o == orderToAdd.m_id) == 4)	//checks if there are max amount already being used
 					continue;

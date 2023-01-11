@@ -233,7 +233,7 @@ class DalTest
 	}
     static void DisplayAllProducts()
     {
-        foreach (Product product in dalList.Product.ReadAll())
+        foreach (Product product in dalList.Product.ReadAllFiltered())
         {
             if (product.m_id != 0)
                 Console.WriteLine(product);
@@ -388,7 +388,7 @@ class DalTest
 	}
 	private static void DisplayAllOrders()
 	{
-		foreach (Order order in dalList.Order.ReadAll())
+		foreach (Order order in dalList.Order.ReadAllFiltered())
 		{
 			if (order.m_id != 0)
 				Console.WriteLine(order);
@@ -554,7 +554,7 @@ class DalTest
 	/// </summary>
 	private static void DisplayAllOrderItems()
     {
-        foreach (OrderItem orderItem in dalList.OrderItem.ReadAll())
+        foreach (OrderItem orderItem in dalList.OrderItem.ReadAllFiltered())
         {
             if (orderItem.m_id != 0)
                 Console.WriteLine(orderItem);

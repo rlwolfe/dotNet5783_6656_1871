@@ -12,7 +12,7 @@ namespace BO
 		public string? m_customerEmail { get; set; }
 		public string? m_customerAddress { get; set; }
 
-		public List<OrderItem> m_items = new List<OrderItem>();
+		public List<OrderItem?> m_items = new List<OrderItem>();
 		public double m_totalPrice { get; set; }
 
 		public override string ToString()
