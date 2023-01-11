@@ -15,15 +15,15 @@ namespace PL.Products
 		public ProductListWindow()
         {
             InitializeComponent();
-			ProductsListView.ItemsSource = bl.Product.ManagerListRequest();
-			ProductSelector.ItemsSource = Enum.GetValues(typeof(BO.Enums.Category));
+			ProductsListView.ItemsSource = bl.Product.ManagerListRequest();						//create listView from products in BL
+			ProductSelector.ItemsSource = Enum.GetValues(typeof(BO.Enums.Category));			//get Enums for combo box list
 		}
 
 		private void AddProductButton_Click(object sender, RoutedEventArgs e)
 		{
-			bool? window = new AddUpdateProduct().ShowDialog();
-			if (window.HasValue)
-				ProductsListView.ItemsSource = bl?.Product.ManagerListRequest();
+			bool? window = new AddUpdateProduct().ShowDialog();									//open new window to add product
+			if (window.HasValue)																//if user finished with add product window
+				ProductsListView.ItemsSource = bl?.Product.ManagerListRequest();				//update the product list
 		}
 
 		private void ProductSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -38,17 +38,17 @@ namespace PL.Products
 			if (productCategory is BO.Enums.Category category)										//filtered list
 				ProductsListView.ItemsSource = bl?.Product?.ManagerListRequest()?.Select(x => x.m_category == category);
 
-			ProductsListView.ItemsSource = from product in bl?.Product.ManagerListRequest()
+			ProductsListView.ItemsSource = from product in bl?.Product.ManagerListRequest()			//get filtered results
 										   where product.m_category == productCategory
 										   select product;
 		}
 
 		private void ProductsListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			BO.ProductForList product = (BO.ProductForList)ProductsListView.SelectedItem;
-			bool? window = new AddUpdateProduct(product).ShowDialog();
+			BO.ProductForList product = (BO.ProductForList)ProductsListView.SelectedItem;		//take selection from list
+			bool? window = new AddUpdateProduct(product).ShowDialog();							
 			if (window.HasValue)
-				ProductsListView.ItemsSource = bl?.Product.ManagerListRequest();
+				ProductsListView.ItemsSource = bl?.Product.ManagerListRequest();                //update product list if user exited out of add product window
 		}
 	}
 }
