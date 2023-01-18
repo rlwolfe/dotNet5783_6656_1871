@@ -1,11 +1,11 @@
-﻿<Window x:Class="PL.Products.AddUpdateProduct"
+﻿<Window x:Class="PL.Products.AddUpdateProductWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Products"
         mc:Ignorable="d"
-        Title="AddUpdateProduct" Height="350" Width="350">
+        Title="Add/Update a Product" Height="350" Width="350">
     <Grid>
         <Grid.Background>
             <ImageBrush Opacity="1" ImageSource="/Products/Groceries.jpg" TileMode="Tile"/>
@@ -16,13 +16,13 @@
         <ComboBox Name="CategoryBox" HorizontalAlignment="Left" Height="30" Margin="156,0,0,197" VerticalAlignment="Bottom" Width="100" VerticalContentAlignment="Center"/>
         <Label Content="Category:" HorizontalAlignment="Left" Margin="93,0,0,202" VerticalAlignment="Bottom" Padding="0,0,0,0" Height="20" FontWeight="Bold"/>
 
-        <TextBox Name="NameBox"  HorizontalAlignment="Left" Margin="156,0,0,159" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom"/>
+        <TextBox Name="NameBox"  HorizontalAlignment="Left" Margin="156,0,0,159" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom" PreviewTextInput="NameBox_PreviewTextInput"/>
         <Label Content="Name:" HorizontalAlignment="Left" Margin="110,0,0,164" VerticalAlignment="Bottom" Padding="0,0,0,0" Height="20" FontWeight="Bold"/>
 
-        <TextBox Name="PriceBox" HorizontalAlignment="Left" Margin="156,0,0,119" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom"/>
+        <TextBox Name="PriceBox" HorizontalAlignment="Left" Margin="156,0,0,119" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom" PreviewTextInput="PriceBox_PreviewTextInput"/>
         <Label Content="Price:" HorizontalAlignment="Left" Margin="116,0,0,124" Padding="0,0,0,0" Height="20" VerticalAlignment="Bottom" FontWeight="Bold"/>
 
-        <TextBox Name="InStockBox" HorizontalAlignment="Left" Margin="156,0,0,79" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom"/>
+        <TextBox Name="InStockBox" HorizontalAlignment="Left" Margin="156,0,0,79" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom"  PreviewTextInput="InStockBox_PreviewTextInput"/>
         <Label Content="In Stock:" HorizontalAlignment="Left" Margin="99,0,0,84" Padding="0,0,0,0" Height="20" VerticalAlignment="Bottom" FontWeight="Bold"/>
 
         <Button Name="AddButton" Content="Add" Margin="10,0,0,23" HorizontalAlignment="Left" Width="80" Click="AddButton_Click" Height="30" VerticalAlignment="Bottom" FontWeight="Bold" Background="#FFABB0B8"/>

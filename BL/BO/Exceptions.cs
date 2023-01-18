@@ -52,7 +52,6 @@ namespace BO
         }
         public dataLayerEntityNotFoundException(string message, Exception innerException) : base(message, innerException) { }
         protected dataLayerEntityNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
     }
 
     [Serializable]
@@ -68,7 +67,6 @@ namespace BO
         }
         public dataLayerIdNotFoundException(string message, Exception innerException) : base(message, innerException) { }
         protected dataLayerIdNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
     }
 
     [Serializable]
@@ -95,6 +93,5 @@ namespace BO
         }
         public blGeneralException(string message, Exception innerException) : base(message, innerException) { }
         protected blGeneralException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
     }
 }

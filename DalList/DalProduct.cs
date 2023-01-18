@@ -1,5 +1,6 @@
 ﻿using BlApi;
 using DO;
+using System.Linq;
 
 namespace Dal;
 
@@ -41,13 +42,12 @@ internal class DalProduct : IProduct
 		{
 			throw new ArgumentNullException(nameof(filter));//filter is null
 		}
-		foreach (Product? product in DataSource.Products)
-		{
-			if (product != null && filter(product))
-			{
-				return (Product)product;
-			}
-		}
+
+		foreach (var product in from Product? product in DataSource.Products
+								where product != null && filter(product)
+								select product)
+			return (Product)product;
+		
 		throw new DO.EntityNotFoundException();
 	}
 	public IEnumerable<Product?> ReadAllFiltered(Func<Product?, bool>? filter)

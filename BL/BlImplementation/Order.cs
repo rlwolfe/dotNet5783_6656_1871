@@ -1,5 +1,6 @@
 ﻿using BlApi;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace BlImplementation
 {
@@ -168,15 +169,15 @@ namespace BlImplementation
 							orderForList.m_status = BO.Enums.OrderStatus.Ordered;                            //not past shipped, but past ordered
 					else
 						orderForList.m_status = BO.Enums.OrderStatus.None;                                   //not past shipped, ordered or delivered
-
-					foreach (DO.OrderItem orderItem in dal.OrderItem.ReadAllFiltered())
+					
+					foreach (var orderItem in from DO.OrderItem orderItem in dal.OrderItem.ReadAllFiltered()
+											  where orderItem.m_orderID == order.m_id
+											  select orderItem)
 					{
-						if (orderItem.m_orderID == order.m_id)
-						{
-							orderForList.m_amountOfItems += orderItem.m_amount;
-							orderForList.m_totalPrice += (orderItem.m_amount * orderItem.m_price);
-						}
+						orderForList.m_amountOfItems += orderItem.m_amount;
+						orderForList.m_totalPrice += (orderItem.m_amount * orderItem.m_price);
 					}
+
 					listOfOrders.Add(orderForList);
 				}
 			}
@@ -348,16 +349,15 @@ namespace BlImplementation
 		private static void InputValidation(BO.Order order)
 		{
 			//add ' ' (space) to regex expression
-			if (order.m_customerName == null || !Regex.IsMatch(order.m_customerName, @"^[a-zA-Z]+$"))
+			if (order.m_customerName == null || !Regex.IsMatch(order.m_customerName, @"^[a-zA-Z\s]+$"))
 				throw new BO.InputIsInvalidException("Customer Name");
 
 			//add @ and . to regex expression
-			if (order.m_customerEmail == null || !Regex.IsMatch(order.m_customerEmail, @"^[a-zA-Z]+\@+[a-zA-Z]+\.+[a-zA-Z]+$"))
+			if (order.m_customerEmail == null || !Regex.IsMatch(order.m_customerEmail, @"^[a-zA-Z]+@+[a-zA-Z]+\.+[a-zA-Z]+$"))
 				throw new BO.InputIsInvalidException("Customer Email");
 
 			//regex expression (up to 4 digits for number space, street name, space, street type (1st letter caps, up to 3 more lowercase
-			if (order.m_customerAddress == null || !Regex.IsMatch(order.m_customerAddress,
-				@"^(\d{1,4}) [a-zA-Z\s]+[A-Z]{1}[a-z]{1,3}$"))
+			if (order.m_customerAddress == null || !Regex.IsMatch(order.m_customerAddress, @"^(\d{1,4}) [a-zA-Z\s]+[A-Z]{1}[a-z]{1,3}$"))
 				throw new BO.InputIsInvalidException("Customer Address");
 
 			//if orderDate is later than shipDate or delivery date
@@ -420,7 +420,7 @@ namespace BlImplementation
 					boOrder.m_totalPrice += (boItem.m_price * boItem.m_amount);
 					boOrder.m_items.Add(boItem);
 				}
-
+				boOrder.m_totalPrice = Math.Round(boOrder.m_totalPrice, 2);
 				Orders.Add(boOrder);
 			}
 		}

@@ -1,5 +1,6 @@
 ﻿using BlApi;
 using DO;
+using System.Linq;
 
 namespace Dal;
 
@@ -42,13 +43,12 @@ internal class DalOrder : IOrder
 		{
 			throw new ArgumentNullException(nameof(filter));			//filter is null
 		}
-		foreach (Order? order in DataSource.Orders)
-		{
-			if (order != null && filter(order))
-			{
-				return (Order)order;
-			}
-		}
+
+		foreach (var order in from Order? order in DataSource.Orders
+							  where order != null && filter(order)
+							  select order)
+			return (Order)order;
+
 		throw new DO.EntityNotFoundException();
 	}
 

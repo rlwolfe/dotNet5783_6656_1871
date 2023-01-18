@@ -10,11 +10,6 @@ namespace BO
 		public double m_totalPrice { get; set; }
 		public int m_amountOfItems { get; set; }
 
-		public override string ToString() => $@"
-			ID = {m_id}:
-			Customer Name: {m_customerName},
-			Status - {m_status},
-			Total Price: {m_totalPrice},
-			Amount of Items: {m_amountOfItems}";
+		public override string ToString() => $"ID = {m_id}:\nCustomer Name: {m_customerName},\nStatus - {m_status},\nTotal Price: {m_totalPrice}, Amount of Items: {m_amountOfItems}";
 	}
 }

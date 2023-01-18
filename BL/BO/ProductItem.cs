@@ -9,12 +9,6 @@
 		public bool m_inStock { get; set; }
 		public int m_amount { get; set; }
 
-		public override string ToString() => $@"
-			ID = {m_id}:
-			Name: {m_name},
-			Category - {m_category},
-			Price: {m_price},
-			Amount: {m_amount},
-			In Stock? {m_inStock}";
+		public override string ToString() => $"ID = {m_id}: Name - {m_name},\nCategory - {m_category}, Price: {m_price},\n{(m_inStock? $"{m_amount} In Stock" : "Not In Stock")}";
 	}
 }

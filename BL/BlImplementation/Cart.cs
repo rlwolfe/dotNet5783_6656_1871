@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using System.Text.RegularExpressions;
 
 namespace BlImplementation
 {
@@ -181,14 +182,14 @@ namespace BlImplementation
 		/// <exception cref="BO.dataLayerIdNotFoundException"></exception>
 		public void PlaceOrder(BO.Cart cart, string customerName, string customerEmail, string customerAddress)
 		{
-			if (customerName == null || customerEmail == null || customerAddress == null)							//as long as the fields aren't empty (the test layer is checking the rest of the logic
+			if (InputValidation(customerName, customerEmail, customerAddress))							//as long as the fields are valid
 				throw new BO.InputIsInvalidException("Customer information");
-
+			
 			int orderID = -1;
 			try
 			{
-				DO.Order doOrder = new DO.Order(customerName, customerEmail, customerAddress, DateTime.Today, null, null);			//create a new order
-				orderID = dal.Order.Create(doOrder);																											//set the order ID
+				DO.Order doOrder = new DO.Order(customerName, customerEmail, customerAddress, DateTime.Today, null, null);          //create a new order
+				orderID = dal.Order.Create(doOrder);																				//set the order ID
 			}
 			catch (DO.idAlreadyExistsException exc)
 			{
@@ -242,7 +243,7 @@ namespace BlImplementation
 			try
 			{
 				Order blOrder = new Order();
-				blOrder.Create(boOrder);								//creation happens here
+				blOrder.Create(boOrder);														//creation happens here
 			}
 			catch (DO.idNotFoundException exc)
 			{
@@ -251,5 +252,21 @@ namespace BlImplementation
 			}
 		}
 
+		private bool InputValidation(string customerName, string customerEmail, string customerAddress)
+		{
+			//add ' ' (space) to regex expression
+			if (customerName == null || !Regex.IsMatch(customerName, @"^[a-zA-Z\s]+$"))
+				throw new BO.InputIsInvalidException("Customer Name");
+
+			//add @ and . to regex expression
+			if (customerEmail == null || !Regex.IsMatch(customerEmail, @"^[a-zA-Z]+@+[a-zA-Z]+\.+[a-zA-Z]+$"))
+				throw new BO.InputIsInvalidException("Customer Email");
+
+			//regex expression (up to 4 digits for number space, street name, space, street type (1st letter caps, up to 3 more lowercase
+			if (customerAddress == null || !Regex.IsMatch(customerAddress, @"^(\d{1,4}) [a-zA-Z\s]+[A-Z]{1}[a-z]{1,3}$"))
+				throw new BO.InputIsInvalidException("Customer Address");
+
+			return true;
+		}
 	}
 }

@@ -14,8 +14,9 @@
             </LinearGradientBrush>
         </Grid.Background>
         <Button Name="ShowProductsButton" Content="Admin" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,100,0,0" Click="AdminButton_Click" Height="50" Width="200" BorderThickness="5,5,5,5" BorderBrush="#FFE5DDDD" Background="#FFC0149D" FontWeight="Bold" FontSize="20" Foreground="#FFF6F6F6"/>
-        <!--<Button Name="ShowProductsButton" Content="Show Orders" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Click="ShowProductsButton_Click" Height="50" Width="200"/>
-        <Button Name="ShowCartsButton" Content="Show Carts" HorizontalAlignment="Center" VerticalAlignment="Bottom"  Margin="0,0,0,100" Click="ShowCartsButton_Click" Height="50" Width="200"/>-->
+        <Button Name="NewOrderButton" Content="New Order" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Click="NewOrderButton_Click" Height="50" Width="200" BorderThickness="5,5,5,5" BorderBrush="#FFE5DDDD" Background="#FFC0149D" FontWeight="Bold" FontSize="20" Foreground="#FFF6F6F6"/>
+        <Button Name="OrderTrackingButton" Content="Track Order" VerticalAlignment="Bottom"  Margin="0,0,25,100" Click="OrderTrackingButton_Click" Height="50" BorderThickness="5,5,5,5" BorderBrush="#FFE5DDDD" Background="#FFC0149D" FontWeight="Bold" FontSize="20" Foreground="#FFF6F6F6" HorizontalAlignment="Right" Width="200"/>
+        <TextBox Name="OrderIDTextBox" HorizontalAlignment="Left" Margin="25,0,0,100" TextWrapping="Wrap" FontSize="20" VerticalAlignment="Bottom" Height="50" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Order ID" PreviewTextInput="OrderIDTextBox_PreviewTextInput" GotFocus="OrderIDTextBox_GotFocus" Background="#FFE5DDDD" Foreground="#FFAB148C" BorderBrush="#FF454545"/>
 
     </Grid>
 </Window>

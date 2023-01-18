@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using System.Linq;
 
 namespace BlTest;
 class BlTest
@@ -79,11 +80,10 @@ class BlTest
 					break;
 
 				case 'a':
-					foreach (BO.ProductForList product in bl.Product.ManagerListRequest())          //runs through all products and prints them without amount variable
-					{
-						if (product.m_id != 0)
-							Console.WriteLine(product);
-					}
+					foreach (var product in from BO.ProductForList product in bl.Product.ManagerListRequest()		//runs through all products and prints them without amount variable
+											where product.m_id != 0
+											select product)
+						Console.WriteLine(product);
 					break;
 
 				case 'b':
@@ -107,11 +107,10 @@ class BlTest
 					break;
 
 				case 'f':
-					foreach (BO.OrderForList order in bl.Order.ReadAll())
-					{
-						if (order.m_id != 0)
-							Console.WriteLine(order);                                               //displays all current orders
-					}
+					foreach (var order in from BO.OrderForList order in bl.Order.ReadAll()
+										  where order.m_id != 0
+										  select order)
+						Console.WriteLine(order);													//displays all current orders
 					break;
 
 				case 'g':
@@ -305,11 +304,10 @@ class BlTest
 					break;
 
 				case 'a':
-					foreach (BO.Product product in bl.Product.CatalogRequest())
-					{
-						if (product.m_id != 0)
-							Console.WriteLine(product);                                                         //prints list of all products in shop
-					}
+					foreach (var product in from BO.ProductItem product in bl.Product.CatalogRequest()
+											where product.m_id != 0
+											select product)
+						Console.WriteLine(product);
 					break;
 
 				case 'b':

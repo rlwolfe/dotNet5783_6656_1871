@@ -77,21 +77,22 @@ namespace BlImplementation
 		/// <summary>
 		/// gets all products for customer to view in list
 		/// </summary>
-		/// <returns>list of products</returns>
+		/// <returns>list of productItems</returns>
 		/// <exception cref="BO.blGeneralException"></exception>
-		public IEnumerable<BO.Product> CatalogRequest()
+		public IEnumerable<BO.ProductItem> CatalogRequest()
 		{
-            List<BO.Product> products = new ();
+            List<BO.ProductItem> products = new ();
             try
 			{
 				foreach (DO.Product prod in dal.Product.ReadAllFiltered())
 				{
-					BO.Product product = new BO.Product();
+					BO.ProductItem product = new BO.ProductItem();
 					product.m_id = prod.m_id;
 					product.m_name = prod.m_name;
 					product.m_category = (BO.Enums.Category)(dal.Product.Read(prod.m_id).m_category.GetHashCode());
 					product.m_price = prod.m_price;
-					product.m_inStock = prod.m_inStock;
+					product.m_amount = prod.m_inStock;
+					product.m_inStock = prod.m_inStock > 0;
 
 					products.Add(product);
 				}
@@ -244,7 +245,7 @@ namespace BlImplementation
 		/// <exception cref="BO.InputIsInvalidException"></exception>
 		private static void InputValidation(BO.Product product)
 		{
-			if (product.m_name == null || !Regex.IsMatch(product.m_name, @"^[a-zA-Z]+$"))
+			if (product.m_name == null || !Regex.IsMatch(product.m_name, @"^[a-zA-Z\s]+$"))
 				throw new BO.InputIsInvalidException("Name");
 
 			if (!Enum.IsDefined(typeof(DO.Enums.Category), product.m_category.GetHashCode()))

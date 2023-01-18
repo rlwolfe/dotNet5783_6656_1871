@@ -1,6 +1,7 @@
 ﻿using DO;
 using Dal;
 using BlApi;
+using System.Linq;
 
 ///<summary>
 /// Tests for the functionality of all data types, with their CRUD functions
@@ -231,12 +232,13 @@ class DalTest
 	}
     static void DisplayAllProducts()
     {
-        foreach (Product product in dalList.Product.ReadAllFiltered())
-        {
-            if (product.m_id != 0)
-                Console.WriteLine(product);
-        }
-    }
+		foreach (var product in from Product product in dalList.Product.ReadAllFiltered()
+								where product.m_id != 0
+								select product)
+		{
+			Console.WriteLine(product);
+		}
+	}
 
     ///<summary>
     /// Order SubMenu
@@ -386,10 +388,11 @@ class DalTest
 	}
 	private static void DisplayAllOrders()
 	{
-		foreach (Order order in dalList.Order.ReadAllFiltered())
+		foreach (var order in from Order order in dalList.Order.ReadAllFiltered()
+							  where order.m_id != 0
+							  select order)
 		{
-			if (order.m_id != 0)
-				Console.WriteLine(order);
+			Console.WriteLine(order);
 		}
 	}
 
@@ -552,12 +555,13 @@ class DalTest
 	/// </summary>
 	private static void DisplayAllOrderItems()
     {
-        foreach (OrderItem orderItem in dalList.OrderItem.ReadAllFiltered())
-        {
-            if (orderItem.m_id != 0)
-                Console.WriteLine(orderItem);
-        }
-    }
+		foreach (var orderItem in from OrderItem orderItem in dalList.OrderItem.ReadAllFiltered()
+								  where orderItem.m_id != 0
+								  select orderItem)
+		{
+			Console.WriteLine(orderItem);
+		}
+	}
 
     ///<summary>
     /// Displays all OrderItems in a given Order

@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="error.png" />
     <None Remove="Products\Groceries.jpg" />
   </ItemGroup>
 
@@ -21,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="error.png" />
     <Resource Include="Products\Groceries.jpg" />
   </ItemGroup>
 </Project>

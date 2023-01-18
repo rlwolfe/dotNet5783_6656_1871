@@ -7,10 +7,7 @@
 		public double m_price { get; set; }
 		public int m_amount { get; set; }
 
-		public override string ToString() => $@"
-			Order Item ID = {m_id}:
-			Product ID = {m_productID},
-			Price: {m_price},
-			Amount: {m_amount}";
+		public override string ToString() => $"Product ID = {m_productID}: {DalApi.Factory.Get().Product.Read(m_productID).m_name},\nPrice: {m_price}, Amount: {m_amount}";
+		//OrderItem ID = {m_id}
 	}
 }
