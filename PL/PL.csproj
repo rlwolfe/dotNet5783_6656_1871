@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <None Remove="error.png" />
+    <None Remove="Popups\error.png" />
+    <None Remove="Popups\success.png" />
     <None Remove="Products\Groceries.jpg" />
   </ItemGroup>
 
@@ -22,7 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="error.png" />
+    <Resource Include="Popups\error.png" />
+    <Resource Include="Popups\success.png" />
     <Resource Include="Products\Groceries.jpg" />
   </ItemGroup>
 </Project>

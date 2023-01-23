@@ -1,4 +1,7 @@
-﻿namespace BO
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+
+namespace BO
 {
 	public class Order
 	{
@@ -11,17 +14,31 @@
 		public DateTime? m_paymentDate { get; set; }
 		public DateTime? m_shipDate { get; set; }
 		public DateTime? m_deliveryDate { get; set; }
-		public List<OrderItem?> m_items { get; set; }
 		public double m_totalPrice { get; set; }
+		
+		private ObservableCollection<OrderItem?> m_items = new ObservableCollection<OrderItem?>();
+		public ObservableCollection<OrderItem?> Items
+		{
+			get => m_items;
+			set
+			{
+				m_items = value;
+				if (PropertyChanged != null)
+				{
+					PropertyChanged(this, new PropertyChangedEventArgs("Items"));
+				}
+			}
+		}
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		public override string ToString()
 		{
-			string str = "";
-			foreach (OrderItem item in m_items)         //creates string to add to ToString of list of items in order
+			string str = m_items.Select(item => item.ToString() + "\n").ToString();   //creates string to add to ToString of list of items in order
+			/*foreach (OrderItem item in m_items)                 //creates string to add to ToString of list items in cart
 			{
 				str += item.ToString();
 				str += "\n";
-			};
+			};*/
 			if (str == "")
 				str = "none";
 

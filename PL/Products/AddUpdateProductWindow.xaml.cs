@@ -24,38 +24,26 @@ namespace PL.Products
 		
 		private void AddButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (!double.TryParse(PriceBox.Text, out double price))
-			{
-				PriceBox.Text = "";
-				new ErrorWindow("Invalid Price", "Price entered was invalid").ShowDialog();
-				return;
-			}
-			if (!int.TryParse(InStockBox.Text, out int inStock))
-			{
-				InStockBox.Text = "";
-				new ErrorWindow("Invalid Amount", "Stock amount entered was invalid").ShowDialog();
-				return;
-			}
-
 			try
+			{	
+				bl.Product.Create(InputValidation());                 //sends product to be created through the BL with fields that have been validated
+			
+				this.Close();
+			}
+			catch (plException exc)
 			{
-				BO.Product product = new BO.Product();                                  //Creates product with all inputed variables
-				product.m_name = NameBox.Text;
-				product.m_category = (BO.Enums.Category)CategoryBox.SelectedValue;
-				product.m_price = Double.Parse(PriceBox.Text);
-				product.m_inStock = Int32.Parse(InStockBox.Text);
-
-				bl.Product.Create(product);                                         //sends product to be created through the BL
+				return;
 			}
 			catch (BO.InputIsInvalidException exc)
 			{
-				throw new plException("Invalid Input", "The " + exc.Message + " entered was invalid");
+				new ErrorWindow("Invalid Input", "The " + exc.Message + " entered was invalid").ShowDialog();
+				return;
 			}
 			catch (Exception exc)
 			{
-				throw new plException("Error", exc.Message);				//make 'readable'
+				new ErrorWindow("Invalid Input", "The " + exc.Message + " is invalid").ShowDialog();
+				return;
 			}
-			this.Close();
 		}
 
 		public AddUpdateProductWindow(ProductForList product)						//update existing product
@@ -73,50 +61,67 @@ namespace PL.Products
 
 		private void UpdateButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (!double.TryParse(PriceBox.Text, out double price))
-			{
-				PriceBox.Text = "";
-				new ErrorWindow("Invalid Price", "Price entered was invalid").ShowDialog();
-				return;
-			}
-
 			try
 			{
-				BO.Product product = new BO.Product();                          //create instance of product to hold changed data
-				product.m_id = Int32.Parse(IDBox.Text);
-				product.m_name = NameBox.Text;
-				product.m_category = (BO.Enums.Category)CategoryBox.SelectedValue;
-				product.m_price = price;
-				product.m_inStock = Int32.Parse(InStockBox.Text);
-
-				bl.Product.Update(product);                                     //send the product to be updated in the BL
+				bl.Product.Update(InputValidation());					  //send the product to be updated in the BL with valid info
+			}
+			catch (plException exc)
+			{
+				return;
 			}
 			catch (BO.InputIsInvalidException exc)
 			{
-				throw new plException("Invalid Input", "The " + exc.Message + " entered was invalid");
+				new ErrorWindow("Invalid Input", "The " + exc.Message + " entered was invalid").ShowDialog();
+				return;
 			}
 			catch (Exception exc)
 			{
-				throw new plException("Error", exc.Message);                //make 'readable'
+				new ErrorWindow("Invalid Input", "The " + exc.Message + " is invalid").ShowDialog();
+				return;
 			}
 			this.Close();
 		}
 
+		private Product InputValidation()
+		{
+			BO.Product product = new BO.Product();                          //create instance of product to hold changed data
+			if (IDBox.Text != "-----")
+				product.m_id = int.Parse(IDBox.Text);
+			product.m_name = NameBox.Text;
+
+			if (CategoryBox.SelectedIndex != -1)
+				product.m_category = (BO.Enums.Category)CategoryBox.SelectedValue;
+			else
+				throw new plException("Category", "The category entered was invalid");
+
+			if (double.TryParse(PriceBox.Text, out double price))
+				product.m_price = price;
+			else
+				throw new plException("Price", "The price entered was invalid");
+
+			if (int.TryParse(InStockBox.Text, out int inStock))
+				product.m_inStock = inStock;
+			else
+				throw new plException("In Stock Value", "The in stock value entered was invalid");
+			
+			return product;																				//returns valid product
+		}
+
 		private void CancelButton_Click(object sender, RoutedEventArgs e) => this.Close();      //exits window
 
-		private void PriceBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+		private void PriceBox_PreviewTextInput(object sender, TextCompositionEventArgs e)				//prevents letters or symbols (besides 1 .)
 		{
 			if (!Regex.IsMatch(e.Text, @"^[0-9\.]+$") || (e.Text == "." && PriceBox.Text.Contains(".")))
 				e.Handled = true;
 		}
 
-		private void NameBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+		private void NameBox_PreviewTextInput(object sender, TextCompositionEventArgs e)				//prevents numbers & symbols
 		{
 			if (!Regex.IsMatch(e.Text, @"^[a-zA-Z\s]+$"))
 				e.Handled = true;
 		}
 
-		private void InStockBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+		private void InStockBox_PreviewTextInput(object sender, TextCompositionEventArgs e)				//prevents symbols & letters
 		{
 			if (!Regex.IsMatch(e.Text, @"^[0-9]+$"))
 				e.Handled = true;

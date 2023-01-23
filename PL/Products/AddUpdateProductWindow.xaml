@@ -13,19 +13,35 @@
         <TextBox Name="IDBox" HorizontalAlignment="Left" Height="25" Margin="59,0,0,256" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="60"  VerticalContentAlignment="Center" Text="-----" IsEnabled="False" FontWeight="Bold" HorizontalContentAlignment="Center"/>
         <Label Name="IDLabel" Content="ID:" HorizontalAlignment="Left" Margin="34,0,0,256" Padding="0,0,0,0" VerticalContentAlignment="Center" Width="16" Height="25" VerticalAlignment="Bottom" FontWeight="Bold"/>
 
-        <ComboBox Name="CategoryBox" HorizontalAlignment="Left" Height="30" Margin="156,0,0,197" VerticalAlignment="Bottom" Width="100" VerticalContentAlignment="Center"/>
+        <ComboBox x:Name="CategoryBox" HorizontalAlignment="Left" Height="30" Margin="156,0,0,197" VerticalAlignment="Bottom" Width="100" VerticalContentAlignment="Center"/>
         <Label Content="Category:" HorizontalAlignment="Left" Margin="93,0,0,202" VerticalAlignment="Bottom" Padding="0,0,0,0" Height="20" FontWeight="Bold"/>
 
-        <TextBox Name="NameBox"  HorizontalAlignment="Left" Margin="156,0,0,159" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom" PreviewTextInput="NameBox_PreviewTextInput"/>
+        <TextBox x:Name="NameBox"  HorizontalAlignment="Left" Margin="156,0,0,159" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom" PreviewTextInput="NameBox_PreviewTextInput"/>
         <Label Content="Name:" HorizontalAlignment="Left" Margin="110,0,0,164" VerticalAlignment="Bottom" Padding="0,0,0,0" Height="20" FontWeight="Bold"/>
 
-        <TextBox Name="PriceBox" HorizontalAlignment="Left" Margin="156,0,0,119" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom" PreviewTextInput="PriceBox_PreviewTextInput"/>
+        <TextBox x:Name="PriceBox" HorizontalAlignment="Left" Margin="156,0,0,119" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom" PreviewTextInput="PriceBox_PreviewTextInput"/>
         <Label Content="Price:" HorizontalAlignment="Left" Margin="116,0,0,124" Padding="0,0,0,0" Height="20" VerticalAlignment="Bottom" FontWeight="Bold"/>
 
-        <TextBox Name="InStockBox" HorizontalAlignment="Left" Margin="156,0,0,79" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom"  PreviewTextInput="InStockBox_PreviewTextInput"/>
+        <TextBox x:Name="InStockBox" HorizontalAlignment="Left" Margin="156,0,0,79" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom"  PreviewTextInput="InStockBox_PreviewTextInput"/>
         <Label Content="In Stock:" HorizontalAlignment="Left" Margin="99,0,0,84" Padding="0,0,0,0" Height="20" VerticalAlignment="Bottom" FontWeight="Bold"/>
 
-        <Button Name="AddButton" Content="Add" Margin="10,0,0,23" HorizontalAlignment="Left" Width="80" Click="AddButton_Click" Height="30" VerticalAlignment="Bottom" FontWeight="Bold" Background="#FFABB0B8"/>
+        <Button Content="Add" Name="AddButton" Margin="10,0,0,23" HorizontalAlignment="Left" Width="80" Click="AddButton_Click" Height="30" VerticalAlignment="Bottom" FontWeight="Bold" Background="#FFABB0B8">
+            <!--<Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ElementName=CategoryBox, Path=SelectedItem, Mode=OneWay}" Value="{x:Null}"/>
+                                <Condition Binding="{Binding ElementName=NameBox, Path=Text.Length, Mode=OneWay}" Value=""/>
+                                <Condition Binding="{Binding ElementName=PriceBox, Path=Text.Length, Mode=OneWay}" Value=""/>
+                                <Condition Binding="{Binding ElementName=InStock, Path=Text.Length, Mode=OneWay}" Value=""/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>-->
+        </Button>
         <Button Name="UpdateButton" Content="Update" HorizontalAlignment="Center" Margin="0,0,0,23" Width="80" Click="UpdateButton_Click" Height="30" VerticalAlignment="Bottom" FontWeight="Bold" Background="#FFABB0B8"/>
         <Button Name="CancelButton" Content="Cancel" Margin="0,0,10,23" HorizontalAlignment="Right" Width="80" Click="CancelButton_Click" Height="30" VerticalAlignment="Bottom" FontWeight="Bold" Background="#FFABB0B8"/>
     </Grid>

@@ -8,36 +8,37 @@
         Title="Order Details" Height="450" Width="525">
     <Grid>
         <TextBox Name="IDBox" Margin="65,52,0,0" TextWrapping="Wrap"  VerticalContentAlignment="Center" Text="----" IsEnabled="False" FontWeight="Bold" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
-        <Label Name="IDLabel" Content="ID:" Margin="34,52,0,0" Padding="0,0,0,0" VerticalContentAlignment="Center" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="16"/>
+        <Label Name="IDLabel" Content="ID:" Margin="34,52,0,0" Padding="0,0,0,0" VerticalContentAlignment="Center" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="16" Visibility="{Binding ElementName=PaymentDatePicker, Path=Visibility}"/>
 
-        <TextBox Name="CustomerNameBox" Margin="140,100,0,0" TextWrapping="NoWrap" VerticalContentAlignment="Center" IsEnabled="False" HorizontalAlignment="Left" Width="100" Height="30" VerticalAlignment="Top"/>
+        <TextBox Name="CustomerNameBox" Margin="140,100,0,0" TextWrapping="NoWrap" VerticalContentAlignment="Center" IsEnabled="False" PreviewTextInput="CustomerNameBox_PreviewTextInput" HorizontalAlignment="Left" Width="100" Height="30" VerticalAlignment="Top"/>
         <Label Content="Customer Name:" Margin="37,105,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="94"/>
 
-        <TextBox Name="CustomerEmailBox" Margin="140,140,0,0" TextWrapping="NoWrap" VerticalContentAlignment="Center" IsEnabled="False" HorizontalAlignment="Left" Width="100" Height="30" VerticalAlignment="Top"/>
+        <TextBox Name="CustomerEmailBox" Margin="140,140,0,0" TextWrapping="NoWrap" VerticalContentAlignment="Center" IsEnabled="False" PreviewTextInput="CustomerEmailBox_PreviewTextInput"  HorizontalAlignment="Left" Width="100" Height="30" VerticalAlignment="Top"/>
         <Label Content="Customer Email:" Margin="39,145,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="91"/>
 
-        <TextBox Name="CustomerAddressBox" Margin="140,180,0,0" TextWrapping="NoWrap" VerticalContentAlignment="Center" IsEnabled="False" HorizontalAlignment="Left" Width="100" Height="30" VerticalAlignment="Top"/>
+        <TextBox Name="CustomerAddressBox" Margin="140,180,0,0" TextWrapping="NoWrap" VerticalContentAlignment="Center" IsEnabled="False" PreviewTextInput="CustomerAddressBox_PreviewTextInput"  HorizontalAlignment="Left" Width="100" Height="30" VerticalAlignment="Top"/>
         <Label Content="Customer Address:" Margin="25,185,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="106"/>
 
         <TextBox Name="PriceBox" Margin="140,220,0,0" TextWrapping="NoWrap" VerticalContentAlignment="Center" IsEnabled="False" HorizontalAlignment="Left" Width="100" Height="30" VerticalAlignment="Top"/>
         <Label Content="Price:" Margin="100,222,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="31"/>
 
         <ComboBox Name="StatusBox" Margin="374,57,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="100" Height="30" VerticalAlignment="Top"/>
-        <Label Content="Status:" HorizontalAlignment="Left" Margin="320,62,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top"/>
+        <Label Content="Status:" HorizontalAlignment="Left" Margin="320,62,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" Visibility="{Binding ElementName=StatusBox, Path=Visibility}"/>
 
-        <Label Content="Order Date:" Margin="292,105,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="66"/>
+        <Label Content="Order Date:" Margin="292,105,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="66" Visibility="{Binding ElementName=PaymentDatePicker, Path=Visibility}"/>
         <DatePicker Name="OrderDatePicker" Margin="373,103,0,0" SelectedDateFormat="Short" IsEnabled="False" HorizontalAlignment="Left" Width="102" Height="24" VerticalAlignment="Top" BindingGroup="{Binding Mode=OneWay}"/>
 
-        <Label Content="Payment Date:" Margin="275,145,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="82"/>
+        <Label Content="Payment Date:" Margin="275,145,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="82" Visibility="{Binding ElementName=PaymentDatePicker, Path=Visibility}"/>
         <DatePicker Name="PaymentDatePicker" Margin="373,143,0,0" SelectedDateFormat="Short" IsEnabled="False" HorizontalAlignment="Left" Width="102" Height="24" VerticalAlignment="Top"/>
 
-        <Label Content="Shipment Date:" Margin="270,185,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="87"/>
+        <Label Content="Shipment Date:" Margin="270,185,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="87" Visibility="{Binding ElementName=PaymentDatePicker, Path=Visibility}"/>
         <DatePicker Name="ShipDatePicker" Margin="373,183,0,0" SelectedDateFormat="Short" IsEnabled="False" HorizontalAlignment="Left" Width="102" Height="24" VerticalAlignment="Top"/>
 
-        <Label Content="Delivery Date:" Margin="278,225,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="80"/>
+        <Label Content="Delivery Date:" Margin="278,225,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="80" Visibility="{Binding ElementName=PaymentDatePicker, Path=Visibility}"/>
         <DatePicker Name="DelivDatePicker" Margin="373,223,0,0" SelectedDateFormat="Short" IsEnabled="False" HorizontalAlignment="Left" Width="102" Height="24" VerticalAlignment="Top"/>
 
-        <Button Name="UpdateButton" Content="Update" Margin="384,0,0,110" Click="UpdateButton_Click" FontWeight="Bold" Background="#FFABB0B8" HorizontalAlignment="Left" Width="80" Height="30" VerticalAlignment="Bottom"/>
+        <Button Name="UpdateButton" Content="Update" Margin="384,0,0,70" Click="UpdateButton_Click" FontWeight="Bold" Background="#FFABB0B8" HorizontalAlignment="Left" Width="80" Height="30" VerticalAlignment="Bottom"/>
+        <Button Name="PlaceOrderButton" Content="Place Order" Margin="384,0,0,110" Click="PlaceOrderButton_Click"  FontWeight="Bold" Background="#FFABB0B8" HorizontalAlignment="Left" Width="80" Height="30" VerticalAlignment="Bottom"/>
         <Button Name="CancelButton" Content="Cancel" Margin="384,0,0,30" Click="CancelButton_Click" FontWeight="Bold" Background="#FFABB0B8" HorizontalAlignment="Left" Width="80" Height="30" VerticalAlignment="Bottom"/>
 
         <Label Content="Items in order:" Margin="25,0,0,145" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="85"/>

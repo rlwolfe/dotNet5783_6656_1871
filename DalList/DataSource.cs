@@ -49,10 +49,22 @@ static internal class DataSource
     static private void ProductFiller() {
 
 		List<int> randNums = new List<int>(10);			//to track which products were already added
-		int item, i = 0;								//item to add to list of products
+		int i = 0;								//item to add to list of products
 		double price;
 
-		do
+		foreach (string name in Enum.GetNames(typeof(Enums.ProductName)))
+		{
+			price = Math.Round((_randomNum.Next(1, 21) + _randomNum.NextDouble()), 2);   //price is random int + random decimal = creates a double
+			Product product = new Product(name, (Enums.Category)(i / 5), price, _randomNum.Next(500));
+												//creates product with name & category from list and random price & quantity
+			if (_randomNum.Next(10) == 0)
+				product.m_inStock = 0;					//randomly selects products to be out of stock
+
+			Products.Add(product);
+			i++;						//for category trackiing
+		}
+
+		/*do
 		{
 			item = _randomNum.Next(50);
 			if (randNums.Contains(item))			//was the product already added?
@@ -71,7 +83,7 @@ static internal class DataSource
 			Products.Add(product);				//adding product to list of all products
 
 			i++;
-		} while (i < 10);				//initializing 10 products in list
+		} while (i < 10);				//initializing 10 products in list*/
 	}
 
     ///<summary>

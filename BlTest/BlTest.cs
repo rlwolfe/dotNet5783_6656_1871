@@ -355,17 +355,17 @@ class BlTest
 				case 'e':
 
 					Console.WriteLine("What is the customer's name?");
-					string? customerName = Console.ReadLine();
+					cart2.m_customerName = Console.ReadLine();
 
 					Console.WriteLine("What is the customer's email?");
-					string? customerEmail = Console.ReadLine();
+					cart2.m_customerEmail = Console.ReadLine();
 
 					Console.WriteLine("What is the customer's address?");
-					string? customerAddress = Console.ReadLine();
+					cart2.m_customerAddress = Console.ReadLine();
 
 					try
 					{
-						bl.Cart.PlaceOrder(cart2, customerName, customerEmail, customerAddress);                    //placing an order
+						bl.Cart.PlaceOrder(cart2);                    //placing an order
 						Console.WriteLine("The order was just placed\nThank you for shopping with us!");
 						subChoice = 'x';
 					}

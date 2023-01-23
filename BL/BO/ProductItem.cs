@@ -1,6 +1,6 @@
 ﻿namespace BO
 {
-	public class ProductItem
+	public class ProductItem 
 	{
 		public int m_id { get; set; }
 		public string? m_name { get; set; }

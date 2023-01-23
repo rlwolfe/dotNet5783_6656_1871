@@ -7,8 +7,8 @@ namespace BlImplementation
 	internal class Order : IOrder
 	{
 		static private IDal? dal = DalApi.Factory.Get();
-		static public List<BO.Order> Orders = new List<BO.Order>();				//holds orders containing tracking status
-		
+		static private List<BO.Order> Orders = new List<BO.Order>();             //holds orders containing tracking status
+
 		/// <summary>
 		/// creates a new order with data from the user
 		/// this method is used by the customers
@@ -19,7 +19,7 @@ namespace BlImplementation
 		/// <exception cref="BO.blGeneralException"></exception>
 		public int Create(BO.Order order)
 		{
-			if (Orders.Count == 0)								//if orders haven't been pulled up from the data layer yet, do it now
+			if (Orders.Count == 0)                              //if orders haven't been pulled up from the data layer yet, do it now
 				fillOrders();
 			InputValidation(order);
 
@@ -27,7 +27,9 @@ namespace BlImplementation
 			order.m_shipDate, order.m_deliveryDate);
 			try
 			{
-				dal.Order.Create(ord);
+				ord.m_id = dal.Order.Create(ord);
+				order.m_id = ord.m_id;
+				Orders.Add(order);
 			}
 			catch (DO.idAlreadyExistsException exc)
 			{
@@ -39,7 +41,6 @@ namespace BlImplementation
 				Console.WriteLine("Some other problem");
 				throw new BO.blGeneralException();
 			}
-			Orders.Add(order);
 			return ord.m_id;
 		}
 
@@ -55,7 +56,7 @@ namespace BlImplementation
 			BO.Order order = new BO.Order();
 			try
 			{
-				if (id > 0)												//if ID is valid then get it
+				if (id > 0)                                             //if ID is valid then get it
 					order = Orders.Find(x => x.m_id == id);
 				else
 					throw new BO.InputIsInvalidException("ID");
@@ -64,13 +65,13 @@ namespace BlImplementation
 			{
 				Console.WriteLine(id);
 			}
-			if (order != null)											//and return it here
+			if (order != null)                                          //and return it here
 				return order;
 
-			order = new BO.Order();										//reset order so it's not null
+			order = new BO.Order();                                     //reset order so it's not null
 			try
 			{
-				DO.Order doOrd = dal.Order.Read(id);					//fill BO order with data layer order's information
+				DO.Order doOrd = dal.Order.Read(id);                    //fill BO order with data layer order's information
 				order.m_id = doOrd.m_id;
 				order.m_customerName = doOrd.m_customerName;
 				order.m_customerEmail = doOrd.m_customerEmail;
@@ -94,8 +95,8 @@ namespace BlImplementation
 
 
 				order.m_totalPrice = 0;
-				order.m_items = new();
-				foreach (DO.OrderItem doItem in dal.OrderItem.ReadAllFiltered())						//find and add orderItems
+				order.Items = new();
+				foreach (DO.OrderItem doItem in dal.OrderItem.ReadAllFiltered())                        //find and add orderItems
 				{
 					BO.OrderItem boItem = new();
 					if (doItem.m_orderID == id)
@@ -108,8 +109,8 @@ namespace BlImplementation
 					else
 						continue;
 
-					order.m_totalPrice += (boItem.m_price * boItem.m_amount);					//set price accordingly
-					order.m_items.Add(boItem);
+					order.m_totalPrice += (boItem.m_price * boItem.m_amount);                   //set price accordingly
+					order.Items.Add(boItem);
 				}
 			}
 			catch (DO.idNotFoundException exc)
@@ -136,14 +137,14 @@ namespace BlImplementation
 			List<BO.OrderForList> listOfOrders = new List<BO.OrderForList>();
 			if (Orders.Count > 0)
 			{
-				foreach (BO.Order order in Orders)										//gets all orders sitting in business layer (with full information)
+				foreach (BO.Order order in Orders)                                      //gets all orders sitting in business layer (with full information)
 				{
 					BO.OrderForList orderForList = new BO.OrderForList()
 					{
 						m_id = order.m_id,
 						m_customerName = order.m_customerName,
 						m_status = order.m_status,
-						m_amountOfItems = order.m_items.Count,
+						m_amountOfItems = order.Items.Count,
 						m_totalPrice = order.m_totalPrice
 					};
 					listOfOrders.Add(orderForList);
@@ -151,7 +152,7 @@ namespace BlImplementation
 			}
 			else
 			{
-				foreach (DO.Order order in dal.Order.ReadAllFiltered())							//since no orders were in the business layer, searches the data layer for orders that may need to be pulled up
+				foreach (DO.Order order in dal.Order.ReadAllFiltered())                         //since no orders were in the business layer, searches the data layer for orders that may need to be pulled up
 				{
 					BO.OrderForList orderForList = new BO.OrderForList()
 					{
@@ -169,7 +170,7 @@ namespace BlImplementation
 							orderForList.m_status = BO.Enums.OrderStatus.Ordered;                            //not past shipped, but past ordered
 					else
 						orderForList.m_status = BO.Enums.OrderStatus.None;                                   //not past shipped, ordered or delivered
-					
+
 					foreach (var orderItem in from DO.OrderItem orderItem in dal.OrderItem.ReadAllFiltered()
 											  where orderItem.m_orderID == order.m_id
 											  select orderItem)
@@ -197,7 +198,7 @@ namespace BlImplementation
 			if (Orders.Count == 0)                              //if orders haven't been pulled up from the data layer yet, do it now
 				fillOrders();
 			BO.Order boOrder = Read(orderId);
-			if (boOrder == null)								//if order isn't yet in business layer - get it from the data layer
+			if (boOrder == null)                                //if order isn't yet in business layer - get it from the data layer
 			{
 				try
 				{
@@ -222,7 +223,7 @@ namespace BlImplementation
 						};
 
 						boOrder.m_totalPrice += (doItem.m_amount * doItem.m_price);
-						boOrder.m_items.Add(boItem);
+						boOrder.Items.Add(boItem);
 					}
 
 					boOrder.m_orderDate = doOrder.m_orderDate;
@@ -259,8 +260,8 @@ namespace BlImplementation
 						default:
 							break;
 					}
-					dal.Order.Update(doOrder);																			//update order in data layer, in case dates have changed
-					boOrder.m_id = Create(boOrder);															//add the id to the order after it's been created successfully in the BL
+					dal.Order.Update(doOrder);                                                                          //update order in data layer, in case dates have changed
+					boOrder.m_id = Create(boOrder);                                                         //add the id to the order after it's been created successfully in the BL
 				}
 				catch (DO.idNotFoundException exc)
 				{
@@ -273,15 +274,15 @@ namespace BlImplementation
 					throw new BO.blGeneralException();
 				}
 			}
-			else																									//if the order already exists in the BL
+			else                                                                                                    //if the order already exists in the BL
 			{
-				int ordIndex = Orders.FindIndex(x => x.m_id == orderId);							//index in the list is needed to make changes to the object itself, not just a copy of it
+				int ordIndex = Orders.FindIndex(x => x.m_id == orderId);                            //index in the list is needed to make changes to the object itself, not just a copy of it
 				if (ordIndex == -1)
 				{
 					Orders.Add(boOrder);
 					ordIndex = Orders.FindIndex(x => x.m_id == orderId);
 				}
-				switch (newStatus)																	//set status according to the parameter sent
+				switch (newStatus)                                                                  //set status according to the parameter sent
 				{
 					case BO.Enums.OrderStatus.Ordered:
 						Orders[ordIndex].m_status = BO.Enums.OrderStatus.Ordered;
@@ -315,7 +316,7 @@ namespace BlImplementation
 			BO.Order boOrder;
 			try
 			{
-				boOrder = Read(orderId);											//finds order for tracking
+				boOrder = Read(orderId);                                            //finds order for tracking
 			}
 			catch (DO.idNotFoundException exc)
 			{
@@ -326,7 +327,7 @@ namespace BlImplementation
 			BO.OrderTracking orderTracking = new BO.OrderTracking();
 			orderTracking.m_id = orderId;
 			orderTracking.m_status = boOrder.m_status;
-			orderTracking.DatePairs = new List<Tuple<DateTime?, string?>>();										//starts an empty list if any pairs that may need to be added
+			orderTracking.DatePairs = new List<Tuple<DateTime?, string?>>();                                        //starts an empty list if any pairs that may need to be added
 
 			if (boOrder.m_orderDate != null)
 				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_orderDate, "The order has been ordered"));
@@ -353,11 +354,11 @@ namespace BlImplementation
 				throw new BO.InputIsInvalidException("Customer Name");
 
 			//add @ and . to regex expression
-			if (order.m_customerEmail == null || !Regex.IsMatch(order.m_customerEmail, @"^[a-zA-Z]+@+[a-zA-Z]+\.+[a-zA-Z]+$"))
+			if (order.m_customerEmail == null || !Regex.IsMatch(order.m_customerEmail, @"^[a-zA-Z0-9._\-]+@+[a-zA-Z]+\.+[a-zA-Z]+$"))
 				throw new BO.InputIsInvalidException("Customer Email");
 
 			//regex expression (up to 4 digits for number space, street name, space, street type (1st letter caps, up to 3 more lowercase
-			if (order.m_customerAddress == null || !Regex.IsMatch(order.m_customerAddress, @"^(\d{1,4}) [a-zA-Z\s]+[A-Z]{1}[a-z]{1,3}$"))
+			if (order.m_customerAddress == null || !Regex.IsMatch(order.m_customerAddress, @"^(\d{1,4}) [a-zA-Z\s]+[A-Za-z]{1,3}$"))
 				throw new BO.InputIsInvalidException("Customer Address");
 
 			//if orderDate is later than shipDate or delivery date
@@ -366,14 +367,14 @@ namespace BlImplementation
 					throw new BO.InputIsInvalidException("OrderDate after ship date");
 			if (order.m_deliveryDate != null)
 				if (DateTime.Compare((DateTime)order.m_orderDate, (DateTime)order.m_deliveryDate) > 0)
-				throw new BO.InputIsInvalidException("OrderDate after delivery date");
+					throw new BO.InputIsInvalidException("OrderDate after delivery date");
 
 			//if shipDate is later than delivery date
 			if (order.m_shipDate != null || order.m_deliveryDate != null)
 				if (DateTime.Compare((DateTime)order.m_shipDate, (DateTime)order.m_deliveryDate) > 0)
 					throw new BO.InputIsInvalidException("ShipDate after delivery date");
 		}
-		
+
 		/// <summary>
 		/// initializes a list of BO orders that hold dates and status for consistant referencing
 		/// </summary>
@@ -381,7 +382,7 @@ namespace BlImplementation
 		{
 			foreach (DO.Order doOrder in dal.Order.ReadAllFiltered())
 			{
-				BO.Order boOrder = new BO.Order();										//grabs data here
+				BO.Order boOrder = new BO.Order();                                      //grabs data here
 				boOrder.m_id = doOrder.m_id;
 				boOrder.m_customerName = doOrder.m_customerName;
 				boOrder.m_customerAddress = doOrder.m_customerAddress;
@@ -403,10 +404,10 @@ namespace BlImplementation
 					boOrder.m_status = BO.Enums.OrderStatus.None;                                   //not past shipped, ordered or delivered
 
 				boOrder.m_totalPrice = 0;
-				boOrder.m_items = new();
+				boOrder.Items = new();
 				foreach (DO.OrderItem doItem in dal.OrderItem.ReadAllFiltered())
 				{
-					BO.OrderItem boItem = new();													//adds list of orderItems to the order
+					BO.OrderItem boItem = new();                                                    //adds list of orderItems to the order
 					if (doItem.m_orderID == doOrder.m_id)
 					{
 						boItem.m_id = doItem.m_id;
@@ -418,7 +419,7 @@ namespace BlImplementation
 						continue;
 
 					boOrder.m_totalPrice += (boItem.m_price * boItem.m_amount);
-					boOrder.m_items.Add(boItem);
+					boOrder.Items.Add(boItem);
 				}
 				boOrder.m_totalPrice = Math.Round(boOrder.m_totalPrice, 2);
 				Orders.Add(boOrder);

@@ -20,7 +20,7 @@
             <ComboBox Name="ProductSelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="ProductSelector_SelectionChanged" FontSize="20" VerticalContentAlignment="Center"/>
             <Label Name="ProductLabel" Grid.Column="0" Content="Category:" HorizontalAlignment="Right" FontSize="24" Margin="0,0,20,0" Foreground="Gainsboro"/>
         </Grid>
-        <ListView x:Name="ProductsListView" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" MouseDoubleClick="ManagerDoubleClick" Background="White" Foreground="Black">
+        <ListView x:Name="ProductsListView" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" MouseDoubleClick="ManagerDoubleClick" SelectionMode="Single" Background="White" Foreground="Black">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>

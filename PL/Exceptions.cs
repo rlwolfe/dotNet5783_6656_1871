@@ -12,7 +12,7 @@ namespace PL
 	{
 		public plException(string type, string errorMessage) : base()
 		{
-			new ErrorWindow(type, errorMessage).Show();
+			new ErrorWindow($"{type} Error", $"The {type} entered was invalid").Show();
 		}
 	}
 }

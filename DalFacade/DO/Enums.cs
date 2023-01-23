@@ -5,18 +5,18 @@
 /// </summary>
 public struct Enums
 {
-	public enum ProductName {	Apple, Orange, Potato, Cherries, Cucumber,	//0-4 Produce
+	public enum ProductName {Apple, Orange, Potato, Carrot, Cucumber,//0-4 Produce
 						Milk, Yogurt, Cottage, Cheese, Butter,		//5-9 Dairy
-						Sausage, Steak, Ribs, Hamburgers, Chicken,	//10-14 Meat
-						Pizza, Popcicles, Fish, Ice, Chips,			//15-19 Frozen
+						Sausage, Steak, Mince, Hamburger, Chicken,	//10-14 Meat
+						Pizza, Jachnun, Salmon, Ice, Dough,			//15-19 Frozen
 						Oil, Salt, Sugar, Vinegar, Honey,			//20-24 Cooking
-						Bagel, Pita, Rolls, Tortillas, Baguette,	//25-29 Bread
-						Beans, Peaches, Corn, Pickles, Tuna,		//30-34 Canned
-						Bamba, Crisps, Bisli, Cookies, Lollipops,	//35-39 Snack
-						Wipes, Soap, Detergent, Tissues, Antiseptic,//40-44 Hygiene
-						Plates, Cups, Bowls, Knives, Forks }		//45-49 Disposables
-
-	public enum Category { Produce, Dairy, Meat, Frozen, Cooking, Bread, Canned, Snacks, Hygine, Disposables }
+						Bagel, Pita, Challah, Tortilla, Baguette,	//25-29 Bread
+						Pasta, Rice, barley, Couscous, Quinoa,		//30-34 Grains
+						Bamba, Pretzel, Bisli, Cookie, Lollipop,	//35-39 Snack
+						Bleach, Soap, Detergent, Tissuebox, Antiseptic,//40-44 Hygiene
+						Tea, Coffee, Water, Coke, Juice }			//45-49 Drinks
+	 
+	public enum Category { Produce, Dairy, Meat, Frozen, Cooking, Bread, Grains, Snacks, Hygine, Drinks }
 
 	public enum FirstName { Aaron, Abby, Liam, Olivia, Noah, Emma, Oliver, Charlotte, Gabriel, Talia, Rachel,
 							Elijah, Amelia, James, Ava, William, Sophia, Benjamin, Isabella, Lucas, Mia, Henry,

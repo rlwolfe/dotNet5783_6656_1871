@@ -5,8 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Products"
         mc:Ignorable="d"
-        Title="ProductDetailsWindow" Height="450" Width="800">
+        Title="ProductDetailsWindow" Height="350" Width="350">
     <Grid>
-        
+        <Grid.Background>
+            <ImageBrush Opacity="1" ImageSource="/Products/Groceries.jpg" TileMode="Tile"/>
+        </Grid.Background>
+        <TextBox Name="IDBox" HorizontalAlignment="Left" Height="25" Margin="59,0,0,266" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="60"  VerticalContentAlignment="Center" IsEnabled="False" Text="{Binding m_id, Mode=OneTime}" FontWeight="Bold" HorizontalContentAlignment="Center"/>
+        <Label Name="IDLabel" Content="ID:" HorizontalAlignment="Left" Margin="34,0,0,266" Padding="0,0,0,0" VerticalContentAlignment="Center" Width="16" Height="25" VerticalAlignment="Bottom" FontWeight="Bold"/>
+
+        <ComboBox x:Name="CategoryBox" HorizontalAlignment="Left" Height="30" Margin="122,0,0,207" VerticalAlignment="Bottom" Width="100" VerticalContentAlignment="Center" IsEnabled="False"/>
+        <Label Content="Category:" HorizontalAlignment="Left" Margin="59,0,0,212" VerticalAlignment="Bottom" Padding="0,0,0,0" Height="20" FontWeight="Bold"/>
+
+        <TextBox x:Name="NameBox"  HorizontalAlignment="Left" Margin="122,0,0,169" TextWrapping="Wrap" FontWeight="Bold" Width="100" VerticalContentAlignment="Center" Height="30" IsEnabled="False" VerticalAlignment="Bottom" Text="{Binding m_name, Mode=OneTime}" Background="Black" Foreground="White"/>
+        <Label Content="Name:" HorizontalAlignment="Left" Margin="76,0,0,174" VerticalAlignment="Bottom" Padding="0,0,0,0" Height="20" FontWeight="Bold"/>
+
+        <TextBox x:Name="PriceBox" HorizontalAlignment="Left" Margin="122,0,0,129" TextWrapping="Wrap" FontWeight="Bold" Width="100" VerticalContentAlignment="Center" Height="30" IsEnabled="False" VerticalAlignment="Bottom" Text="{Binding m_price, Mode=OneTime}" Foreground="White" Background="Black"/>
+        <Label Content="Price:" HorizontalAlignment="Left" Margin="82,0,0,134" Padding="0,0,0,0" Height="20" VerticalAlignment="Bottom" FontWeight="Bold"/>
+
+        <TextBox x:Name="AmountBox" HorizontalAlignment="Left" Margin="122,0,0,89" TextWrapping="Wrap" FontWeight="Bold" Width="100" VerticalContentAlignment="Center" Height="30" IsEnabled="False" VerticalAlignment="Bottom" Text="{Binding m_amount, Mode=OneTime}" Background="Black" Foreground="White"/>
+        <Label Content="Amount in Stock:" HorizontalAlignment="Left" Margin="16,0,0,94" Padding="0,0,0,0" Height="20" VerticalAlignment="Bottom" FontWeight="Bold"/>
+        <CheckBox Name="InStockCheckBox" Content="Product in stock?" Margin="42,0,0,67" FontWeight="Bold" HorizontalAlignment="Left" Width="130" Height="15" VerticalAlignment="Bottom" IsEnabled="False" IsChecked="{Binding m_inStock, Mode=OneTime}"/>
+
+        <Button Content="Add to Cart" Name="AddToCartButton" Margin="10,0,0,23" HorizontalAlignment="Left" Width="80" Click="AddToCartButton_Click" Height="30" VerticalAlignment="Bottom" FontWeight="Bold" Background="#FFABB0B8"/>
+        <Button Name="CloseButton" Content="Close" Margin="0,0,10,23" HorizontalAlignment="Right" Width="80" Click="CloseButton_Click" Height="30" VerticalAlignment="Bottom" FontWeight="Bold" Background="#FFABB0B8"/>
     </Grid>
 </Window>

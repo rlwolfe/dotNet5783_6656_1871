@@ -1,4 +1,5 @@
 ﻿using BO;
+using PL.Popups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,13 @@ using System.Windows.Input;
 
 namespace PL.Products
 {
-    /// <summary>
-    /// Interaction logic for ProductListWindow.xaml
-    /// </summary>
-    public partial class ProductListWindow : Window
-    {
+	/// <summary>
+	/// Interaction logic for ProductListWindow.xaml
+	/// </summary>
+	public partial class ProductListWindow : Window
+	{
 		private BlApi.IBl? bl = BlApi.Factory.Get();
-		//static cart - clear when ordered?
+		static internal Cart cart = new Cart();
 
 		public ProductListWindow(object sender)
 		{
@@ -25,36 +26,52 @@ namespace PL.Products
 			{
 				ProductsListView.ItemsSource = bl.Product.ManagerListRequest();                 //create listView for manager (productsForList)
 				AddProductToCartButton.Visibility = Visibility.Hidden;
+				ViewCartButton.Visibility = Visibility.Hidden;
 			}
 			else
 			{
 				ProductsListView.ItemsSource = bl.Product.CatalogRequest();                     //creates listView for customer (productItems)
 				AddProductButton.Visibility = Visibility.Hidden;
+				ViewCartButton.Content = $"View Cart ({cart.Items.Count})";
 			}
 		}
 
 		private void AddProductButton_Click(object sender, RoutedEventArgs e)
 		{
-			bool? window = new AddUpdateProductWindow().ShowDialog();									//open new window to add product
-			if (window.HasValue)																//if user finished with add product window
-				ProductsListView.ItemsSource = bl?.Product.ManagerListRequest();				//update the product list
+			bool? window = new AddUpdateProductWindow().ShowDialog();                                   //open new window to add product
+			if (window.HasValue)                                                                //if user finished with add product window
+			{
+				if (ProductSelector.SelectedIndex == -1 || (BO.Enums.Category)ProductSelector.SelectedItem == BO.Enums.Category.None)
+					ProductsListView.ItemsSource = bl?.Product.ManagerListRequest();                //update product list when user exited out of add product window
+				else
+					ProductsListView.ItemsSource = from prod in bl?.Product.ManagerListRequest()         //get filtered results
+												   where prod.m_category == (BO.Enums.Category)ProductSelector.SelectedItem
+												   select prod;
+			}
 		}
 
 		private void ProductSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			BO.Enums.Category productCategory = (BO.Enums.Category)ProductSelector.SelectedItem;	//selected category
-			if (productCategory == BO.Enums.Category.None)											//view all the products
+			BO.Enums.Category productCategory = (BO.Enums.Category)ProductSelector.SelectedItem;    //selected category
+			if (productCategory == BO.Enums.Category.None)                                          //view all the products
 			{
-				ProductsListView.ItemsSource = bl.Product.ManagerListRequest();
-				ProductSelector.ItemsSource = Enum.GetValues(typeof(BO.Enums.Category));
-				return;
-			}
-			if (productCategory is BO.Enums.Category category)										//filtered list
-				ProductsListView.ItemsSource = bl?.Product?.ManagerListRequest()?.Select(x => x.m_category == category);
+				if (AddProductButton.Visibility != Visibility.Hidden)                               //if currently in customer catalog view
+					ProductsListView.ItemsSource = bl.Product.ManagerListRequest();
 
-			ProductsListView.ItemsSource = from product in bl?.Product.ManagerListRequest()			//get filtered results
-										   where product.m_category == productCategory
-										   select product;
+				else
+					ProductsListView.ItemsSource = bl.Product.CatalogRequest();
+			}
+			else
+			{
+				if (AddProductButton.Visibility != Visibility.Hidden)                               //if currently in customer catalog view
+					ProductsListView.ItemsSource = from product in bl?.Product.ManagerListRequest()         //get filtered results
+												   where product.m_category == productCategory
+												   select product;
+				else
+					ProductsListView.ItemsSource = from product in bl?.Product.CatalogRequest()        //get filtered results
+												   where product.m_category == productCategory
+												   select product;
+			}
 		}
 
 		private void ManagerDoubleClick(object sender, MouseButtonEventArgs e)
@@ -65,40 +82,69 @@ namespace PL.Products
 				return;
 			}
 
-			BO.ProductForList product = (BO.ProductForList)ProductsListView.SelectedItem;		//take selection from list
-			
-			if (product == null)																//didn't click an Item on list
+			BO.ProductForList product = (BO.ProductForList)ProductsListView.SelectedItem;       //take selection from list
+
+			if (product == null)                                                                //didn't click an Item on list
 				return;
-			
-			bool? window = new AddUpdateProductWindow(product).ShowDialog();							
+
+			bool? window = new AddUpdateProductWindow(product).ShowDialog();
 			if (window.HasValue)
-				ProductsListView.ItemsSource = bl?.Product.ManagerListRequest();                //update product list if user exited out of add product window
+			{
+				if (ProductSelector.SelectedIndex == -1 || (BO.Enums.Category)ProductSelector.SelectedItem == BO.Enums.Category.None)
+					ProductsListView.ItemsSource = bl?.Product.ManagerListRequest();                //update product list when user exited out of update product window
+				else
+					ProductsListView.ItemsSource = from prod in bl?.Product.ManagerListRequest()         //get filtered results
+												   where prod.m_category == (BO.Enums.Category)ProductSelector.SelectedItem
+												   select prod;
+			}
 		}
+
 		private void CustomerDoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			BO.ProductItem product = (BO.ProductItem)ProductsListView.SelectedItem;       //take selection from list
 
 			if (product == null)                                                                //didn't click an Item on list
 				return;
-			
+
 			new ProductDetailsWindow(product).ShowDialog();
+			ViewCartButton.Content = $"View Cart ({cart.Items.Count})";
 		}
 
 		private void AddProductToCartButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (ProductsListView.SelectedItems.Count != 0)
+			if (ProductsListView.SelectedItem != null)
 			{
-				foreach (ProductItem product in ProductsListView.SelectedItems)
+				ProductItem product = ProductsListView.SelectedItem as ProductItem;
+				try
 				{
-					//Cart?
-					//bl.Cart.AddToCart(cart, product.m_id);
+					if (cart.Items.FirstOrDefault(x => x.m_productID == product.m_id) == null)
+					{
+						if (!bl.Product.CustomerRequest(product.m_id).m_inStock)
+							new ErrorWindow("Out of Stock", $"Sorry, {product.m_name} is not in stock").Show();
+						else
+						{
+							bl.Cart.AddToCart(cart, product.m_id);
+							new SuccessWindow($"{product.m_name} was successfully added to the cart").Show();
+							ViewCartButton.Content = $"View Cart ({cart.Items.Count})";
+						}
+					}
+					else
+						new ErrorWindow("Product Duplicate Error", $"{product.m_name} is already in the cart,\nUpdate quantity in 'View Cart'").Show();
+				}
+				catch (Exception exc)
+				{
+					throw new plException("Error", "Error Occurred when attempted to add product to cart:\n" + exc.Message);
 				}
 			}
+			else
+				new ErrorWindow("Nothing Selected Error", "Please select an item to add to cart").ShowDialog();
 		}
 
 		private void ViewCartButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			bool? window = new CartWindows.ViewCartWindow().ShowDialog();                                   //open new window to add product
+			if (window.HasValue)
+				ViewCartButton.Content = $"View Cart ({cart.Items.Count})";
 		}
 	}
 }

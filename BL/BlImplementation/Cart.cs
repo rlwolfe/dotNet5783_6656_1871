@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 namespace BlImplementation
@@ -20,17 +21,18 @@ namespace BlImplementation
 			try
 			{
 				DO.Product product = dal.Product.Read(prodID);
-				BO.OrderItem boOrderItem = cart.m_items?.Find(x => x.m_productID == prodID);
+				BO.OrderItem boOrderItem = cart.Items.FirstOrDefault(x => x.m_productID == prodID);         //is the product in the cart?
 				if (boOrderItem == null)
-                {
-					if (product.m_inStock != 0)
+				{
+					if (product.m_inStock != 0)                                                     //is it in stock?
 					{
 						boOrderItem = new BO.OrderItem();
 						boOrderItem.m_productID = prodID;
 						boOrderItem.m_price = product.m_price;
 						boOrderItem.m_amount = 1;
-						cart.m_items?.Add(boOrderItem);
-						cart.m_totalPrice += boOrderItem.m_price;
+						cart.Items?.Add(boOrderItem);
+						cart.m_totalPrice = Math.Round(cart.m_totalPrice + boOrderItem.m_price, 2);
+
 					}
 					else
 					{
@@ -41,7 +43,7 @@ namespace BlImplementation
 				else
 				{
 					boOrderItem.m_amount += 1;
-					cart.m_totalPrice += boOrderItem.m_price;
+					cart.m_totalPrice = Math.Round(cart.m_totalPrice + boOrderItem.m_price, 2);
 				}
 				Console.WriteLine("This is the ID of the product just added: " + prodID);
 			}
@@ -75,12 +77,12 @@ namespace BlImplementation
 			}
 			catch (DO.idNotFoundException exc)
 			{
-				Console.WriteLine(id); 
+				Console.WriteLine(id);
 				throw new BO.dataLayerIdNotFoundException(exc.Message);
 			}
 			catch (Exception exc)
 			{
-				Console.WriteLine("Some other problem"); 
+				Console.WriteLine("Some other problem");
 				throw new BO.blGeneralException();
 			}
 			return orderItem;
@@ -98,14 +100,14 @@ namespace BlImplementation
 		/// <exception cref="BO.blGeneralException"></exception>
 		public BO.Cart Update(BO.Cart cart, int prodID, int amount)
 		{
-			if (amount == 0)																			//if the user wants to delete the item from the cart
+			if (amount <= 0)                                                                            //if the user wants to delete the item from the cart
 			{
-				BO.OrderItem toDel = cart.m_items.Find(x => x.m_productID == prodID);
+				BO.OrderItem toDel = cart.Items.FirstOrDefault(x => x.m_productID == prodID);
 
 				if (toDel != null)
 				{
-					cart.m_totalPrice -= (toDel.m_price * toDel.m_amount);
-					cart.m_items.Remove(toDel);
+					cart.m_totalPrice = Math.Round(cart.m_totalPrice - (toDel.m_price * toDel.m_amount), 2);
+					cart.Items.Remove(toDel);
 				}
 			}
 			else
@@ -113,30 +115,35 @@ namespace BlImplementation
 				try
 				{
 					DO.Product product = dal.Product.Read(prodID);                                  //set product if product exists
-					int orderItemIndex = cart.m_items.FindIndex(x => x.m_productID == prodID);      //find product in the cart
+
+					BO.OrderItem item = cart.Items.FirstOrDefault(x => x.m_productID == prodID);      //find product in the cart				
+					int orderItemIndex = -1;
+					if (item != null)
+						orderItemIndex = cart.Items.IndexOf(item);
+
 					if (orderItemIndex == -1)
 						throw new BO.UnableToExecute("product not yet in cart, please add it to cart first");
-					int diff = amount - cart.m_items[orderItemIndex].m_amount;
+					int diff = amount - cart.Items[orderItemIndex].m_amount;
 
 					if (orderItemIndex != -1)                                      //product is in the cart
 					{
 						if (product.m_inStock >= amount)                    //enough of the product is in stock
 						{
-							cart.m_totalPrice += (product.m_price * diff);      //if new amount < amount in cart it deducts
-							cart.m_items[orderItemIndex].m_amount = amount;     //if new amount > amount in cart it adds
+							cart.m_totalPrice = Math.Round(cart.m_totalPrice + (product.m_price * diff), 2);      //if new amount < amount in cart it deducts
+							cart.Items[orderItemIndex].m_amount = amount;     //if new amount > amount in cart it adds
 						}
-						else															//if there isn't enough of the product that the customer wanted
+						else                                                            //if there isn't enough of the product that the customer wanted
 						{
-							diff = product.m_inStock - cart.m_items[orderItemIndex].m_amount;			//find out if there are more in stock than in the cart 
-							if (diff >= 0)															//if there is more in stock than in the cart
+							diff = product.m_inStock - cart.Items[orderItemIndex].m_amount;         //find out if there are more in stock than in the cart 
+							if (diff >= 0)                                                          //if there is more in stock than in the cart
 							{
-								cart.m_items[orderItemIndex].m_amount += diff;								//add all that are in stock to the cart
-								cart.m_totalPrice += (product.m_price * diff);
+								cart.Items[orderItemIndex].m_amount += diff;                                //add all that are in stock to the cart
+								cart.m_totalPrice = Math.Round(cart.m_totalPrice + (product.m_price * diff), 2);
 							}
 							else
 							{
-								cart.m_items[orderItemIndex].m_amount = product.m_inStock;				//if there aren't enough in stock, just take all that are in stock
-								cart.m_totalPrice += (product.m_price * diff);										//and deduct what's no longer in the cart from the price
+								cart.Items[orderItemIndex].m_amount = product.m_inStock;                //if there aren't enough in stock, just take all that are in stock
+								cart.m_totalPrice = Math.Round(cart.m_totalPrice + (product.m_price * diff), 2);                                        //and deduct what's no longer in the cart from the price
 							}
 						}
 
@@ -144,25 +151,25 @@ namespace BlImplementation
 					else
 						throw new BO.blGeneralException();
 
-					Console.WriteLine($"The product with the ID {prodID} now has {cart.m_items[orderItemIndex].m_amount} in the cart ");
+					Console.WriteLine($"The product with the ID {prodID} now has {cart.Items[orderItemIndex].m_amount} in the cart ");
 				}
-                catch (DO.idNotFoundException exc)
-                {
-                    Console.WriteLine(prodID); 
-                    throw new BO.dataLayerIdNotFoundException(exc.Message);
-                }
+				catch (DO.idNotFoundException exc)
+				{
+					Console.WriteLine(prodID);
+					throw new BO.dataLayerIdNotFoundException(exc.Message);
+				}
 				catch (BO.UnableToExecute)
 				{
 
 				}
-                catch (BO.blGeneralException exc)
-                {
-                    Console.WriteLine("Some other problem: " + exc.Message); 
-                    throw new BO.blGeneralException();
-                }
-                catch (Exception exc)
+				catch (BO.blGeneralException exc)
 				{
-					Console.WriteLine("Some other problem"); 
+					Console.WriteLine("Some other problem: " + exc.Message);
+					throw new BO.blGeneralException();
+				}
+				catch (Exception exc)
+				{
+					Console.WriteLine("Some other problem");
 					throw new BO.blGeneralException();
 				}
 			}
@@ -173,83 +180,89 @@ namespace BlImplementation
 		/// lets customer place the actual order from what's in the cart
 		/// </summary>
 		/// <param name="cart"></param>
-		/// <param name="customerName"></param>
-		/// <param name="customerEmail"></param>
-		/// <param name="customerAddress"></param>
 		/// <exception cref="BO.InputIsInvalidException"></exception>
 		/// <exception cref="BO.dataLayerIdAlreadyExistsException"></exception>
 		/// <exception cref="BO.blGeneralException"></exception>
 		/// <exception cref="BO.dataLayerIdNotFoundException"></exception>
-		public void PlaceOrder(BO.Cart cart, string customerName, string customerEmail, string customerAddress)
+
+		public void PlaceOrder(BO.Cart cart)
 		{
-			if (InputValidation(customerName, customerEmail, customerAddress))							//as long as the fields are valid
-				throw new BO.InputIsInvalidException("Customer information");
-			
 			int orderID = -1;
 			try
 			{
-				DO.Order doOrder = new DO.Order(customerName, customerEmail, customerAddress, DateTime.Today, null, null);          //create a new order
-				orderID = dal.Order.Create(doOrder);																				//set the order ID
+				if (!InputValidation(cart.m_customerName, cart.m_customerEmail, cart.m_customerAddress))                         //as long as the fields are valid
+					throw new BO.InputIsInvalidException("Customer information");
+				else
+				{
+					DO.Order doOrder = new DO.Order(cart.m_customerName, cart.m_customerEmail, cart.m_customerAddress, DateTime.Today, null, null);          //create a new order
+					orderID = dal.Order.Create(doOrder);                                                                                //set the order ID
+				}
 			}
 			catch (DO.idAlreadyExistsException exc)
 			{
-				Console.WriteLine(orderID); 
+				Console.WriteLine(orderID);
 				throw new BO.dataLayerIdAlreadyExistsException(exc.Message);
+			}
+			catch (BO.InputIsInvalidException exc)
+			{
+				throw new BO.InputIsInvalidException("Customer information");
 			}
 			catch (Exception exc)
 			{
-				Console.WriteLine("Some other problem"); 
+				Console.WriteLine("Some other problem");
 				throw new BO.blGeneralException();
 			}
 
-			foreach (BO.OrderItem orderItem in cart.m_items)																					//add all the necessary products to the order
+
+			if (cart.Items.Count > 0)
 			{
-				if (orderItem.m_amount <= 0 || orderItem.m_amount > dal.Product.Read(orderItem.m_productID).m_inStock)					//check that there's enough in stock
-					throw new BO.UnableToExecute("there is not enough in stock");
+				foreach (BO.OrderItem orderItem in cart.Items)                                                                                  //add all the necessary products to the order
+				{
+					try
+					{
+						DO.Product tempProd = dal.Product.Read(orderItem.m_productID);
+						if (orderItem.m_amount > tempProd.m_inStock)                  //check that there's enough in stock
+							throw new BO.UnableToExecute($"there is not enough {tempProd.m_name} in stock");
 
-				DO.OrderItem newItem = new DO.OrderItem(orderItem.m_productID, orderID, orderItem.m_price, orderItem.m_amount);
-				orderItem.m_id = dal.OrderItem.Create(newItem);
+						DO.OrderItem newItem = new DO.OrderItem(orderItem.m_productID, orderID, orderItem.m_price, orderItem.m_amount);
+						orderItem.m_id = dal.OrderItem.Create(newItem);
+						//BO.OrderItem boItem = new BO.OrderItem()
 
-				try
-				{
-					DO.Product tempProd = dal.Product.Read(orderItem.m_productID);
-					tempProd.m_inStock -= orderItem.m_amount;
-					dal.Product.Update(tempProd);																			//update the product's in stock amount
-				}
-				catch (DO.idNotFoundException exc)
-				{
-					Console.WriteLine(orderItem.m_productID); 
-					throw new BO.dataLayerIdNotFoundException(exc.Message);
-				}
-				catch (Exception exc)
-				{
-					Console.WriteLine("Some other problem"); 
-					throw new BO.blGeneralException();
+						tempProd.m_inStock -= orderItem.m_amount;
+						dal.Product.Update(tempProd);                                                                           //update the product's in stock amount
+					}
+					catch (DO.idNotFoundException exc)
+					{
+						Console.WriteLine(orderItem.m_productID);
+						throw new BO.dataLayerIdNotFoundException(exc.Message);
+					}
+					catch (BO.UnableToExecute exc)
+					{
+						Console.WriteLine(exc.Message);
+						cart.Items.First(x => x.m_productID == orderItem.m_productID).m_amount                  //adjust the amount of requested in cart
+											= dal.Product.Read(orderItem.m_productID).m_inStock;                //to the amount remaining in store
+					}
+					catch (Exception exc)
+					{
+						Console.WriteLine("Some other problem");
+						throw new BO.blGeneralException();
+					}
 				}
 			}
-			BO.Order boOrder = new BO.Order()													//create final BL order for proccessing 
+			BO.Order boOrder = new BO.Order()                                                   //create final BL order for proccessing 
 			{
-				m_customerName = customerName,
-				m_customerEmail = customerEmail,
-				m_customerAddress = customerAddress,
+				m_id = orderID,
+				m_customerName = cart.m_customerName,
+				m_customerEmail = cart.m_customerEmail,
+				m_customerAddress = cart.m_customerAddress,
 				m_orderDate = DateTime.Today,
 				m_paymentDate = DateTime.Today,
 				m_shipDate = null,
 				m_deliveryDate = null,
 				m_status = BO.Enums.OrderStatus.Ordered,
 				m_totalPrice = cart.m_totalPrice,
-				m_items = cart.m_items
+				Items = (ObservableCollection<BO.OrderItem>)cart.Items
 			};
-			try
-			{
-				Order blOrder = new Order();
-				blOrder.Create(boOrder);														//creation happens here
-			}
-			catch (DO.idNotFoundException exc)
-			{
-				Console.WriteLine(boOrder.m_id); 
-				throw new BO.dataLayerIdNotFoundException(exc.Message);
-			}
 		}
 
 		private bool InputValidation(string customerName, string customerEmail, string customerAddress)
@@ -263,7 +276,7 @@ namespace BlImplementation
 				throw new BO.InputIsInvalidException("Customer Email");
 
 			//regex expression (up to 4 digits for number space, street name, space, street type (1st letter caps, up to 3 more lowercase
-			if (customerAddress == null || !Regex.IsMatch(customerAddress, @"^(\d{1,4}) [a-zA-Z\s]+[A-Z]{1}[a-z]{1,3}$"))
+			if (customerAddress == null || !Regex.IsMatch(customerAddress, @"^(\d{1,4}) [a-zA-Z\s]+[A-Za-z]{1,3}$"))
 				throw new BO.InputIsInvalidException("Customer Address");
 
 			return true;

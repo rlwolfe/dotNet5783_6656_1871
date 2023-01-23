@@ -1,0 +1,14 @@
+﻿<Window x:Class="PL.Popups.SuccessWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL.Popups"
+        mc:Ignorable="d"
+        Title="Success!" Height="350" Width="400">
+    <Grid>
+        <TextBlock x:Name="SuccessMessage" Height="170" Margin="10,90,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Success" FontSize="24" Foreground="#FF8DC63F" FontFamily="Trebuchet MS" FontWeight="Bold"/>
+        <Image HorizontalAlignment="Left" Height="73" Margin="10,10,0,0" VerticalAlignment="Top" Width="68" Source="/Popups/success.png"/>
+        <Button Name="OkButton" Content="OK" Background="#FFF9F9F9" FontWeight="Bold" FontSize="22" FontFamily="Segoe UI Black" Margin="150,0,150,10" Click="OkButton_Click" Height="50" VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>
