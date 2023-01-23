@@ -25,7 +25,7 @@ namespace PL.Orders
 	{
 		private BlApi.IBl? bl = BlApi.Factory.Get();
 
-		public OrderDetailsWindow()
+		public OrderDetailsWindow()												//creating a new order
 		{
 			InitializeComponent();
 			StatusBox.Visibility = Visibility.Hidden;
@@ -47,7 +47,7 @@ namespace PL.Orders
 			OrderListBox.ItemsSource = ProductListWindow.cart.Items;                        // Bind ItemList with ListBox
 		}
 
-		public OrderDetailsWindow(int ID)
+		public OrderDetailsWindow(int ID)													//order tracking window
 		{
 			InitializeComponent();
 
@@ -61,8 +61,9 @@ namespace PL.Orders
 		{
 			InitializeComponent();
 
+			StatusBox.IsEnabled = false;													//cannot change order tracking here
 			PlaceOrderButton.Visibility = Visibility.Hidden;
-			UpdateButton.Visibility = Visibility.Visible;
+			UpdateButton.Visibility = Visibility.Visible;                                   //cannot create new order or update
 
 			FillFields(orderForList.m_id);
 
@@ -80,6 +81,12 @@ namespace PL.Orders
 			CustomerEmailBox.Text = order.m_customerEmail;                              //display info to update from order
 			CustomerAddressBox.Text = order.m_customerAddress;
 			PriceBox.Text = order.m_totalPrice.ToString();
+			
+			PaymentDatePicker.SelectedDate = order.m_paymentDate;
+			OrderDatePicker.SelectedDate = order.m_orderDate;
+			ShipDatePicker.SelectedDate = order.m_shipDate;                              //display info to update from order
+			DelivDatePicker.SelectedDate = order.m_deliveryDate;
+			StatusBox.SelectedItem = order.m_status;
 		}
 
 		private void UpdateButton_Click(object sender, RoutedEventArgs e)
