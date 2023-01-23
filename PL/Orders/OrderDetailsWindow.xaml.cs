@@ -25,7 +25,7 @@ namespace PL.Orders
 	{
 		private BlApi.IBl? bl = BlApi.Factory.Get();
 
-		public OrderDetailsWindow()												//creating a new order
+		public OrderDetailsWindow()                                             //creating a new order
 		{
 			InitializeComponent();
 			StatusBox.Visibility = Visibility.Hidden;
@@ -47,7 +47,7 @@ namespace PL.Orders
 			OrderListBox.ItemsSource = ProductListWindow.cart.Items;                        // Bind ItemList with ListBox
 		}
 
-		public OrderDetailsWindow(int ID)													//order tracking window
+		public OrderDetailsWindow(int ID)                                                   //order tracking window
 		{
 			InitializeComponent();
 
@@ -57,13 +57,12 @@ namespace PL.Orders
 			FillFields(ID);
 		}
 
-		public OrderDetailsWindow(OrderForList orderForList)                                //read only window
+		public OrderDetailsWindow(OrderForList orderForList)                                //update window
 		{
 			InitializeComponent();
 
-			StatusBox.IsEnabled = false;													//cannot change order tracking here
 			PlaceOrderButton.Visibility = Visibility.Hidden;
-			UpdateButton.Visibility = Visibility.Visible;                                   //cannot create new order or update
+			UpdateButton.Visibility = Visibility.Visible;                                   //cannot create new order
 
 			FillFields(orderForList.m_id);
 
@@ -81,7 +80,7 @@ namespace PL.Orders
 			CustomerEmailBox.Text = order.m_customerEmail;                              //display info to update from order
 			CustomerAddressBox.Text = order.m_customerAddress;
 			PriceBox.Text = order.m_totalPrice.ToString();
-			
+
 			PaymentDatePicker.SelectedDate = order.m_paymentDate;
 			OrderDatePicker.SelectedDate = order.m_orderDate;
 			ShipDatePicker.SelectedDate = order.m_shipDate;                              //display info to update from order
@@ -91,9 +90,16 @@ namespace PL.Orders
 
 		private void UpdateButton_Click(object sender, RoutedEventArgs e)
 		{
-			bl.Order.UpdateOrderStatus(Int32.Parse(IDBox.Text), (Enums.OrderStatus)StatusBox.SelectedValue);                                     //send the product to be updated in the BL
+			try
+			{
+				bl.Order.UpdateOrderStatus(Int32.Parse(IDBox.Text), (Enums.OrderStatus)StatusBox.SelectedValue);                                     //send the product to be updated in the BL
+				this.Close();
+			}
+			catch (BO.UnableToExecute exc)
+			{
+				new ErrorWindow("Update Order Status Error", exc.Message).ShowDialog();
+			}
 
-			this.Close();
 		}
 
 		private void PlaceOrderButton_Click(object sender, RoutedEventArgs e)
@@ -112,7 +118,7 @@ namespace PL.Orders
 				ProductListWindow.cart.m_customerAddress = "";
 
 				this.Close();
-				
+
 			}
 			catch (plException exc)
 			{
@@ -147,9 +153,9 @@ namespace PL.Orders
 
 		private void CustomerEmailBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
 		{
-			if (!Regex.IsMatch(e.Text, @"^[a-zA-Z0-9.@]+$") ||																//acceptable characters
-				(e.Text == "." && (CustomerEmailBox.Text.Contains(".") || !CustomerEmailBox.Text.Contains("@"))) ||			//can't put . before @
-				(Regex.IsMatch(e.Text, @"^[@]+$") && (CustomerEmailBox.Text.Contains("@") || CustomerEmailBox.Text == "")))	//can't put @ to start or more than once
+			if (!Regex.IsMatch(e.Text, @"^[a-zA-Z0-9.@]+$") ||                                                              //acceptable characters
+				(e.Text == "." && (CustomerEmailBox.Text.Contains(".") || !CustomerEmailBox.Text.Contains("@"))) ||         //can't put . before @
+				(Regex.IsMatch(e.Text, @"^[@]+$") && (CustomerEmailBox.Text.Contains("@") || CustomerEmailBox.Text == ""))) //can't put @ to start or more than once
 				e.Handled = true;
 		}
 

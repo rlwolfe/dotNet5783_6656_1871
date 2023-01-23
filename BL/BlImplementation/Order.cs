@@ -242,20 +242,26 @@ namespace BlImplementation
 							break;
 
 						case BO.Enums.OrderStatus.Shipped:
-							if (doOrder.m_shipDate == null || doOrder.m_shipDate > DateTime.Today)           //if it's default or after today set the date to match the new status
+							if ((doOrder.m_shipDate == null || doOrder.m_shipDate > DateTime.Today)           //if it's default or after today set the date to match the new status
+								&& doOrder.m_orderDate != null && doOrder.m_orderDate < DateTime.Today)
 							{
 								doOrder.m_shipDate = DateTime.Today;
 								boOrder.m_shipDate = DateTime.Today;
+								boOrder.m_status = BO.Enums.OrderStatus.Shipped;
 							}
-							boOrder.m_status = BO.Enums.OrderStatus.Shipped;
+							else
+								throw new BO.UnableToExecute("Can't be shipped before it was ordered");
 							break;
 						case BO.Enums.OrderStatus.Delivered:
-							if (doOrder.m_deliveryDate == null || doOrder.m_deliveryDate > DateTime.Today)     //if it's default or after today set the date to match the new status
+							if ((doOrder.m_deliveryDate == null || doOrder.m_deliveryDate > DateTime.Today)     //if it's default or after today set the date to match the new status
+								&& doOrder.m_shipDate != null && doOrder.m_shipDate < DateTime.Today)
 							{
 								doOrder.m_deliveryDate = DateTime.Today;
 								boOrder.m_deliveryDate = DateTime.Today;
+								boOrder.m_status = BO.Enums.OrderStatus.Delivered;
 							}
-							boOrder.m_status = BO.Enums.OrderStatus.Delivered;
+							else
+								throw new BO.UnableToExecute("Order can't be delivered before it was shipped");
 							break;
 						default:
 							break;
@@ -267,6 +273,11 @@ namespace BlImplementation
 				{
 					Console.WriteLine(orderId);
 					throw new BO.dataLayerIdNotFoundException(exc.Message);
+				}
+				catch (BO.UnableToExecute exc)
+				{
+					Console.WriteLine(exc.Message);
+					throw new BO.UnableToExecute(exc.Message);
 				}
 				catch (Exception exc)
 				{
@@ -282,22 +293,52 @@ namespace BlImplementation
 					Orders.Add(boOrder);
 					ordIndex = Orders.FindIndex(x => x.m_id == orderId);
 				}
-				switch (newStatus)                                                                  //set status according to the parameter sent
+				try
 				{
-					case BO.Enums.OrderStatus.Ordered:
-						Orders[ordIndex].m_status = BO.Enums.OrderStatus.Ordered;
-						Orders[ordIndex].m_orderDate = DateTime.Today;
-						break;
-					case BO.Enums.OrderStatus.Shipped:
-						Orders[ordIndex].m_status = BO.Enums.OrderStatus.Shipped;
-						Orders[ordIndex].m_shipDate = DateTime.Today;
-						break;
-					case BO.Enums.OrderStatus.Delivered:
-						Orders[ordIndex].m_status = BO.Enums.OrderStatus.Delivered;
-						Orders[ordIndex].m_deliveryDate = DateTime.Today;
-						break;
-					default:
-						break;
+					switch (newStatus)                                                                  //set status according to the parameter sent
+					{
+						case BO.Enums.OrderStatus.Ordered:
+							Orders[ordIndex].m_status = BO.Enums.OrderStatus.Ordered;
+							Orders[ordIndex].m_orderDate = DateTime.Today;
+							break;
+						case BO.Enums.OrderStatus.Shipped:
+							if (Orders[ordIndex].m_orderDate != null && Orders[ordIndex].m_orderDate < DateTime.Today)
+							{
+								Orders[ordIndex].m_status = BO.Enums.OrderStatus.Shipped;
+								Orders[ordIndex].m_shipDate = DateTime.Today;
+							}
+							else
+								throw new BO.UnableToExecute("Can't be shipped before it was ordered");
+							break;
+						case BO.Enums.OrderStatus.Delivered:
+							if (Orders[ordIndex].m_shipDate != null && Orders[ordIndex].m_shipDate < DateTime.Today)
+							{
+								Orders[ordIndex].m_status = BO.Enums.OrderStatus.Delivered;
+								Orders[ordIndex].m_deliveryDate = DateTime.Today;
+							}
+							else
+								throw new BO.UnableToExecute("Order can't be delivered before it was shipped");
+							break;
+						case BO.Enums.OrderStatus.None:
+							Orders[ordIndex].m_status = BO.Enums.OrderStatus.None;
+							Orders[ordIndex].m_orderDate = null;
+							Orders[ordIndex].m_paymentDate = null;
+							Orders[ordIndex].m_shipDate = null;
+							Orders[ordIndex].m_deliveryDate = null;
+							break;
+						default:
+							break;
+					}
+				}
+				catch (BO.UnableToExecute exc)
+				{
+					Console.WriteLine(exc.Message);
+					throw new BO.UnableToExecute(exc.Message);
+				}
+				catch (Exception exc)
+				{
+					Console.WriteLine("Some other problem");
+					throw new BO.blGeneralException();
 				}
 			}
 			Console.WriteLine("Update successful");
@@ -392,7 +433,7 @@ namespace BlImplementation
 				boOrder.m_deliveryDate = doOrder.m_deliveryDate;
 				boOrder.m_paymentDate = doOrder.m_orderDate;
 
-				if (boOrder.m_orderDate != null && boOrder.m_orderDate <= DateTime.Now)
+				if ((boOrder.m_orderDate != null && boOrder.m_orderDate <= DateTime.Now) || boOrder.Items.Count == 0)
 					if (boOrder.m_shipDate != null && boOrder.m_shipDate <= DateTime.Now)
 						if (boOrder.m_deliveryDate != null && boOrder.m_deliveryDate <= DateTime.Now)
 							boOrder.m_status = BO.Enums.OrderStatus.Delivered;                      //past delivery, shipped and ordered
