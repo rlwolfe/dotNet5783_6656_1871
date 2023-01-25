@@ -1,4 +1,5 @@
 ﻿using PL.Orders;
+using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 
@@ -21,12 +22,22 @@ namespace PL
 
 		private void OrderTrackingButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (int.TryParse(OrderIDTextBox.Text, out int result))
-				new OrderDetailsWindow(result).Show();
-			else
+			try
 			{
-				new ErrorWindow("Error", "Please enter an order ID").ShowDialog();
-				OrderIDTextBox.Text = "";
+				if (int.TryParse(OrderIDTextBox.Text, out int ID))
+				{
+					if (bl.Order.Read(ID) != null)
+						new OrderTrackerWindow(ID).Show();
+				}
+				else
+				{
+					new ErrorWindow("Error", "Please enter an order ID").Show();
+					OrderIDTextBox.Text = "";
+				}
+			}
+			catch (Exception exc)
+			{
+				new ErrorWindow("Invalid Entry", $"ID entered doesn't match any current {exc.Message}s").Show();
 			}
 		}
 

@@ -46,9 +46,8 @@ static internal class DataSource
     ///<summary>
     /// Creates 10 inital products for the database, randomly comprised from available options
     /// </summary>
-    static private void ProductFiller() {
-
-		List<int> randNums = new List<int>(10);			//to track which products were already added
+    static private void ProductFiller()
+	{
 		int i = 0;								//item to add to list of products
 		double price;
 
@@ -57,33 +56,12 @@ static internal class DataSource
 			price = Math.Round((_randomNum.Next(1, 21) + _randomNum.NextDouble()), 2);   //price is random int + random decimal = creates a double
 			Product product = new Product(name, (Enums.Category)(i / 5), price, _randomNum.Next(500));
 												//creates product with name & category from list and random price & quantity
-			if (_randomNum.Next(10) == 0)
+			if (i % 10 == 2)
 				product.m_inStock = 0;					//randomly selects products to be out of stock
 
 			Products.Add(product);
-			i++;						//for category trackiing
+			i++;						//for category tracking
 		}
-
-		/*do
-		{
-			item = _randomNum.Next(50);
-			if (randNums.Contains(item))			//was the product already added?
-				continue;
-			randNums.Add(item);											//add product to list for future checking
-			price = Math.Round((_randomNum.Next(1,21) + _randomNum.NextDouble()), 2);   //price is random int + random decimal = creates a double
-
-			Product product = new Product(Enum.GetName(typeof(Enums.ProductName), item),        //product ID
-					 (Enums.Category)(item / 5),         //Randomly selects name from enum list of products
-																//Finds category in enum's list based on its location
-					price, _randomNum.Next(500));                //price from above & how many currently in stock
-
-			if (i < 2)
-				product.m_inStock = 0;              //starting with 5% of products out of stock
-
-			Products.Add(product);				//adding product to list of all products
-
-			i++;
-		} while (i < 10);				//initializing 10 products in list*/
 	}
 
     ///<summary>
@@ -95,11 +73,12 @@ static internal class DataSource
 		
 		for (int i = 0; i < 20; i++)						//creating 20 orders
 		{
-			num = _randomNum.Next(400);						//randoming numbers for addresses
-			DateTime orderDate = DateTime.Now - new TimeSpan(_randomNum.NextInt64(10L * 1000L * 1000L * 3600L * 24L * 10L));
-			DateTime shipDate = DateTime.Now + new TimeSpan(_randomNum.Next(5), 4, 0, 0);		//randomizing time in the past ^ and
-			DateTime delivDate = DateTime.Now + new TimeSpan(_randomNum.Next(5, 11), 4, 0, 0);	//< future for the date fields
+			num = _randomNum.Next(400);                     //randoming numbers for addresses
 
+			DateTime orderDate = DateTime.Now - new TimeSpan(_randomNum.NextInt64(6048000000000, 12096000000000));		//randomizing time one week in the past
+			DateTime shipDate = orderDate + new TimeSpan(_randomNum.NextInt64(3024000000000, 6048000000000));			//half week ago
+			DateTime delivDate = shipDate + new TimeSpan(_randomNum.NextInt64(864000000000, 3024000000000));			//within past 3 days
+			
 			string first = Enums.FirstName.GetName(typeof(Enums.FirstName), i);				//getting names from enum
 			string last = Enums.LastName.GetName(typeof(Enums.LastName), i);
 		
@@ -117,30 +96,37 @@ static internal class DataSource
     ///<summary>
     /// Creates 40 inital orderItems for the database, randomly comprised from available options
     /// </summary>
-    static private void OrderItemFiller() {
-
-		List<int> usedOrders = new List<int>(40);           //to track which orders already have 4 orderItems
-		bool confirmed;
-		
+    static private void OrderItemFiller()
+	{
 		for (int i=0; i < 40; i++)							//initiating 40 OrderItems
 		{
-			Product productToAdd = (Product)Products[_randomNum.Next(2, 10)];	//randomly selects a product to add
-			confirmed = false;
-			do
+			OrderItem orderItem;
+			if (i < 20)																		//put 1 item in each order
 			{
-				Order orderToAdd = (Order)Orders[_randomNum.Next(0, 20)];		//randomly selects an order to add
+				orderItem = new OrderItem(Products[i].Value.m_id, Orders[i].Value.m_id,
+					Products[i].Value.m_price, _randomNum.Next(1, 5));                      //randomly chooses amount of product in order
+				OrderItems.Add(orderItem);
 
-				if (usedOrders.Count(o => o == orderToAdd.m_id) == 4)	//checks if there are max amount already being used
-					continue;
+				if (i % 2 == 0 && i != 0)                                                                   //for half of the items, add another product
+				{
+					orderItem = new OrderItem(Products[i * 2].Value.m_id, Orders[i].Value.m_id,
+						Products[i * 2].Value.m_price, _randomNum.Next(1, 5));
+					OrderItems.Add(orderItem);                                       //adds orderItem to list
+				}
+			}
+			else																			//after 20 put 1 more item in each order
+			{
+				orderItem = new OrderItem(Products[i].Value.m_id, Orders[i - 20].Value.m_id,
+					Products[i].Value.m_price, _randomNum.Next(1, 5));
+				OrderItems.Add(orderItem);
 
-				usedOrders.Add(orderToAdd.m_id);							//adds to list for future checks
-				OrderItem orderItem = new OrderItem(productToAdd.m_id, orderToAdd.m_id,
-					productToAdd.m_price, _randomNum.Next(1, 5));      //randomly chooses amount of product in order
-
-				OrderItems.Add(orderItem);							//adds orderItem to list
-				confirmed = true;										//ends loop
-
-			} while (!confirmed);
+				if (i % 2 == 0 && i < 26)                                                                   //for half of the items, add another product
+				{
+					orderItem = new OrderItem(Products[i * 2].Value.m_id, Orders[i - 20].Value.m_id,
+						Products[i * 2].Value.m_price, _randomNum.Next(1, 5));                   //randomly chooses amount of product in order
+					OrderItems.Add(orderItem);                                       //adds orderItem to list
+				}
+			}
 		}
-	}	
+	}
 }

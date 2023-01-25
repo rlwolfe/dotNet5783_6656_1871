@@ -8,7 +8,6 @@ namespace BlImplementation
 	internal class Cart : ICart
 	{
 		private IDal? dal = DalApi.Factory.Get();
-		private Order bliOrder = new Order();
 
 		/// <summary>
 		/// adds orderItem to cart
@@ -250,20 +249,6 @@ namespace BlImplementation
 					}
 				}
 			}
-			/*BO.Order boOrder = new BO.Order()                                                   //create final BL order for proccessing 
-			{
-				m_id = orderID,
-				m_customerName = cart.m_customerName,
-				m_customerEmail = cart.m_customerEmail,
-				m_customerAddress = cart.m_customerAddress,
-				m_orderDate = DateTime.Today,
-				m_paymentDate = DateTime.Today,
-				m_shipDate = null,
-				m_deliveryDate = null,
-				m_status = BO.Enums.OrderStatus.Ordered,
-				m_totalPrice = cart.m_totalPrice,
-				Items = (ObservableCollection<BO.OrderItem>)cart.Items
-			};*/
 		}
 
 		private bool InputValidation(string customerName, string customerEmail, string customerAddress)

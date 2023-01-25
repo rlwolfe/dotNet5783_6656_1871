@@ -52,7 +52,16 @@ namespace PL.Products
 
 		private void RemoveFromCartButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			if (ProductListWindow.cart.Items.Where(x => x.m_productID == int.Parse(IDBox.Text)).Count() != 0)			//if product is in cart
+			{
+				bl.Cart.Update(ProductListWindow.cart, int.Parse(IDBox.Text), 0);
+				new SuccessWindow($"{NameBox.Text} was successfully removed from the cart").Show();
+				this.Close();
+			}
+			else
+			{
+				new ErrorWindow("Product not in Cart", "Product cannot be removed if it's not in cart").Show();
+			}
         }
     }
 }

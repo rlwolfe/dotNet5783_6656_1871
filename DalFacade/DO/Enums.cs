@@ -11,7 +11,7 @@ public struct Enums
 						Pizza, Jachnun, Salmon, Ice, Dough,			//15-19 Frozen
 						Oil, Salt, Sugar, Vinegar, Honey,			//20-24 Cooking
 						Bagel, Pita, Challah, Tortilla, Baguette,	//25-29 Bread
-						Pasta, Rice, barley, Couscous, Quinoa,		//30-34 Grains
+						Pasta, Rice, Barley, Couscous, Quinoa,		//30-34 Grains
 						Bamba, Pretzel, Bisli, Cookie, Lollipop,	//35-39 Snack
 						Bleach, Soap, Detergent, Tissuebox, Antiseptic,//40-44 Hygiene
 						Tea, Coffee, Water, Coke, Juice }			//45-49 Drinks

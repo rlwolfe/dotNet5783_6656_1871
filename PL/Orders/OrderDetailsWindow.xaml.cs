@@ -52,7 +52,8 @@ namespace PL.Orders
 			InitializeComponent();
 
 			PlaceOrderButton.Visibility = Visibility.Hidden;
-			UpdateButton.Visibility = Visibility.Visible;
+			UpdateButton.Visibility = Visibility.Hidden;
+			StatusBox.IsEnabled = false;
 
 			FillFields(ID);
 		}

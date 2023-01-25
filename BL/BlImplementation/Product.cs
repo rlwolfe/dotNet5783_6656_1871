@@ -1,5 +1,6 @@
 ﻿using BlApi;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace BlImplementation
 {
@@ -23,16 +24,16 @@ namespace BlImplementation
 			{
 				dal.Product.Create(prod);
 			}
-			catch(DO.idAlreadyExistsException exc) 
+			catch (DO.idAlreadyExistsException exc)
 			{
 				Console.WriteLine(prod.m_id);
 				throw new BO.dataLayerIdAlreadyExistsException(exc.Message);
 			}
-			catch(Exception exc)
+			catch (Exception exc)
 			{
-                Console.WriteLine("Some other problem");
+				Console.WriteLine("Some other problem");
 				throw new BO.blGeneralException();
-            }
+			}
 			return prod.m_id;
 		}
 
@@ -50,16 +51,16 @@ namespace BlImplementation
 			{
 				product = dal.Product.Read(id);
 			}
-            catch (DO.idNotFoundException exc)
-            {
+			catch (DO.idNotFoundException exc)
+			{
 				Console.WriteLine(id);
-                throw new BO.dataLayerIdNotFoundException(exc.Message);
-            }
-            catch (Exception exc)
-            {
-                Console.WriteLine("Some other problem");
-                throw new BO.blGeneralException();
-            }
+				throw new BO.dataLayerIdNotFoundException(exc.Message);
+			}
+			catch (Exception exc)
+			{
+				Console.WriteLine("Some other problem");
+				throw new BO.blGeneralException();
+			}
 
 			BO.ProductItem productItem = new BO.ProductItem()
 			{
@@ -71,7 +72,7 @@ namespace BlImplementation
 				m_inStock = product.m_inStock > 0
 			};
 
-            return productItem;
+			return productItem;
 		}
 
 		/// <summary>
@@ -81,27 +82,25 @@ namespace BlImplementation
 		/// <exception cref="BO.blGeneralException"></exception>
 		public IEnumerable<BO.ProductItem> CatalogRequest()
 		{
-            List<BO.ProductItem> products = new ();
-            try
+			List<BO.ProductItem> products = new();
+			try
 			{
-				foreach (DO.Product prod in dal.Product.ReadAllFiltered())
-				{
-					BO.ProductItem product = new BO.ProductItem();
-					product.m_id = prod.m_id;
-					product.m_name = prod.m_name;
-					product.m_category = (BO.Enums.Category)(dal.Product.Read(prod.m_id).m_category.GetHashCode());
-					product.m_price = prod.m_price;
-					product.m_amount = prod.m_inStock;
-					product.m_inStock = prod.m_inStock > 0;
-
-					products.Add(product);
-				}
+				products.AddRange(from prod in dal.Product.ReadAllFiltered()
+								  select new BO.ProductItem()
+								  {
+									  m_id = prod.Value.m_id,
+									  m_name = prod.Value.m_name,
+									  m_category = (BO.Enums.Category)(dal.Product.Read(prod.Value.m_id).m_category.GetHashCode()),
+									  m_price = prod.Value.m_price,
+									  m_amount = prod.Value.m_inStock,
+									  m_inStock = prod.Value.m_inStock > 0
+								  });
 			}
-			catch(Exception exc)
+			catch (Exception exc)
 			{
 				Console.WriteLine("Some other problem");
-                throw new BO.blGeneralException();
-            }
+				throw new BO.blGeneralException();
+			}
 			return products;
 		}
 
@@ -143,19 +142,14 @@ namespace BlImplementation
 		/// <returns>list of limited product information</returns>
 		public IEnumerable<BO.ProductForList> ManagerListRequest()
 		{
-			List<BO.ProductForList> list = new();
-
-			foreach (DO.Product prod in dal.Product.ReadAllFiltered())
-			{
-				BO.ProductForList productForList = new BO.ProductForList();
-				productForList.m_id = prod.m_id;
-				productForList.m_name = prod.m_name;
-				productForList.m_price = prod.m_price;
-				productForList.m_category = (BO.Enums.Category)prod.m_category;
-
-				list.Add(productForList);
-			}
-			return list;
+			return from prod in dal.Product.ReadAllFiltered()
+							  select new BO.ProductForList()
+							  {
+								  m_id = prod.Value.m_id,
+								  m_name = prod.Value.m_name,
+								  m_price = prod.Value.m_price,
+								  m_category = (BO.Enums.Category)prod.Value.m_category
+							  };
 		}
 
 		/// <summary>
@@ -169,26 +163,26 @@ namespace BlImplementation
 			InputValidation(product);
 
 			DO.Product doProd = new DO.Product();
-            try
+			try
 			{
 				doProd = dal.Product.Read(product.m_id);
-                doProd.m_name = product.m_name;
-                doProd.m_category = (DO.Enums.Category)product.m_category;
-                doProd.m_price = product.m_price;
-                doProd.m_inStock = product.m_inStock;
-            }
-            catch (DO.idNotFoundException exc)
-            {
-                Console.WriteLine(product.m_id); 
-                throw new BO.dataLayerIdNotFoundException(exc.Message);
-            }
-            catch (Exception exc)
-            {
-                Console.WriteLine("Some other problem - read product (dl)");
-                throw new BO.blGeneralException();
-            }
-			
-            try
+				doProd.m_name = product.m_name;
+				doProd.m_category = (DO.Enums.Category)product.m_category;
+				doProd.m_price = product.m_price;
+				doProd.m_inStock = product.m_inStock;
+			}
+			catch (DO.idNotFoundException exc)
+			{
+				Console.WriteLine(product.m_id);
+				throw new BO.dataLayerIdNotFoundException(exc.Message);
+			}
+			catch (Exception exc)
+			{
+				Console.WriteLine("Some other problem - read product (dl)");
+				throw new BO.blGeneralException();
+			}
+
+			try
 			{
 				dal.Product.Update(doProd);
 			}
@@ -236,8 +230,8 @@ namespace BlImplementation
 				throw new BO.blGeneralException();
 			}
 			Console.WriteLine($"Product with id - {productId} was deleted successfully");
-        }
-		
+		}
+
 		/// <summary>
 		/// validates information from user
 		/// </summary>

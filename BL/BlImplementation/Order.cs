@@ -1,7 +1,6 @@
 ﻿using BlApi;
 using System.Text.RegularExpressions;
 using System.Linq;
-using BO;
 using System.Collections.ObjectModel;
 
 namespace BlImplementation
@@ -63,9 +62,10 @@ namespace BlImplementation
 				else
 					throw new BO.InputIsInvalidException("ID");
 			}
-			catch (BO.InputIsInvalidException)
+			catch (BO.InputIsInvalidException exc)
 			{
 				Console.WriteLine(id);
+				throw new BO.dataLayerEntityNotFoundException(exc.Message);
 			}
 			if (order != null)                                          //and return it here
 				return order;
@@ -162,7 +162,7 @@ namespace BlImplementation
 					foreach (DO.OrderItem doOrderItem in itemsInOrder)
 					{
 						boOrder.m_totalPrice += (doOrderItem.m_price * doOrderItem.m_amount);
-						boOrder.Items.Add(new OrderItem(doOrderItem));                          //bring items from DO to BO
+						boOrder.Items.Add(new BO.OrderItem(doOrderItem));                          //bring items from DO to BO
 					}
 					Orders.Add(boOrder);
 				}
@@ -170,18 +170,16 @@ namespace BlImplementation
 			List<BO.OrderForList> listOfOrders = new List<BO.OrderForList>();
 			if (Orders.Count > 0)
 			{
-				foreach (BO.Order order in Orders)                                      //gets all orders sitting in business layer (with full information)
-				{
-					BO.OrderForList orderForList = new BO.OrderForList()
-					{
-						m_id = order.m_id,
-						m_customerName = order.m_customerName,
-						m_status = order.m_status,
-						m_amountOfItems = order.Items.Count,
-						m_totalPrice = order.m_totalPrice
-					};
-					listOfOrders.Add(orderForList);
-				}
+				listOfOrders.AddRange(from order in Orders					//gets all orders sitting in business layer (with full information)
+									  let orderForList = new BO.OrderForList()
+									  {
+										  m_id = order.m_id,
+										  m_customerName = order.m_customerName,
+										  m_status = order.m_status,
+										  m_amountOfItems = order.Items.Count,
+										  m_totalPrice = order.m_totalPrice
+									  }
+									  select orderForList);
 			}
 			else
 			{
@@ -245,6 +243,7 @@ namespace BlImplementation
 					boOrder.m_paymentDate = doOrder.m_orderDate;
 
 					boOrder.m_totalPrice = 0;
+					
 					foreach (DO.OrderItem doItem in dal.OrderItem.ReadAllFiltered())
 					{
 						BO.OrderItem boItem = new BO.OrderItem()
@@ -404,13 +403,13 @@ namespace BlImplementation
 			orderTracking.DatePairs = new List<Tuple<DateTime?, string?>>();                                        //starts an empty list if any pairs that may need to be added
 
 			if (boOrder.m_orderDate != null)
-				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_orderDate, "The order has been ordered"));
+				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_orderDate, "The order was ordered"));
 
 			if (boOrder.m_shipDate != null)
-				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_shipDate, "The order has been shipped"));
+				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_shipDate, "The order was shipped"));
 
 			if (boOrder.m_deliveryDate != null)
-				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_deliveryDate, "The order has been delivered"));
+				orderTracking.DatePairs.Add(Tuple.Create(boOrder.m_deliveryDate, "The order was delivered"));
 
 			Console.WriteLine("Tracking has been set for: " + orderId);
 			return orderTracking;
