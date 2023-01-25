@@ -16,7 +16,7 @@
         <ComboBox x:Name="CategoryBox" HorizontalAlignment="Left" Height="30" Margin="156,0,0,197" VerticalAlignment="Bottom" Width="100" VerticalContentAlignment="Center"/>
         <Label Content="Category:" HorizontalAlignment="Left" Margin="93,0,0,202" VerticalAlignment="Bottom" Padding="0,0,0,0" Height="20" FontWeight="Bold"/>
 
-        <TextBox x:Name="NameBox"  HorizontalAlignment="Left" Margin="156,0,0,159" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom" PreviewTextInput="NameBox_PreviewTextInput"/>
+        <TextBox x:Name="NameBox" HorizontalAlignment="Left" Margin="156,0,0,159" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom" PreviewTextInput="NameBox_PreviewTextInput"/>
         <Label Content="Name:" HorizontalAlignment="Left" Margin="110,0,0,164" VerticalAlignment="Bottom" Padding="0,0,0,0" Height="20" FontWeight="Bold"/>
 
         <TextBox x:Name="PriceBox" HorizontalAlignment="Left" Margin="156,0,0,119" TextWrapping="Wrap" Width="100" VerticalContentAlignment="Center" Height="30" VerticalAlignment="Bottom" PreviewTextInput="PriceBox_PreviewTextInput"/>

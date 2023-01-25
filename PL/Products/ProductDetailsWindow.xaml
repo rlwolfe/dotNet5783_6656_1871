@@ -27,6 +27,7 @@
         <CheckBox Name="InStockCheckBox" Content="Product in stock?" Margin="42,0,0,67" FontWeight="Bold" HorizontalAlignment="Left" Width="130" Height="15" VerticalAlignment="Bottom" IsEnabled="False" IsChecked="{Binding m_inStock, Mode=OneTime}"/>
 
         <Button Content="Add to Cart" Name="AddToCartButton" Margin="10,0,0,23" HorizontalAlignment="Left" Width="80" Click="AddToCartButton_Click" Height="30" VerticalAlignment="Bottom" FontWeight="Bold" Background="#FFABB0B8"/>
+        <Button Content="Remove from Cart" Name="RemoveFromCartButton" Margin="0,281,0,0" HorizontalAlignment="Center" Width="114" Click="RemoveFromCartButton_Click" Height="30" VerticalAlignment="Top" FontWeight="Bold" Background="#FFABB0B8"/>
         <Button Name="CloseButton" Content="Close" Margin="0,0,10,23" HorizontalAlignment="Right" Width="80" Click="CloseButton_Click" Height="30" VerticalAlignment="Bottom" FontWeight="Bold" Background="#FFABB0B8"/>
     </Grid>
 </Window>
