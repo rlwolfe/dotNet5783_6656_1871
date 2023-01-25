@@ -47,15 +47,15 @@ internal class DalOrderItem : IOrderItem
 								  where orderItem != null && filter(orderItem)
 								  select orderItem)
 			return (OrderItem)orderItem;
-		
+
 		throw new DO.EntityNotFoundException();
 	}
 	public IEnumerable<OrderItem?> ReadAllFiltered(Func<OrderItem?, bool>? filter)
 	{
-		if (filter == null)									//return all
+		if (filter == null)                                 //return all
 			return DataSource.OrderItems;
 
-		return from orderItem in DataSource.OrderItems		//return filtered list
+		return from orderItem in DataSource.OrderItems      //return filtered list
 			   where filter(orderItem) select orderItem;
 	}
 

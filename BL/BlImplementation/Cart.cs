@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using BO;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
@@ -7,6 +8,7 @@ namespace BlImplementation
 	internal class Cart : ICart
 	{
 		private IDal? dal = DalApi.Factory.Get();
+		private Order bliOrder = new Order();
 
 		/// <summary>
 		/// adds orderItem to cart
@@ -26,7 +28,7 @@ namespace BlImplementation
 				{
 					if (product.m_inStock != 0)                                                     //is it in stock?
 					{
-						boOrderItem = new BO.OrderItem();
+						boOrderItem = new OrderItem();
 						boOrderItem.m_productID = prodID;
 						boOrderItem.m_price = product.m_price;
 						boOrderItem.m_amount = 1;
@@ -213,7 +215,6 @@ namespace BlImplementation
 				throw new BO.blGeneralException();
 			}
 
-
 			if (cart.Items.Count > 0)
 			{
 				foreach (BO.OrderItem orderItem in cart.Items)                                                                                  //add all the necessary products to the order
@@ -249,7 +250,7 @@ namespace BlImplementation
 					}
 				}
 			}
-			BO.Order boOrder = new BO.Order()                                                   //create final BL order for proccessing 
+			/*BO.Order boOrder = new BO.Order()                                                   //create final BL order for proccessing 
 			{
 				m_id = orderID,
 				m_customerName = cart.m_customerName,
@@ -262,7 +263,7 @@ namespace BlImplementation
 				m_status = BO.Enums.OrderStatus.Ordered,
 				m_totalPrice = cart.m_totalPrice,
 				Items = (ObservableCollection<BO.OrderItem>)cart.Items
-			};
+			};*/
 		}
 
 		private bool InputValidation(string customerName, string customerEmail, string customerAddress)

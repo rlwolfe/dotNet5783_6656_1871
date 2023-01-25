@@ -1,6 +1,8 @@
 ﻿using BlApi;
 using System.Text.RegularExpressions;
 using System.Linq;
+using BO;
+using System.Collections.ObjectModel;
 
 namespace BlImplementation
 {
@@ -134,6 +136,37 @@ namespace BlImplementation
 		{
 			if (Orders.Count == 0)                              //if orders haven't been pulled up from the data layer yet, do it now
 				fillOrders();
+			else if (Orders.Count != dal.Order.ReadAllFiltered().Count())
+			{
+				List<DO.Order?> newOrders = dal.Order.ReadAllFiltered().ToList().                                       //creates list of all orders in dal, not in BL
+										GetRange(Orders.Count, dal.Order.ReadAllFiltered().Count() - Orders.Count);
+				foreach (DO.Order order in newOrders)
+				{
+					IEnumerable<DO.OrderItem?> itemsInOrder = from item in dal.OrderItem.ReadAllFiltered()              //list of orderItems in order
+															  where item.Value.m_orderID == order.m_id
+															  select item;
+
+					BO.Order boOrder = new BO.Order()                                                   //create final BL order for proccessing 
+					{
+						m_id = order.m_id,
+						m_customerName = order.m_customerName,
+						m_customerEmail = order.m_customerEmail,
+						m_customerAddress = order.m_customerAddress,
+						m_orderDate = DateTime.Today,
+						m_paymentDate = DateTime.Today,
+						m_shipDate = null,
+						m_deliveryDate = null,
+						m_status = BO.Enums.OrderStatus.Ordered,
+						m_totalPrice = 0
+					};
+					foreach (DO.OrderItem doOrderItem in itemsInOrder)
+					{
+						boOrder.m_totalPrice += (doOrderItem.m_price * doOrderItem.m_amount);
+						boOrder.Items.Add(new OrderItem(doOrderItem));                          //bring items from DO to BO
+					}
+					Orders.Add(boOrder);
+				}
+			}
 			List<BO.OrderForList> listOfOrders = new List<BO.OrderForList>();
 			if (Orders.Count > 0)
 			{
