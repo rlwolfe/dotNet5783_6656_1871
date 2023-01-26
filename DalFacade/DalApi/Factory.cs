@@ -1,11 +1,10 @@
-﻿using BlApi;
-using DO;
+﻿using DO;
 using System.Reflection;
 using static DalApi.DalConfig;
 
 namespace DalApi
 {
-	public static class Factory
+    public static class Factory
 	{
 		public static IDal? Get()
 		{

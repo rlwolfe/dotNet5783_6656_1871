@@ -5,9 +5,9 @@ using System.Collections.ObjectModel;
 
 namespace BlImplementation
 {
-	internal class Order : IOrder
+    internal class Order : IOrder
 	{
-		static private IDal? dal = DalApi.Factory.Get();
+		static private DalApi.IDal? dal = DalApi.Factory.Get();
 		static private List<BO.Order> Orders = new List<BO.Order>();             //holds orders containing tracking status
 
 		/// <summary>

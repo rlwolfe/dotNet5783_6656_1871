@@ -2,11 +2,12 @@
 using System.Text.RegularExpressions;
 using System.Linq;
 
+
 namespace BlImplementation
 {
-	internal class Product : IProduct
+    internal class Product : IProduct
 	{
-		private IDal? dal = DalApi.Factory.Get();
+		private DalApi.IDal? dal = DalApi.Factory.Get();
 
 		/// <summary>
 		/// creates a new product

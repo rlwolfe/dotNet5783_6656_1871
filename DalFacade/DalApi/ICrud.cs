@@ -1,4 +1,4 @@
-﻿namespace BlApi
+﻿namespace DalApi
 {
 	public interface ICrud<T> where T : struct
 	{

@@ -1,8 +1,9 @@
-﻿using BlApi;
+﻿using DalApi;
+
 
 namespace Dal
 {
-	sealed internal class DalList : IDal
+    sealed public class DalList : IDal
 	{
 		public static IDal Instance { get; } = new DalList();
 

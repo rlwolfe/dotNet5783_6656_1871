@@ -1,13 +1,14 @@
 ﻿using BlApi;
 using BO;
+
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 namespace BlImplementation
 {
-	internal class Cart : ICart
+    internal class Cart : ICart
 	{
-		private IDal? dal = DalApi.Factory.Get();
+		private DalApi.IDal? dal = DalApi.Factory.Get();
 
 		/// <summary>
 		/// adds orderItem to cart
