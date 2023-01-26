@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Orders"
         mc:Ignorable="d"
-        Title="OrderListWindow" Height="640" Width="800">
+        Title="Order List Window" Height="640" Width="800">
     <Grid Name="MainGrid" Background="#FF6B71CB">
         <Grid.RowDefinitions>
             <RowDefinition Height="46*"/>
@@ -14,7 +14,17 @@
         </Grid.RowDefinitions>
         <Grid Name="UpGrid" Height="auto" Grid.Row="0" Width="auto">
             <Label Content="Orders" HorizontalAlignment="Center" FontSize="28" Margin="0,0,0,0" Foreground="Gainsboro"/>
-        </Grid>
+            <Button Name="GroupingButton" Content="Group by Order Status" HorizontalAlignment="left" Height="30" Margin="10,0,0,0" VerticalAlignment="Center" Width="150" Click="GroupingButton_Click"/>
+            <Label Content="Order by:" HorizontalAlignment="Right" Height="30" Margin="0,0,230,0" VerticalAlignment="Center" Width="85" FontSize="14" FontWeight="Bold" Foreground="Gainsboro" HorizontalContentAlignment="Right"/>
+            <ComboBox Name="SortComboBox" HorizontalAlignment="Right" Height="30" Margin="0,0,95,0" VerticalAlignment="Center" Width="131" VerticalContentAlignment="Center" Padding="5,3,0,3" MaxDropDownHeight="250" SelectionChanged="SortComboBox_SelectionChanged">
+                <ComboBoxItem IsSelected="True">ID</ComboBoxItem>
+                <ComboBoxItem>Customer's Full Name</ComboBoxItem>
+                <ComboBoxItem>Total Price</ComboBoxItem>
+                <ComboBoxItem>Amount of Items</ComboBoxItem>
+            </ComboBox>
+            <RadioButton x:Name="AscRadioButton" Content="Ascending" HorizontalAlignment="Right" Height="15" Margin="0,10,10,0" VerticalAlignment="Top" Width="80" Foreground="Gainsboro" Checked="AscRadioButton_Checked"/>
+            <RadioButton x:Name="DescRadioButton" Content="Descending" HorizontalAlignment="Right" Height="15" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="80" Foreground="Gainsboro" Checked="DescRadioButton_Checked"/>
+            </Grid>
         <ListView x:Name="OrdersListView" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" MouseDoubleClick="OrdersListView_MouseDoubleClick" Background="White" Foreground="Black">
             <ListView.View>
                 <GridView>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.Orders"
         mc:Ignorable="d"
         Title="Order Details" Height="450" Width="525">
-    <Grid>
+    <Grid Background="#FFD5B799">
         <TextBox Name="IDBox" Margin="65,52,0,0" TextWrapping="Wrap"  VerticalContentAlignment="Center" Text="----" IsEnabled="False" FontWeight="Bold" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
         <Label Name="IDLabel" Content="ID:" Margin="34,52,0,0" Padding="0,0,0,0" VerticalContentAlignment="Center" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="16" Visibility="{Binding ElementName=PaymentDatePicker, Path=Visibility}"/>
 
@@ -42,6 +42,6 @@
         <Button Name="CancelButton" Content="Cancel" Margin="384,0,0,30" Click="CancelButton_Click" FontWeight="Bold" Background="#FFABB0B8" HorizontalAlignment="Left" Width="80" Height="30" VerticalAlignment="Bottom"/>
 
         <Label Content="Items in order:" Margin="25,0,0,145" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="85"/>
-        <ListBox Name="OrderListBox" Margin="25,0,0,25" Height="120" HorizontalAlignment="Left" Width="300" VerticalAlignment="Bottom"/>
+        <ListBox Name="OrderListBox" Margin="25,0,0,25" Height="120" HorizontalAlignment="Left" Width="300" VerticalAlignment="Bottom" Background="#E5EDD3B9"/>
     </Grid>
 </Window>

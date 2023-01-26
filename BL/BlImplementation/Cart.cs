@@ -193,6 +193,8 @@ namespace BlImplementation
 			{
 				if (!InputValidation(cart.m_customerName, cart.m_customerEmail, cart.m_customerAddress))                         //as long as the fields are valid
 					throw new BO.InputIsInvalidException("Customer information");
+				else if(cart.Items.Count == 0)
+					throw new BO.UnableToExecute("there are no products in the cart");
 				else
 				{
 					DO.Order doOrder = new DO.Order(cart.m_customerName, cart.m_customerEmail, cart.m_customerAddress, DateTime.Today, null, null);          //create a new order
@@ -207,6 +209,10 @@ namespace BlImplementation
 			catch (BO.InputIsInvalidException exc)
 			{
 				throw new BO.InputIsInvalidException("Customer information");
+			}
+			catch (BO.UnableToExecute exc)
+			{
+				throw new BO.UnableToExecute("there are no products in the cart");
 			}
 			catch (Exception exc)
 			{

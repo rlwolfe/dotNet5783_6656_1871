@@ -7,19 +7,31 @@
         mc:Ignorable="d"
         Title="View Cart Window" Height="300" Width="450">
     <Grid>
-        <Label Content="Items in cart:" Margin="25,25,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="85"/>
-        <ListBox Name="ItemsListBox" Margin="50,45,50,0" Height="120" VerticalAlignment="Top" ItemsSource="{Binding}"/>
-        
-        <Button Name="IncreaseButton" Content="Increase Quantity" HorizontalAlignment="Left" Margin="50,180,0,0" VerticalAlignment="Top" Click="IncreaseButton_Click"/>
-        <Button Name="DecreaseButton" Content="Decrease Quantity" Margin="160,180,0,0" VerticalAlignment="Top" Click="DecreaseButton_Click" HorizontalAlignment="Left" Width="110"/>
-        <Button Name="RemoveButton" Content="Remove from Cart" HorizontalAlignment="Right" Margin="0,180,50,0" VerticalAlignment="Top" Click="RemoveButton_Click"/>
-        
-        <Button Name="ClearCartButton" Content="Clear Cart" Command="{Binding ClickCommand}" HorizontalAlignment="Right" Margin="0,20,50,0" VerticalAlignment="Top" Click="ClearCartButton_Click"/>
-        
-        <Label Content="Total Price:" Margin="25,217,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="70"/>
+        <Grid.Background>
+            <ImageBrush ImageSource="/CartWindows/cart.jpg" Stretch="Fill" TileMode="None">
+                <ImageBrush.RelativeTransform>
+                    <TransformGroup>
+                        <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="1.2" ScaleY="1.25"/>
+                        <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                        <RotateTransform CenterX="0.5" CenterY="0.5"/>
+                        <TranslateTransform X="0.09" Y="0.12"/>
+                    </TransformGroup>
+                </ImageBrush.RelativeTransform>
+            </ImageBrush>
+        </Grid.Background>
+        <Label Content="Items in cart:" Margin="25,25,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="85" Foreground="#FFDE3029"/>
+        <ListBox Name="ItemsListBox" Margin="50,45,50,0" Height="120" VerticalAlignment="Top" ItemsSource="{Binding}" Background="#E5FFFFFF"/>
+
+        <Button Name="IncreaseButton" Content="Increase Quantity" HorizontalAlignment="Left" Margin="50,180,0,0" VerticalAlignment="Top" Click="IncreaseButton_Click" Background="#FFDB3128" Foreground="White"/>
+        <Button Name="DecreaseButton" Content="Decrease Quantity" Margin="160,180,0,0" VerticalAlignment="Top" Click="DecreaseButton_Click" HorizontalAlignment="Left" Width="110" Background="#FFDB3128" Foreground="White"/>
+        <Button Name="RemoveButton" Content="Remove from Cart" HorizontalAlignment="Right" Margin="0,180,50,0" VerticalAlignment="Top" Click="RemoveButton_Click" Background="#FFDB3128" Foreground="White"/>
+
+        <Button Name="ClearCartButton" Content="Clear Cart" Command="{Binding ClickCommand}" HorizontalAlignment="Right" Margin="0,20,50,0" VerticalAlignment="Top" Click="ClearCartButton_Click" Background="#FFDB3128" Foreground="White"/>
+
+        <Label Content="Total Price:" Margin="25,217,0,0" Padding="0,0,0,0" FontWeight="Bold" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="70" Foreground="#FFDE3029"/>
         <TextBox Name="TotalPriceTextBox" TextWrapping="WrapWithOverflow" IsEnabled="False" Margin="100,217,0,0" Height="20" HorizontalAlignment="Left" Width="80" VerticalAlignment="Top"/>
-        
-        <Button Name="PlaceOrderButton" Content="Place Order" HorizontalAlignment="Left" Margin="255,227,0,0" VerticalAlignment="Top" Click="PlaceOrderButton_Click"/>
-        <Button Name="CloseButton" Content="Close" HorizontalAlignment="Right" Margin="0,227,50,0" VerticalAlignment="Top" Click="CloseButton_Click"/>
+
+        <Button Name="PlaceOrderButton" Content="Place Order" HorizontalAlignment="Left" Margin="255,227,0,0" VerticalAlignment="Top" Click="PlaceOrderButton_Click" Background="#FFDB3128" Foreground="White"/>
+        <Button Name="CloseButton" Content="Close" HorizontalAlignment="Right" Margin="0,227,50,0" VerticalAlignment="Top" Click="CloseButton_Click" Background="#FFDB3128" Foreground="White"/>
     </Grid>
 </Window>

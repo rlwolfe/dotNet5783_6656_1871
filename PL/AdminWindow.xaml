@@ -5,9 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="AdminWindow" Height="400" Width="400">
+        Title="Admin Window" Height="400" Width="400">
     <Grid>
-        <Button Name="ShowProductsButton" Content="Show Products" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,100,0,0" Click="ShowProductsButton_Click" Height="50" Width="200" BorderThickness="5,5,5,5" BorderBrush="#FFE5DDDD" Background="#FFC0149D" FontWeight="Bold" FontSize="20" Foreground="#FFF6F6F6"/>
-        <Button Name="ShowOrdersButton" Content="Show Orders" HorizontalAlignment="Center" VerticalAlignment="Bottom"  Margin="0,0,0,100" Click="ShowOrdersButton_Click" Height="50" Width="200" BorderThickness="5,5,5,5" BorderBrush="#FFE5DDDD" Background="#FFC0149D" FontWeight="Bold" FontSize="20" Foreground="#FFF6F6F6"/>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="1,1" StartPoint="0.5,0.5" MappingMode="RelativeToBoundingBox" SpreadMethod="Pad" Opacity="1">
+                <GradientStop Color="Black" Offset="1"/>
+                <GradientStop Color="#FF5281CB"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Button Name="ShowProductsButton" Content="Show Products" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,100,0,0" Click="ShowProductsButton_Click" Height="50" Width="200" BorderThickness="5,5,5,5" BorderBrush="#FFE5DDDD" Background="#FFF3A719" FontWeight="Bold" FontSize="20" Foreground="#FFF6F6F6"/>
+        <Button Name="ShowOrdersButton" Content="Show Orders" HorizontalAlignment="Center" VerticalAlignment="Bottom"  Margin="0,0,0,100" Click="ShowOrdersButton_Click" Height="50" Width="200" BorderThickness="5,5,5,5" BorderBrush="#FFE5DDDD" Background="#FFF3A719" FontWeight="Bold" FontSize="20" Foreground="#FFF6F6F6"/>
     </Grid>
 </Window>

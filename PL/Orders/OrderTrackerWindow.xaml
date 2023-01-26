@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Orders"
         mc:Ignorable="d"
-        Title="OrderTrackerWindow" Height="200" Width="400">
-    <Grid>
+        Title="Order Tracker Window" Height="200" Width="400">
+    <Grid Background="#FFD2A1C9">
         <Label Content="ID:" HorizontalAlignment="Left" Height="20" Margin="10,10,0,0" VerticalAlignment="Top" Width="20" Padding="0,0,0,0" FontSize="14"/>
         <TextBox x:Name="IDTextBox" HorizontalAlignment="Left" Height="20" Margin="35,10,0,0" IsEnabled="False" TextWrapping="Wrap" VerticalAlignment="Top" Width="20"/>
         
         <TextBlock x:Name="OrderTrackingText" HorizontalAlignment="Center" Height="50" Margin="0,50,0,0" TextWrapping="Wrap" Text="{Binding m_, Mode=OneWay}" VerticalAlignment="Top" Width="300" FontSize="16"/>
        
-        <Button Name="ViewOrderButton" Content="View Order Details" HorizontalAlignment="Left" Height="30" Margin="50,127,0,0" VerticalAlignment="Top" Width="110" Click="ViewOrderButton_Click"/>
-        <Button Name="CloseButton" Content="Close" HorizontalAlignment="Right" Height="30" Margin="0,127,50,0" VerticalAlignment="Top" Width="110" Click="CloseButton_Click"/>
+        <Button Name="ViewOrderButton" Content="View Order Details" HorizontalAlignment="Left" Height="30" Margin="50,127,0,0" VerticalAlignment="Top" Width="110" Click="ViewOrderButton_Click" Background="#FF7FC58A"/>
+        <Button Name="CloseButton" Content="Close" HorizontalAlignment="Right" Height="30" Margin="0,127,50,0" VerticalAlignment="Top" Width="110" Click="CloseButton_Click" Background="#FF7FC58A"/>
     </Grid>
 </Window>

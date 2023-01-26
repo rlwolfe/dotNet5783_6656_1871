@@ -13,7 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="CartWindows\cart.jpg" />
     <None Remove="error.png" />
+    <None Remove="Orders\Order.jpg" />
+    <None Remove="Orders\Orders.jpg" />
     <None Remove="Popups\error.png" />
     <None Remove="Popups\success.png" />
     <None Remove="Products\Groceries.jpg" />
@@ -24,6 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="CartWindows\cart.jpg" />
+    <Resource Include="Orders\Orders.jpg" />
     <Resource Include="Popups\error.png" />
     <Resource Include="Popups\success.png" />
     <Resource Include="Products\Groceries.jpg" />
